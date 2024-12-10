@@ -25,8 +25,12 @@ def predict_img(net,
     with torch.no_grad():
         output = net(img).cpu()
         output = F.interpolate(output, (full_img.size[1], full_img.size[0]), mode='bilinear')
+
+        #remove background: output = output[:, 1:, :, :]
+        #softmax for probs: output = F.softmax(output, dim=1)
         if net.n_classes > 1:
             mask = output.argmax(dim=1)
+    
         else:
             mask = torch.sigmoid(output) > out_threshold
 
