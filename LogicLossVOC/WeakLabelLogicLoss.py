@@ -55,11 +55,11 @@ def parse_data(data):
     return adjacency, relations, scribbles, image_level, bboxes
 
 
-def calculateLogicLossD(output_tensor,weaklabels):
+def calculateLogicLoss(output_tensor,weaklabels):
     #example file_path = '../../datasetExtraction/Dataset1/2011_002953.txt'
     output_tensor = output_tensor[0,:,:,:]
+    print(output_tensor)
     output_tensor = F.softmax(output_tensor, dim=0)
-    print(output_tensor,output_tensor.shape)
     adjacencies, relations, scribbles, image_level, bboxes = weaklabels[0]
 
     loss = 0
@@ -86,12 +86,14 @@ def calculateLogicLossD(output_tensor,weaklabels):
         #loss += scribble(output_tensor,scribbleCoords,class_values[objectString])
     for i in image_level:
         i = i[0]
+        print(image_level)
         info = i.split(',')
         objects = info[0::2]
         percentages = info[1::2]
         for i in range(len(objects)):
             #print([class_values[objects[i]]],int(percentages[i].replace('%','')))
-            loss += about_p_percent_is_class(output_tensor,[class_values[objects[i]]],int(percentages[i].replace('%',''))/100)
+            if objects[i] != "background":
+                loss += about_p_percent_is_class(output_tensor,[class_values[objects[i]]],int(percentages[i].replace('%',''))/100)
     for i in bboxes:
         i = i[0]
         info = i.split(',')

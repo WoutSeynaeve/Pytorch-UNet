@@ -231,14 +231,12 @@ def about_p_percent_is_class(normalized_tensor,classesList,p):
     for classs in classesList:
         ExpectedPixels += normalized_tensor[classs].sum()
 
-    print("expected pixels being classes",classesList,"=",ExpectedPixels) 
     _, H, W = normalized_tensor.shape
 
     
-    maxloss = 100
+    maxloss = 10
     totalPixels = H*W
     NumberOfPixels = p*totalPixels
-    print(NumberOfPixels)
     loss = maxloss*torch.square(torch.abs(ExpectedPixels-NumberOfPixels)/totalPixels)
     return loss
 
@@ -250,7 +248,7 @@ def alteast_p_percent_is_class(normalized_tensor,classesList,p):
     print("expected pixels being classes",classesList,"=",ExpectedPixels) 
     _, H, W = normalized_tensor.shape
 
-    maxloss = 100
+    maxloss = 10
 
     totalPixels = H*W
     NumberOfPixels = p*totalPixels
