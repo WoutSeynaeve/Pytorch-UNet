@@ -1,6 +1,7 @@
 import torch
 import torch.nn.functional as F
 from tqdm import tqdm
+import torch.nn as nn
 
 from utils.dice_score import multiclass_dice_coeff, dice_coeff
 
@@ -38,3 +39,42 @@ def evaluate(net, dataloader, device, amp):
 
     net.train()
     return dice_score / max(num_val_batches, 1)
+
+@torch.inference_mode()
+def evaluateWeaklySupervised(net, dataloader, device, amp):
+    net.eval()
+    num_val_batches = len(dataloader)
+    overlap_score = 0
+
+    # iterate over the validation set
+    with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
+        for batch in tqdm(dataloader, total=num_val_batches, desc='Validation round', unit='batch', leave=False):
+            image, mask_true = batch['image'], batch['mask']
+        
+            """FOR THIS IMPLEMENTATION, IM ASSUMING BATCH SIZE == 1"""
+
+            # move images and labels to correct device and type
+            image = image.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
+            mask_true = mask_true.to(device=device, dtype=torch.long)
+
+            # predict the mask
+            mask_pred = net(image)
+            mask_pred = F.one_hot(mask_pred.argmax(dim=1), net.n_classes).permute(0, 3, 1, 2).float()
+            mask_pred = (mask_pred == mask_pred.max(dim=1, keepdim=True)[0]).float()  # Create one-hot tensor
+
+            # Get the class indices by taking the argmax over the class dimension (dim=1)
+            long_tensor = mask_pred.argmax(dim=1).squeeze(0)  # Shape: [250, 198]
+            mask_true = mask_true[0,:,:]
+            if long_tensor.shape != mask_true.shape:
+                raise ValueError("Tensors must have the same shape")
+
+            # Compare elements and calculate the number of equal ones
+            equal_elements = (long_tensor == mask_true).float()
+
+            # Calculate the proportion of equal elements
+            equal_proportion = equal_elements.sum() / equal_elements.numel()
+            overlap_score += equal_proportion.item()
+           
+
+    net.train()
+    return overlap_score / max(num_val_batches, 1)

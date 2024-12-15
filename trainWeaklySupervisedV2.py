@@ -12,13 +12,14 @@ from pathlib import Path
 from torch import optim
 from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
-
-from evaluate import evaluate
+from LogicLossVOC.WeakLabelLogicLoss import calculateLogicLoss
+from evaluate import evaluate, evaluateWeaklySupervised
 from unet import UNet
-from utils.data_loading import WeaklyLabelledDataset
+from utils.data_loading import WeakLabelDataset,BasicDataset
 
 dir_img = Path('../../datasetPascalVOC/JPEGImages/')
-dir_mask = Path('../../datasetPascalVOC/Dataset1/')
+dir_mask = Path('../../datasetPascalVOC/segmentationGroundTruth/')
+dir_weaklabel = Path('../../datasetPascalVOC/Dataset1/')
 dir_checkpoint = Path('./checkpoints/')
 
 
@@ -40,7 +41,7 @@ def train_model(
     # try:
     #     dataset = CarvanaDataset(dir_img, dir_mask, img_scale)
     # except (AssertionError, RuntimeError, IndexError):
-    dataset = WeaklyLabelledDataset(dir_img, dir_mask, img_scale)
+    dataset = WeakLabelDataset(dir_img, dir_mask, dir_weaklabel, img_scale)
 
     # 2. Split into train / validation partitions
     n_val = int(len(dataset) * val_percent)
@@ -73,7 +74,7 @@ def train_model(
     # 4. Set up the optimizer, the loss, the learning rate scheduler and the loss scaling for AMP
     optimizer = optim.RMSprop(model.parameters(),
                               lr=learning_rate, weight_decay=weight_decay, momentum=momentum, foreach=True)
-    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'max', patience=5)  # goal: maximize Dice score
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'max', patience=5)  # goal: maximize overlap
     grad_scaler = torch.cuda.amp.GradScaler(enabled=amp)
 
     global_step = 0
@@ -84,8 +85,8 @@ def train_model(
         epoch_loss = 0
         with tqdm(total=n_train, desc=f'Epoch {epoch}/{epochs}', unit='img') as pbar:
             for batch in train_loader:
-                images, true_masks = batch['image'], batch['mask']
-
+                images, true_masks, weaklabel = batch['image'], batch['mask'], batch["weaklabel"]
+            
                 assert images.shape[1] == model.n_channels, \
                     f'Network has been defined with {model.n_channels} input channels, ' \
                     f'but loaded images have {images.shape[1]} channels. Please check that ' \
@@ -95,7 +96,7 @@ def train_model(
 
                 with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
                     masks_pred = model(images)
-                    loss = torch.sum(masks_pred) #To do
+                    loss = calculateLogicLossDebug(masks_pred,weaklabel)
 
                 optimizer.zero_grad(set_to_none=True)
                 grad_scaler.scale(loss).backward()
@@ -126,10 +127,10 @@ def train_model(
                         #     if not (torch.isinf(value.grad) | torch.isnan(value.grad)).any():
                         #         histograms['Gradients/' + tag] = wandb.Histogram(value.grad.data.cpu())
 
-                        val_score = evaluate(model, val_loader, device, amp)
+                        val_score = evaluateWeaklySupervised(model, val_loader, device, amp)
                         scheduler.step(val_score)
 
-                        logging.info('Validation Dice score: {}'.format(val_score))
+                        logging.info('Validation overlap score: {}'.format(val_score))
                         # try:
                         #     experiment.log({
                         #         'learning rate': optimizer.param_groups[0]['lr'],
