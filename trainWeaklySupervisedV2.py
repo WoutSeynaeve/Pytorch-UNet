@@ -98,7 +98,6 @@ def train_model(
                     masks_pred = model(images)
                     #after a while, mask_pred becomes all NAN !! problem!!
                     loss = calculateLogicLoss(masks_pred,weaklabel)
-                print(loss)
                 optimizer.zero_grad(set_to_none=True)
                 grad_scaler.scale(loss).backward()
                 grad_scaler.unscale_(optimizer)
