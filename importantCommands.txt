@@ -2,3 +2,5 @@ PyTorch-bundle/2.1.2-foss-2023a-CUDA-12.1.1
 matplotlib/3.7.2-gfbf-2023a
  
 train: python trainWeaklySupervisedV2.py --classes 21 --amp
+
+predict: python predict.py -i ./testImages/2007_001834.jpg -o output.jpg --classes 21 -m './checkpoints/checkpoint_epoch1.pth'

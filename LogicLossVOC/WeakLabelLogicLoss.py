@@ -89,16 +89,16 @@ def calculateLogicLoss(output_tensor,weaklabels):
         objects = info[0::2]
         percentages = info[1::2]
 
-        for notObject in class_values.keys(): #IMAGELEVELLABEL NOT !
-                if not notObject in objects:
-                    #loss += image_level_label(output_tensor,[class_values[notObject]],"not")
-                    """alternative: """
-                    loss += about_p_percent_is_class(output_tensor,[class_values[notObject]],0)
+        # for notObject in class_values.keys(): #IMAGELEVELLABEL NOT !
+        #         if not notObject in objects:
+        #             #loss += image_level_label(output_tensor,[class_values[notObject]],"not")
+        #             """alternative: """
+        #             loss += about_p_percent_is_class(output_tensor,[class_values[notObject]],0)
 
-        for i in range(len(objects)):
-            #print([class_values[objects[i]]],int(percentages[i].replace('%','')))
-            if objects[i] != "background":
-                loss += about_p_percent_is_class(output_tensor,[class_values[objects[i]]],int(percentages[i].replace('%',''))/100)
+        # for i in range(len(objects)):
+        #     #print([class_values[objects[i]]],int(percentages[i].replace('%','')))
+        #     if objects[i] != "background":
+        #         loss += about_p_percent_is_class(output_tensor,[class_values[objects[i]]],int(percentages[i].replace('%',''))/100)
     for i in bboxes:
         i = i[0]
         info = i.split(',')
@@ -106,13 +106,16 @@ def calculateLogicLoss(output_tensor,weaklabels):
         x1,x2,y1,y2 = info[1:-1]
         percentage = int(info[-1].replace('%',''))/100
         #print(class_values[objectt],percentage,x1,x2,y1,y2)
-        #loss += about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[objectt]],percentage,x1,x2,y1,y2)
+        #loss += about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[objectt]],percentage,int(x1),int(x2),int(y1),int(y2))
     
     #GLOBAL SMOOTHNESS CONSTRAINT
-    globalsmoothness = False   #set to True to enable !!!
+    globalsmoothness = True   #set to True to enable !!!
     if globalsmoothness:
         for i in range(0,21):
             loss += ifXthenXadjecent(output_tensor, i)
+        #Average loss is ong: 0.000375: so if we want to scale all the losses to where the average should be == 1
+        if loss < 0.1:
+            loss /= 0.000375
     
     #IMAGE LEVEL LABEL NOT for all classes which should not be in the image
     # --> to do !! 
