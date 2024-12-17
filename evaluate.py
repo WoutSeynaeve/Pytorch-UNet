@@ -48,7 +48,7 @@ def evaluateWeaklySupervised(net, dataloader, device, amp):
 
     # iterate over the validation set
     with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
-        for batch in tqdm(dataloader, total=num_val_batches, desc='Validation round', unit='batch', leave=False):
+        for batch in dataloader:
             image, mask_true = batch['image'], batch['mask']
         
             """FOR THIS IMPLEMENTATION, IM ASSUMING BATCH SIZE == 1"""

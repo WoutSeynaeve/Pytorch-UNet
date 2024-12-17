@@ -90,7 +90,6 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
     output_tensor = F.softmax(output_tensor, dim=0)
     adjacencies, relations, scribbles, image_level, bboxes = weaklabels[0]
     loss = 0
-        
     #print(adjacencies, relations, scribbles, image_level,bboxes)
     for i in adjacencies:
         i = i[0]
@@ -115,24 +114,12 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
         label = i.split(',')
         objectString = label[0]
         scribbleCoords = [(int(pair[0][1:]), int(pair[1][:-1])) for pair in zip(label[1:][::2], label[1:][1::2])]
-
-        if objectString == "background":
-            i = image_level[0][0]
-            info = i.split(',')
-            for objects in info[0::2]:
-                if objects != "background":
-                    if len(scribbleCoords) != 0:
-                        addloss = scribble(output_tensor,np.array(scribbleCoords),class_values[objectString],"not")
-                        if printLosses:
-                            print("loss for scribble not being class",addloss.item())
-                        loss += addloss
-        else:
-            #print(scribbleCoords,class_values[objectString])
-            if len(scribbleCoords) != 0:
-                addloss = scribble(output_tensor,np.array(scribbleCoords),class_values[objectString])
-                if printLosses:
-                    print("loss for scribbles",addloss.item())
-                loss += addloss
+        #print(scribbleCoords,class_values[objectString])
+        if len(scribbleCoords) != 0:
+            addloss = scribble(output_tensor,np.array(scribbleCoords),class_values[objectString])
+            if printLosses:
+                print("loss for scribbles",addloss.item())
+            loss += addloss
 
     for i in image_level:
         i = i[0]
@@ -140,14 +127,14 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
         objects = info[0::2]
         percentages = info[1::2]
 
-        # for notObject in class_values.keys(): #IMAGELEVELLABEL NOT !
-        #         if not notObject in objects:
-        #             #loss += image_level_label(output_tensor,[class_values[notObject]],"not")
-        #             """alternative: """
-        #             addloss= about_p_percent_is_class(output_tensor,[class_values[notObject]],0)/10
-        #             if printLosses:
-        #                 print("loss to not predict other classes in the image",addloss.item())
-        #             loss += addloss
+        for notObject in class_values.keys(): #IMAGELEVELLABEL NOT !
+                if not notObject in objects:
+                    #loss += image_level_label(output_tensor,[class_values[notObject]],"not")
+                    """alternative: """
+                    addloss= about_p_percent_is_class(output_tensor,[class_values[notObject]],0)/10
+                    if printLosses:
+                        print("loss to not predict other classes in the image",addloss.item())
+                    loss += addloss
         """
         for i in range(len(objects)):
             #print([class_values[objects[i]]],int(percentages[i].replace('%','')))
@@ -155,13 +142,13 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
                 print([class_values[objects[i]]],int(percentages[i].replace('%',''))/100)
                 loss += about_p_percent_is_class(output_tensor,[class_values[objects[i]]],int(percentages[i].replace('%',''))/100)
         """
-        # for i in range(len(objects)):
-        #     #print([class_values[objects[i]]],int(percentages[i].replace('%','')))
-        #     if objects[i] == "background":
-        #         addloss = about_p_percent_is_class(output_tensor,[class_values[objects[i]]],int(percentages[i].replace('%',''))/100)/10
-        #         if printLosses:
-        #             print("loss to predict x percentage background in the image",addloss.item())
-        #         loss += addloss
+        for i in range(len(objects)):
+            #print([class_values[objects[i]]],int(percentages[i].replace('%','')))
+            if objects[i] == "background":
+                addloss = about_p_percent_is_class(output_tensor,[class_values[objects[i]]],int(percentages[i].replace('%',''))/100)/10
+                if printLosses:
+                    print("loss to predict x percentage background in the image",addloss.item())
+                loss += addloss
     #"Outside of the bboxes for class I should not be class I"
     addloss = outsideBoundingBoxesNotClass(output_tensor,bboxes)
     if printLosses:

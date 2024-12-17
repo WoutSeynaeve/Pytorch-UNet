@@ -102,12 +102,35 @@ def mask_to_image(mask: np.ndarray, mask_values):
     for cls, count in top_classes:
         print(f"Class {class_values[cls]}: {count} pixels")
 
-    # Get a colormap and scale it to the number of unique mask values
-    colormap = colormaps["tab20"]
-    colors = [tuple((np.array(colormap(i / len(mask_values))[:3]) * 255).astype(np.uint8)) for i in range(len(mask_values))]
+    manual_colors = [
+    (0, 0, 0),  # Class 0: Background (black)
+    (255, 0, 0),  # Class 1: Red
+    (0, 255, 0),  # Class 2: Green
+    (0, 0, 255),  # Class 3: Blue
+    (255, 255, 0),  # Class 4: Yellow
+    (255, 0, 255),  # Class 5: Magenta
+    (0, 255, 255),  # Class 6: Cyan
+    (128, 128, 128),  # Class 7: Gray
+    (255, 165, 0),  # Class 8: Orange
+    (75, 0, 130),  # Class 9: Indigo
+    (255, 20, 147),  # Class 10: DeepPink
+    (0, 128, 0),  # Class 11: DarkGreen
+    (0, 0, 139),  # Class 12: DarkBlue
+    (255, 99, 71),  # Class 13: Tomato
+    (160, 82, 45),  # Class 14: Sienna
+    (255, 255, 240),  # Class 15: Ivory
+    (0, 255, 127),  # Class 16: SpringGreen
+    (255, 228, 196),  # Class 17: Bisque
+    (255, 218, 185),  # Class 18: PeachPuff
+    (255, 240, 245),  # Class 19: LavenderBlush
+    (50, 80, 110),  
+    ]
 
-    # Map class labels to RGB values
-    color_map = {cls: colors[i] for i, cls in enumerate(mask_values)}
+    # Ensure there are enough colors for all classes (21 classes)
+
+    # Map class labels to RGB colors
+    mask_values.pop()
+    color_map = {cls: manual_colors[i] for i, cls in enumerate(mask_values)}
 
     # Create an RGB output array
     h, w = mask.shape

@@ -44,7 +44,7 @@ def bounding_box(normalized_tensor,x1,x2,y1,y2,I, Option = None):
 
 def scribble(normalized_tensor, scribble_coords, target_class, Option = None):
     class_probs = normalized_tensor[target_class, :, :]
-    class_probs = torch.clamp(class_probs, 0, 1 - 1e-7)
+    class_probs = torch.clamp(class_probs, 1e-7, 1 - 1e-7)
     scribble_probs = class_probs[scribble_coords[:, 0], scribble_coords[:, 1]] 
     
     if Option:
@@ -74,7 +74,8 @@ def adjacency(normalized_tensor, class_I, class_J,NOT = None):
 
     # Compute log(1 - P_J)
     log_one_minus_probs_J = torch.log1p(-probs_J)
-   
+    adjacency_kernel = adjacency_kernel.to(log_one_minus_probs_J.dtype).to(log_one_minus_probs_J.device)
+
     # Convolve log(1 - P_J) with adjacency kernel to sum over neighbors
     log_sum_neighbors = F.conv2d(
         log_one_minus_probs_J.unsqueeze(0).unsqueeze(0),  # Add batch and channel dimensions
@@ -82,7 +83,7 @@ def adjacency(normalized_tensor, class_I, class_J,NOT = None):
         padding=1  # Ensure the output has the same spatial dimensions as input
     ).squeeze(0).squeeze(0)  # Remove batch and channel dimensions
     # Compute probabilities for no adjacencies
-    pixelwise_adjacency = torch.exp(torch.log(probs_I+1e-10) + torch.log1p(-torch.exp(log_sum_neighbors)))
+    pixelwise_adjacency = torch.exp(torch.log(probs_I) + torch.log1p(-torch.exp(log_sum_neighbors)))
     # Compute log(pixelwise_no_adjacency)
     log_pixelwise_no_adjacency = torch.log1p(-pixelwise_adjacency)
 
@@ -212,7 +213,7 @@ def ifXthenXadjecent(normalized_tensor, class_I):
         padding=1  # Ensure the output has the same spatial dimensions as input
     ).squeeze(0).squeeze(0)  # Remove batch and channel dimensions
     #probability of pixel being I and no adjecent pixel being I
-    pixelwise_no_adjacency = torch.exp(torch.log(probs_I+1e-10) + log_sum_neighbors)
+    pixelwise_no_adjacency = torch.exp(torch.log(probs_I) + log_sum_neighbors)
     log_pixelwise_no_adjacency = torch.log1p(-pixelwise_no_adjacency)
     # Sum over all pixels to compute log(global_no_adjacency)
     log_probability = torch.sum(log_pixelwise_no_adjacency)
@@ -229,16 +230,19 @@ def atleast_p_percent_is_class_in_bounding_box(normalized_tensor,classesList,p,x
     bounding_box_tensor = normalized_tensor[:,y1:y2+1, x1:x2+1]
     return alteast_p_percent_is_class(bounding_box_tensor,classesList,p)
 
-def about_p_percent_is_class(normalized_tensor,classesList,p):
+def about_p_percent_is_class(normalized_tensor,classesList,p,single=None):
     ExpectedPixels = 0
     for classs in classesList:
         ExpectedPixels += normalized_tensor[classs].sum()
+    if single:
+        _,totalPixels = normalized_tensor.shape
+    else:
+        _, H, W = normalized_tensor.shape
+        totalPixels = H*W
 
-    _, H, W = normalized_tensor.shape
 
     
     maxloss = 1000
-    totalPixels = H*W
     NumberOfPixels = p*totalPixels
   
     loss = maxloss*torch.abs(ExpectedPixels-NumberOfPixels)/totalPixels #REMOVED SQUARE!!!!!
