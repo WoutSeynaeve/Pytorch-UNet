@@ -48,7 +48,6 @@ def predict_img(net,
     img = torch.from_numpy(BasicDataset.preprocess(None, full_img, scale_factor, is_mask=False))
     img = img.unsqueeze(0)
     img = img.to(device=device, dtype=torch.float32)
-
     with torch.no_grad():
         output = net(img).cpu()
         output = F.interpolate(output, (full_img.size[1], full_img.size[0]), mode='bilinear')
@@ -97,7 +96,7 @@ def mask_to_image(mask: np.ndarray, mask_values):
     # Count class frequencies in the mask
     class_counts = Counter(mask.flatten())
     top_classes = class_counts.most_common(5)
-
+    print(top_classes)
     # Print top 5 classes
     print("Top 5 classes in the image (class: count):")
     for cls, count in top_classes:

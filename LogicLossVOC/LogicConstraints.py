@@ -45,11 +45,8 @@ def bounding_box(normalized_tensor,x1,x2,y1,y2,I, Option = None):
 def scribble(normalized_tensor, scribble_coords, target_class, Option = None):
     class_probs = normalized_tensor[target_class, :, :]
     class_probs = torch.clamp(class_probs, 0, 1 - 1e-7)
-
-
-    scribble_probs = class_probs[scribble_coords[:, 1], scribble_coords[:, 0]] 
-    #print("Extracted class probabilities for scribble: ",scribble_probs)
-
+    scribble_probs = class_probs[scribble_coords[:, 0], scribble_coords[:, 1]] 
+    
     if Option:
         log_probs = torch.log1p(-scribble_probs)
     else:
@@ -102,6 +99,7 @@ def adjacency(normalized_tensor, class_I, class_J,NOT = None):
     return logicLoss
 
 def ifXthenYatRelation(normalized_tensor, X, Y, relation,NOT = None):
+    device = normalized_tensor.device
     probs_I = normalized_tensor[X, :, :]  # Shape: (H, W)
     probs_J = normalized_tensor[Y, :, :]  # Shape: (H, W)
     probs_I = torch.clamp(probs_I, 0, 1 - 1e-7)
@@ -239,10 +237,11 @@ def about_p_percent_is_class(normalized_tensor,classesList,p):
     _, H, W = normalized_tensor.shape
 
     
-    maxloss = 10
+    maxloss = 1000
     totalPixels = H*W
     NumberOfPixels = p*totalPixels
-    loss = maxloss*torch.square(torch.abs(ExpectedPixels-NumberOfPixels)/totalPixels)
+  
+    loss = maxloss*torch.abs(ExpectedPixels-NumberOfPixels)/totalPixels #REMOVED SQUARE!!!!!
     return loss
 
 def alteast_p_percent_is_class(normalized_tensor,classesList,p):

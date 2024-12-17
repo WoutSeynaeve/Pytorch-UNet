@@ -2,7 +2,7 @@ import os
 from LogicLossVOC.LogicConstraints import adjacency, ifXthenXadjecent, ifXthenYatRelation, scribble, image_level_label, about_p_percent_is_class, about_p_percent_is_class_in_bounding_box
 import torch.nn.functional as F
 import torch
-
+import numpy as np
 class_values = {
     "background": 0,
     "aeroplane": 1,
@@ -82,23 +82,31 @@ def calculateLogicLoss(output_tensor,weaklabels):
         objectString = label[0]
         scribbleCoords = [(int(pair[0][1:]), int(pair[1][:-1])) for pair in zip(label[1:][::2], label[1:][1::2])]
         #print(scribbleCoords,class_values[objectString])
-        #loss += scribble(output_tensor,scribbleCoords,class_values[objectString])
+        if len(scribbleCoords) != 0:
+            loss += scribble(output_tensor,np.array(scribbleCoords),class_values[objectString])
     for i in image_level:
         i = i[0]
         info = i.split(',')
         objects = info[0::2]
         percentages = info[1::2]
 
-        # for notObject in class_values.keys(): #IMAGELEVELLABEL NOT !
-        #         if not notObject in objects:
-        #             #loss += image_level_label(output_tensor,[class_values[notObject]],"not")
-        #             """alternative: """
-        #             loss += about_p_percent_is_class(output_tensor,[class_values[notObject]],0)
-
-        # for i in range(len(objects)):
-        #     #print([class_values[objects[i]]],int(percentages[i].replace('%','')))
-        #     if objects[i] != "background":
-        #         loss += about_p_percent_is_class(output_tensor,[class_values[objects[i]]],int(percentages[i].replace('%',''))/100)
+        for notObject in class_values.keys(): #IMAGELEVELLABEL NOT !
+                if not notObject in objects:
+                    #loss += image_level_label(output_tensor,[class_values[notObject]],"not")
+                    """alternative: """
+                    loss += about_p_percent_is_class(output_tensor,[class_values[notObject]],0)/10
+        """
+        for i in range(len(objects)):
+            #print([class_values[objects[i]]],int(percentages[i].replace('%','')))
+            if objects[i] != "background":
+                print([class_values[objects[i]]],int(percentages[i].replace('%',''))/100)
+                loss += about_p_percent_is_class(output_tensor,[class_values[objects[i]]],int(percentages[i].replace('%',''))/100)
+        """
+        for i in range(len(objects)):
+            #print([class_values[objects[i]]],int(percentages[i].replace('%','')))
+            if objects[i] == "background":
+                loss += about_p_percent_is_class(output_tensor,[class_values[objects[i]]],int(percentages[i].replace('%',''))/100)/10
+    print(bboxes)
     for i in bboxes:
         i = i[0]
         info = i.split(',')
@@ -106,17 +114,14 @@ def calculateLogicLoss(output_tensor,weaklabels):
         x1,x2,y1,y2 = info[1:-1]
         percentage = int(info[-1].replace('%',''))/100
         #print(class_values[objectt],percentage,x1,x2,y1,y2)
-        #loss += about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[objectt]],percentage,int(x1),int(x2),int(y1),int(y2))
+        loss += about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[objectt]],percentage,int(x1),int(x2),int(y1),int(y2))
     
     #GLOBAL SMOOTHNESS CONSTRAINT
-    globalsmoothness = True   #set to True to enable !!!
+    globalsmoothness = False   #set to True to enable !!!
     if globalsmoothness:
         for i in range(0,21):
             loss += ifXthenXadjecent(output_tensor, i)
-        #Average loss is ong: 0.000375: so if we want to scale all the losses to where the average should be == 1
-        if loss < 0.1:
-            loss /= 0.000375
-    
+
     #IMAGE LEVEL LABEL NOT for all classes which should not be in the image
     # --> to do !! 
     #but: Maybe this forces too much prediction of background?   

@@ -18,10 +18,17 @@ from unet import UNet
 from utils.data_loading import WeakLabelDataset,BasicDataset
 import numpy as np 
 
-dir_img = Path('../../datasetPascalVOC/JPEGImages/')
-dir_mask = Path('../../datasetPascalVOC/segmentationGroundTruth/')
-dir_weaklabel = Path('../../datasetPascalVOC/Dataset1/')
-dir_checkpoint = Path('./checkpoints/')
+debug = True
+if debug:
+    dir_img = Path('../../DebugDataset/JPEGImages/')
+    dir_mask = Path('../../DebugDataset/segmentationGroundTruth/')
+    dir_weaklabel = Path('../../DebugDataset/Dataset1/')
+    dir_checkpoint = Path('./DebugCheckpoints/')
+else:   
+    dir_img = Path('../../datasetPascalVOC/JPEGImages/')
+    dir_mask = Path('../../datasetPascalVOC/segmentationGroundTruth/')
+    dir_weaklabel = Path('../../datasetPascalVOC/Dataset1/')
+    dir_checkpoint = Path('./checkpoints/')
 
 
 def train_model(
@@ -79,82 +86,138 @@ def train_model(
     grad_scaler = torch.cuda.amp.GradScaler(enabled=amp)
 
     global_step = 0
+    if debug:
+        epochs = 1
+            # 5. Begin training
+        for epoch in range(1, epochs + 1):
+            model.train()
+            epoch_loss = 0
+            with tqdm(total=n_train, desc=f'Epoch {epoch}/{epochs}', unit='img') as pbar:
+                for batch in train_loader:
+                    for i in range(500):
+                        images, true_masks, weaklabel = batch['image'], batch['mask'], batch["weaklabel"]
+                        
+                        assert images.shape[1] == model.n_channels, \
+                            f'Network has been defined with {model.n_channels} input channels, ' \
+                            f'but loaded images have {images.shape[1]} channels. Please check that ' \
+                            'the images are loaded correctly.'
 
-    # 5. Begin training
-    for epoch in range(1, epochs + 1):
-        model.train()
-        epoch_loss = 0
-        with tqdm(total=n_train, desc=f'Epoch {epoch}/{epochs}', unit='img') as pbar:
-            for batch in train_loader:
-                images, true_masks, weaklabel = batch['image'], batch['mask'], batch["weaklabel"]
-            
-                assert images.shape[1] == model.n_channels, \
-                    f'Network has been defined with {model.n_channels} input channels, ' \
-                    f'but loaded images have {images.shape[1]} channels. Please check that ' \
-                    'the images are loaded correctly.'
+                        images = images.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
+                        with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
+                            masks_pred = model(images)
+                            #after a while, mask_pred becomes all NAN !! problem!!
 
-                images = images.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
+                            loss = calculateLogicLoss(masks_pred,weaklabel)
+                            if loss.item() > 0 and loss.item() < np.inf:
+                                pass
+                            else:
+                                print(loss,masks_pred)
+                                report = 0
+                                assert(report == 1)
+                        if loss.item() < 8:
+                            break
+                        optimizer.zero_grad(set_to_none=True)
+                        grad_scaler.scale(loss).backward()
+                        grad_scaler.unscale_(optimizer)
+                        torch.nn.utils.clip_grad_norm_(model.parameters(), gradient_clipping)
+                        grad_scaler.step(optimizer)
+                        grad_scaler.update()
+                        
+                        pbar.update(images.shape[0])
+                        global_step += 1
+                        epoch_loss += loss
+                        print("average loss so far:",epoch_loss/(global_step))
+                        # experiment.log({
+                        #     'train loss': loss.item(),
+                        #     'step': global_step,
+                        #     'epoch': epoch
+                        # })
+                        pbar.set_postfix(**{'loss (batch)': loss.item()})
+                    if save_checkpoint:
+                        Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
+                        state_dict = model.state_dict()
+                        state_dict['mask_values'] = dataset.mask_values
+                        torch.save(state_dict, str(dir_checkpoint / 'checkpoint_epoch{}.pth'.format(epoch)))
+                        logging.info(f'Checkpoint {epoch} saved!')
 
-                with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
-                    masks_pred = model(images)
-                    #after a while, mask_pred becomes all NAN !! problem!!
-
-                    loss = calculateLogicLoss(masks_pred,weaklabel)
-                    if loss.item() > 0 and loss.item() < np.inf:
-                        pass
-                    else:
-                        print(loss,masks_pred)
-                        report = 0
-                        assert(report == 1)
-                optimizer.zero_grad(set_to_none=True)
-                grad_scaler.scale(loss).backward()
-                grad_scaler.unscale_(optimizer)
-                torch.nn.utils.clip_grad_norm_(model.parameters(), gradient_clipping)
-                grad_scaler.step(optimizer)
-                grad_scaler.update()
+                   
+    else:
+        # 5. Begin training
+        for epoch in range(1, epochs + 1):
+            model.train()
+            epoch_loss = 0
+            with tqdm(total=n_train, desc=f'Epoch {epoch}/{epochs}', unit='img') as pbar:
+                for batch in train_loader:
                 
-                pbar.update(images.shape[0])
-                global_step += 1
-                epoch_loss += loss
-                print("average loss so far:",epoch_loss/(global_step))
-                # experiment.log({
-                #     'train loss': loss.item(),
-                #     'step': global_step,
-                #     'epoch': epoch
-                # })
-                pbar.set_postfix(**{'loss (batch)': loss.item()})
+                    images, true_masks, weaklabel = batch['image'], batch['mask'], batch["weaklabel"]
+                
+                    assert images.shape[1] == model.n_channels, \
+                        f'Network has been defined with {model.n_channels} input channels, ' \
+                        f'but loaded images have {images.shape[1]} channels. Please check that ' \
+                        'the images are loaded correctly.'
 
-                # Evaluation round
-                division_step = (n_train // (5 * batch_size))
-                if division_step > 0:
-                    if global_step % division_step == 0:
-                        # histograms = {}
-                        # for tag, value in model.named_parameters():
-                        #     tag = tag.replace('/', '.')
-                        #     if not (torch.isinf(value) | torch.isnan(value)).any():
-                        #         histograms['Weights/' + tag] = wandb.Histogram(value.data.cpu())
-                        #     if not (torch.isinf(value.grad) | torch.isnan(value.grad)).any():
-                        #         histograms['Gradients/' + tag] = wandb.Histogram(value.grad.data.cpu())
+                    images = images.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
 
-                        val_score = evaluateWeaklySupervised(model, val_loader, device, amp)
-                        scheduler.step(val_score)
+                    with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
+                        masks_pred = model(images)
+                        #after a while, mask_pred becomes all NAN !! problem!!
 
-                        logging.info('Validation overlap score: {}'.format(val_score))
-                        # try:
-                        #     experiment.log({
-                        #         'learning rate': optimizer.param_groups[0]['lr'],
-                        #         'validation Dice': val_score,
-                        #         'images': wandb.Image(images[0].cpu()),
-                        #         'masks': {
-                        #             'true': wandb.Image(true_masks[0].float().cpu()),
-                        #             'pred': wandb.Image(masks_pred.argmax(dim=1)[0].float().cpu()),
-                        #         },
-                        #         'step': global_step,
-                        #         'epoch': epoch,
-                        #         **histograms
-                        #     })
-                        # except:
-                        #     pass
+                        loss = calculateLogicLoss(masks_pred,weaklabel)
+                        if loss.item() > 0 and loss.item() < np.inf:
+                            pass
+                        else:
+                            print(loss,masks_pred)
+                            report = 0
+                            assert(report == 1)
+                    optimizer.zero_grad(set_to_none=True)
+                    grad_scaler.scale(loss).backward()
+                    grad_scaler.unscale_(optimizer)
+                    torch.nn.utils.clip_grad_norm_(model.parameters(), gradient_clipping)
+                    grad_scaler.step(optimizer)
+                    grad_scaler.update()
+                    
+                    pbar.update(images.shape[0])
+                    global_step += 1
+                    epoch_loss += loss
+                    print("average loss so far:",epoch_loss/(global_step))
+                    # experiment.log({
+                    #     'train loss': loss.item(),
+                    #     'step': global_step,
+                    #     'epoch': epoch
+                    # })
+                    pbar.set_postfix(**{'loss (batch)': loss.item()})
+
+                    # Evaluation round
+                    division_step = (n_train // (5 * batch_size))
+                    if division_step > 0:
+                        if global_step % division_step == 0:
+                            # histograms = {}
+                            # for tag, value in model.named_parameters():
+                            #     tag = tag.replace('/', '.')
+                            #     if not (torch.isinf(value) | torch.isnan(value)).any():
+                            #         histograms['Weights/' + tag] = wandb.Histogram(value.data.cpu())
+                            #     if not (torch.isinf(value.grad) | torch.isnan(value.grad)).any():
+                            #         histograms['Gradients/' + tag] = wandb.Histogram(value.grad.data.cpu())
+
+                            val_score = evaluateWeaklySupervised(model, val_loader, device, amp)
+                            scheduler.step(val_score)
+
+                            logging.info('Validation overlap score: {}'.format(val_score))
+                            # try:
+                            #     experiment.log({
+                            #         'learning rate': optimizer.param_groups[0]['lr'],
+                            #         'validation Dice': val_score,
+                            #         'images': wandb.Image(images[0].cpu()),
+                            #         'masks': {
+                            #             'true': wandb.Image(true_masks[0].float().cpu()),
+                            #             'pred': wandb.Image(masks_pred.argmax(dim=1)[0].float().cpu()),
+                            #         },
+                            #         'step': global_step,
+                            #         'epoch': epoch,
+                            #         **histograms
+                            #     })
+                            # except:
+                            #     pass
         print("average loss during this epoch = ",epoch_loss/2622) #pas dit nog aan eventueel
         if save_checkpoint:
             Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
