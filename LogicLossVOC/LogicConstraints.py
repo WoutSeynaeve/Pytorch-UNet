@@ -196,7 +196,7 @@ def area_label(normalized_tensor, class_index, area, option=None):
 def ifXthenXadjecent(normalized_tensor, class_I):
     # Extract probabilities for class I and class J
     probs_I = normalized_tensor[class_I, :, :]  # Shape: (H, W)
-    probs_I = torch.clamp(probs_I, 0, 1 - 1e-7)
+    probs_I = torch.clamp(probs_I, 1e-7, 1 - 1e-7)
 
     # Define adjacency kernel (3x3 neighborhood excluding center)
     adjacency_kernel = torch.tensor([[1, 1, 1],
@@ -231,6 +231,7 @@ def atleast_p_percent_is_class_in_bounding_box(normalized_tensor,classesList,p,x
     return alteast_p_percent_is_class(bounding_box_tensor,classesList,p)
 
 def about_p_percent_is_class(normalized_tensor,classesList,p,single=None):
+    assert(p <= 1)
     ExpectedPixels = 0
     for classs in classesList:
         ExpectedPixels += normalized_tensor[classs].sum()
@@ -249,6 +250,7 @@ def about_p_percent_is_class(normalized_tensor,classesList,p,single=None):
     return loss
 
 def alteast_p_percent_is_class(normalized_tensor,classesList,p):
+    assert(p <= 1)
     ExpectedPixels = 0
     for classs in classesList:
         ExpectedPixels += normalized_tensor[classs].sum()

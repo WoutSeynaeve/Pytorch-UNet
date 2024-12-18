@@ -129,9 +129,8 @@ def mask_to_image(mask: np.ndarray, mask_values):
     # Ensure there are enough colors for all classes (21 classes)
 
     # Map class labels to RGB colors
-    mask_values.pop()
+    mask_values = range(0,21)
     color_map = {cls: manual_colors[i] for i, cls in enumerate(mask_values)}
-
     # Create an RGB output array
     h, w = mask.shape
     out = np.zeros((h, w, 3), dtype=np.uint8)

@@ -1,11 +1,11 @@
 #!/bin/bash -l
 #SBATCH --account=intro_vsc37115 
 #SBATCH --cluster=wice
-#SBATCH --partition=batch_sapphirerapids
+#SBATCH --partition=interactive
 #SBATCH --nodes=1
 #SBATCH --ntasks=7
 #SBATCH --gpus-per-node=1
-#SBATCH --time=02:00:00
+#SBATCH --time=05:00:00
 #SBATCH --job-name=weakSegmentation
 #SBATCH --output=%x.log
 #SBATCH --mail-type=BEGIN,FAIL,END
@@ -20,5 +20,5 @@ echo The node architecture is $VSC_ARCH_LOCAL
 echo Current path is $(pwd)
 
 
-python trainWeaklySupervisedV2.py
+python trainWeaklySupervised.py --load ./savedModels/modelEpoch50.pth
 
