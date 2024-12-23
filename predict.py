@@ -53,9 +53,13 @@ def predict_img(net,
         output = F.interpolate(output, (full_img.size[1], full_img.size[0]), mode='bilinear')
 
         #remove background: output = output[:, 1:, :, :]
-        #softmax for probs: output = F.softmax(output, dim=1)
+        #softmax for probs: 
+        output = F.softmax(output, dim=1)  # Compute softmax over the class dimension
         if net.n_classes > 1:
-            mask = output.argmax(dim=1)    
+            mask = output.argmax(dim=1)  # Assign pixels to the class with the highest probability
+            # Create a condition where the max probability must be above 0.5
+            max_probs, _ = output.max(dim=1)  # Get the maximum probability for each pixel
+            mask[max_probs <= 0.2] = 0  # Set mask to 0 for pixels where no class has prob > th
         else:
             mask = torch.sigmoid(output) > out_threshold
 

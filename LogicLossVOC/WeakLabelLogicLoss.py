@@ -1,5 +1,5 @@
 import os
-from LogicLossVOC.LogicConstraints import adjacency, ifXthenXadjecent, ifXthenYatRelation, scribble, image_level_label, about_p_percent_is_class, about_p_percent_is_class_in_bounding_box
+from LogicLossVOC.LogicConstraints import adjacency, ifXthenXadjecent,atmost_p_percent_is_class_in_bounding_box, ifXthenYatRelation, scribble, image_level_label, about_p_percent_is_class, about_p_percent_is_class_in_bounding_box
 import torch.nn.functional as F
 import torch
 import random
@@ -120,10 +120,10 @@ def parse_data(data):
 def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
    
     #             ImageLevelLoss, Adjacencies, BBoxObject, OutsideBBoxNotObject, BBoxBackground, Smoothness, Scribbles, Relations
-    configuration = [[False,1],   [True,1] ,    [True,1],        [True,1] ,        [True,15],     [False,100], [True,1],  [False,1]]
+    configuration = [[True,5],   [False,1] ,    [True,1],        [True,1] ,        [True,10],     [False,100], [True,1],  [False,1]]
     
     #             Scr. Objects, Scr. Background, Scr.NOT objects, Scr.NOT Background   
-    ScribbleTypes = [[True,1],    [True,50],         [True,10],       [True,1]]   
+    ScribbleTypes = [[True,5],    [True,10],         [True,10],       [True,1]]   
 
     output_tensor = output_tensor[0,:,:,:]
     output_tensor = F.softmax(output_tensor, dim=0)
@@ -136,7 +136,7 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
             i = i[0]
             objects = i.split(',')
             addloss = adjacency(output_tensor, class_values[objects[0]], class_values[objects[1]])
-            if addloss > 1e-7:
+            if addloss > 0.1:
                 loss += addloss
                 if printLosses:
                     print("loss for adjacency between",objects,": ",addloss)
@@ -178,7 +178,7 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
             else:
                 if len(scribbleCoords) != 0:
                     if ScribbleTypes[0][0]:
-                        addloss = scribble(output_tensor,np.array(scribbleCoords),class_values[objectString])
+                        addloss = scribble(output_tensor,np.array(scribbleCoords),class_values[objectString])/ScribbleTypes[0][1]
                         if printLosses:
                             print("loss for scribbles for class",objectString,": ",addloss.item())
                         loss += addloss
@@ -193,7 +193,6 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
             info = i.split(',')
             objects = info[0::2]
             percentages = info[1::2]
-            print("shoundt")
             for notObject in class_values.keys(): #IMAGELEVELLABEL NOT !
                     if not notObject in objects:
                         #loss += image_level_label(output_tensor,[class_values[notObject]],"not")
@@ -203,19 +202,19 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
                             print("loss to not predict other classes in the image",addloss.item())
                         loss += addloss
 
-            for i in range(len(objects)):
-                if objects[i] != "background":
-                    print([class_values[objects[i]]],int(percentages[i].replace('%',''))/100)
-                    loss += about_p_percent_is_class(output_tensor,[class_values[objects[i]]],int(percentages[i].replace('%',''))/100)
+            # for i in range(len(objects)):
+            #     if objects[i] != "background":
+            #         print([class_values[objects[i]]],int(percentages[i].replace('%',''))/100)
+            #         loss += about_p_percent_is_class(output_tensor,[class_values[objects[i]]],int(percentages[i].replace('%',''))/100)
     
-            #I DONT THINK YOU WOULD EVEN WANT THIS:
-            for i in range(len(objects)):
-                if objects[i] == "background":
-                    if random.random() <= 1:
-                        addloss = about_p_percent_is_class(output_tensor,[class_values[objects[i]]],int(percentages[i].replace('%',''))/100)
-                        if printLosses:
-                            print("loss to predict x percentage background in the image",addloss.item())
-                        loss += addloss
+            # #I DONT THINK YOU WOULD EVEN WANT THIS:
+            # for i in range(len(objects)):
+            #     if objects[i] == "background":
+            #         if random.random() <= 1:
+            #             addloss = about_p_percent_is_class(output_tensor,[class_values[objects[i]]],int(percentages[i].replace('%',''))/100)
+            #             if printLosses:
+            #                 print("loss to predict x percentage background in the image",addloss.item())
+            #             loss += addloss
         
     addloss = outsideBoundingBoxes(output_tensor,bboxes,configuration,printLosses)
     
@@ -228,17 +227,27 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
             objectt = info[0]
             x1,x2,y1,y2 = info[1:-1]
             percentage = int(info[-1].replace('%',''))/100
-            addloss = about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[objectt]],percentage,int(x1),int(x2),int(y1),int(y2))
+            addloss = about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[objectt]],percentage,int(x1),int(x2),int(y1),int(y2))/2
             if printLosses:
                 print("loss for boundingboxes for",objectt," : ",addloss.item())
             loss += addloss
+            addloss = atmost_p_percent_is_class_in_bounding_box(output_tensor,[class_values['background']],1-percentage,int(x1),int(x2),int(y1),int(y2))
+            if addloss != 0:
+                if printLosses:
+                    print("loss for background to not take in boundingbox",objectt," : ",addloss.item())
+                loss += addloss
+            
     
     #GLOBAL SMOOTHNESS CONSTRAINT
     if configuration[5][0]:
-        for i in range(0,21):
-            if loss != np.inf:
-                addloss = ifXthenXadjecent(output_tensor, i)/configuration[5][1]
-                if addloss > 1e-7:
-                    loss += addloss  
+        for i in image_level:
+            i = i[0]
+            info = i.split(',')
+            objects = info[0::2]
+            for i in objects:
+                if loss != np.inf:
+                    addloss = ifXthenXadjecent(output_tensor, class_values[i])/configuration[5][1]
+                    if addloss > 0.1:
+                        loss += addloss  
 
     return loss

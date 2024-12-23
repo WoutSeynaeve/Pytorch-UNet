@@ -182,7 +182,8 @@ def train_model(
                         pbar.update(images.shape[0])
                         pbar.set_postfix(**{'loss (batch)': loss.item()})
                     global_step += 1
-                    epoch_loss += loss.detach()  
+                    
+                    epoch_loss += loss.detach() 
                     del images, true_masks, weaklabel, masks_pred, loss  # Free memory
                     torch.cuda.empty_cache()  # Clear GPU memory
                     # experiment.log({
@@ -236,7 +237,7 @@ def train_model(
 def get_args():
     #note: Batch size can be upped, but the images must be resized (scaled or padded) to have the same format!!
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')
-    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=50, help='Number of epochs')
+    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=180, help='Number of epochs')
     parser.add_argument('--batch-size', '-b', dest='batch_size', metavar='B', type=int, default=1, help='Batch size')
     parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-8,
                         help='Learning rate', dest='lr')

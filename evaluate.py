@@ -59,8 +59,22 @@ def evaluateWeaklySupervised(net, dataloader, device, amp):
 
             # predict the mask
             mask_pred = net(image)
-            mask_pred = F.one_hot(mask_pred.argmax(dim=1), net.n_classes).permute(0, 3, 1, 2).float()
-            mask_pred = (mask_pred == mask_pred.max(dim=1, keepdim=True)[0]).float()  # Create one-hot tensor
+            # Compute softmax probabilities
+            mask_pred = F.softmax(mask_pred, dim=1)
+
+            # Get the class predictions
+            argmax_mask = mask_pred.argmax(dim=1)  # Class with the highest probability for each pixel
+            max_probs, _ = mask_pred.max(dim=1)    # Maximum probability for each pixel
+
+            # Create a mask for ambiguous pixels
+            ambiguous_pixels = max_probs <= 0.3
+            argmax_mask[ambiguous_pixels] = 0  # Assign ambiguous pixels to class 0
+
+            # Convert to one-hot encoding
+            mask_pred = F.one_hot(argmax_mask, net.n_classes).permute(0, 3, 1, 2).float()
+
+            # Ensure one-hot consistency (this step might now be redundant due to the above logic)
+            mask_pred = (mask_pred == mask_pred.max(dim=1, keepdim=True)[0]).float()
 
             # Get the class indices by taking the argmax over the class dimension (dim=1)
             long_tensor = mask_pred.argmax(dim=1).squeeze(0)  # Shape: [250, 198]

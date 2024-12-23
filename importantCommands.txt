@@ -4,6 +4,8 @@ cd SegmentationModel/Pytorch-UNet/
 
 train: python trainWeaklySupervisedV2.py --classes 21 --scale 1
 
-predict: python predict.py -i ./testImages/2007_001834.jpg -o output.jpg --classes 21 --scale 1 -m './checkpoints/checkpoint_epoch1.pth'
-or 
+predict: 
+python predict.py -i ./testImages/2007_001834.jpg -o output.jpg --classes 21 --scale 1 -m './checkpoints/checkpoint_epoch1.pth'
+python predict.py -i ./testImages/2007_001834.jpg -o output.jpg --classes 21 --scale 1 -m './...'
+
 python predict.py -i ../../DebugDataset/JPEGImages/2007_001185.jpg -o output.jpg --classes 21 --scale 1 -m './DebugCheckpoints/checkpoint_epoch1.pth'
