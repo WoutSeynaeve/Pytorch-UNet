@@ -41,7 +41,7 @@ def evaluate(net, dataloader, device, amp):
     return dice_score / max(num_val_batches, 1)
 
 @torch.inference_mode()
-def evaluateWeaklySupervised(net, dataloader, device, amp):
+def evaluateWeaklySupervised2(net, dataloader, device, amp):
     net.eval()
     num_val_batches = len(dataloader)
     overlap_score = 0
@@ -61,7 +61,6 @@ def evaluateWeaklySupervised(net, dataloader, device, amp):
             mask_pred = net(image)
             # Compute softmax probabilities
             mask_pred = F.softmax(mask_pred, dim=1)
-
             # Get the class predictions
             argmax_mask = mask_pred.argmax(dim=1)  # Class with the highest probability for each pixel
             max_probs, _ = mask_pred.max(dim=1)    # Maximum probability for each pixel
@@ -92,3 +91,61 @@ def evaluateWeaklySupervised(net, dataloader, device, amp):
 
     net.train()
     return overlap_score / max(num_val_batches, 1)
+
+@torch.inference_mode()
+def evaluateWeaklySupervised(net, dataloader, device, amp):
+    net.eval()  # Set the model to evaluation mode
+    num_val_batches = len(dataloader)
+    overlap_score = 0
+    num_classes = 21  # Pascal VOC
+    # Initialize IoU accumulators
+    iou_per_class = torch.zeros(num_classes, device=device)
+    valid_classes = torch.zeros(num_classes, device=device)  # To track classes present in the dataset
+
+    # Iterate over the validation set
+    with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
+        for batch in dataloader:
+            image, mask_true = batch['image'], batch['mask']
+
+            # Move images and labels to correct device and type
+            image = image.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
+            mask_true = mask_true.to(device=device, dtype=torch.long)
+
+            # Predict the mask
+            mask_pred = net(image)
+
+            # Compute softmax probabilities
+            mask_pred = F.softmax(mask_pred, dim=1)
+
+            # Get predicted class per pixel (argmax over class dimension)
+            mask_pred_class = torch.argmax(mask_pred, dim=1)
+
+            # Flatten the masks for easier processing
+            mask_pred_class = mask_pred_class.view(-1)
+            mask_true = mask_true.view(-1)
+         
+            # Compute IoU for each class
+            for cls in range(num_classes):
+                # Binary masks for the current class
+                pred_mask = (mask_pred_class == cls)
+                true_mask = (mask_true == cls)
+
+                # Intersection and union
+                intersection = (pred_mask & true_mask).sum().float()
+                union = (pred_mask | true_mask).sum().float()
+
+                if union > 0:  # Avoid division by zero
+                    iou_per_class[cls] += intersection / union
+                    valid_classes[cls] += 1
+    missing_classes = [cls for cls in range(num_classes) if valid_classes[cls] == 0]
+
+    if missing_classes:
+        print(f"Warning: The following classes are not present in the evaluation set: {missing_classes}")
+    # Compute mean IoU, ignoring classes not present in the ground truth
+    mean_iou = (iou_per_class / valid_classes.clamp(min=1)).nanmean().item()
+
+    # Convert IoU scores to a dictionary for per-class analysis
+    per_class_iou = {cls: (iou_per_class[cls] / valid_classes[cls]).item() if valid_classes[cls] > 0 else None
+                     for cls in range(num_classes)}
+    print(per_class_iou)
+    return mean_iou

@@ -120,7 +120,7 @@ def parse_data(data):
 def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
    
     #             ImageLevelLoss, Adjacencies, BBoxObject, OutsideBBoxNotObject, BBoxBackground, Smoothness, Scribbles, Relations
-    configuration = [[True,5],   [False,1] ,    [True,1],        [True,1] ,        [True,10],     [False,100], [True,1],  [False,1]]
+    configuration = [[True,5],   [False,1] ,    [True,0.5],        [True,1] ,        [True,10],     [False,100], [False,1],  [False,1]]
     
     #             Scr. Objects, Scr. Background, Scr.NOT objects, Scr.NOT Background   
     ScribbleTypes = [[True,5],    [True,10],         [True,10],       [True,1]]   
@@ -227,7 +227,7 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
             objectt = info[0]
             x1,x2,y1,y2 = info[1:-1]
             percentage = int(info[-1].replace('%',''))/100
-            addloss = about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[objectt]],percentage,int(x1),int(x2),int(y1),int(y2))/2
+            addloss = about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[objectt]],percentage,int(x1),int(x2),int(y1),int(y2))/configuration[2][1]
             if printLosses:
                 print("loss for boundingboxes for",objectt," : ",addloss.item())
             loss += addloss
@@ -249,5 +249,6 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
                     addloss = ifXthenXadjecent(output_tensor, class_values[i])/configuration[5][1]
                     if addloss > 0.1:
                         loss += addloss  
-
+    # if loss.item() < 22:
+    #     print(weaklabels[0][3],loss)
     return loss

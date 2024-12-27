@@ -44,6 +44,7 @@ def train_model(
         weight_decay: float = 1e-8,
         momentum: float = 0.999,
         gradient_clipping: float = 1.0,
+        configuration: int = 0,
 ):
     # 1. Create dataset
     # try:
@@ -86,6 +87,12 @@ def train_model(
     grad_scaler = torch.cuda.amp.GradScaler(enabled=amp)
 
     global_step = 0
+
+    #             ImageLevelLoss, Adjacencies, BBoxObject, OutsideBBoxNotObject, BBoxBackground, Smoothness, Scribbles, Relations
+    configuration1 = [[True,5],   [False,1] ,    [True,0.1],        [True,1] ,        [True,10],     [False,100], [False,1],  [False,1]]
+    
+    configurations = [configuration1]
+    configuration_instance = configurations[configuration]
     if debug:
         epochs = 1
             # 5. Begin training
@@ -207,7 +214,8 @@ def train_model(
 
                             val_score = evaluateWeaklySupervised(model, val_loader, device, amp)
                             scheduler.step(val_score)
-
+                            if epoch%10 == 5:
+                                print("TRAIN EVAL:",evaluateWeaklySupervised(model,train_loader,device,amp))
                             logging.info('Validation overlap score: {}'.format(val_score))
                             print( " new lr: ", optimizer.param_groups[0]['lr'])
                             # try:
@@ -239,7 +247,7 @@ def get_args():
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')
     parser.add_argument('--epochs', '-e', metavar='E', type=int, default=180, help='Number of epochs')
     parser.add_argument('--batch-size', '-b', dest='batch_size', metavar='B', type=int, default=1, help='Batch size')
-    parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-8,
+    parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-6,
                         help='Learning rate', dest='lr')
     parser.add_argument('--load', '-f', type=str, default=False, help='Load model from a .pth file')
     parser.add_argument('--scale', '-s', type=float, default=1, help='Downscaling factor of the images')
@@ -248,6 +256,7 @@ def get_args():
     parser.add_argument('--amp', action='store_true', default=False, help='Use mixed precision')
     parser.add_argument('--bilinear', action='store_true', default=False, help='Use bilinear upsampling')
     parser.add_argument('--classes', '-c', type=int, default=21, help='Number of classes')
+    parser.add_argument('--configuration', '-conf', dest='config', type=int, default=0, help='configuration id')
 
     return parser.parse_args()
 
@@ -286,7 +295,8 @@ if __name__ == '__main__':
             device=device,
             img_scale=args.scale,
             val_percent=args.val / 100,
-            amp=args.amp
+            amp=args.amp,
+            configuration=args.config
         )
     except torch.cuda.OutOfMemoryError:
         logging.error('Detected OutOfMemoryError! '
@@ -302,5 +312,6 @@ if __name__ == '__main__':
             device=device,
             img_scale=args.scale,
             val_percent=args.val / 100,
-            amp=args.amp
+            amp=args.amp,
+            configuration=arg.config
         )
