@@ -148,4 +148,8 @@ def evaluateWeaklySupervised(net, dataloader, device, amp):
     per_class_iou = {cls: (iou_per_class[cls] / valid_classes[cls]).item() if valid_classes[cls] > 0 else None
                      for cls in range(num_classes)}
     print(per_class_iou)
+
+    
+    net.train()
+
     return mean_iou

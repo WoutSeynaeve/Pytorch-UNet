@@ -120,7 +120,7 @@ def parse_data(data):
 def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
    
     #             ImageLevelLoss, Adjacencies, BBoxObject, OutsideBBoxNotObject, BBoxBackground, Smoothness, Scribbles, Relations
-    configuration = [[True,5],   [False,1] ,    [True,0.5],        [True,1] ,        [True,10],     [False,100], [False,1],  [False,1]]
+    configuration = [[True,5],   [False,1] ,    [True,1],        [True,1] ,        [True,10],     [False,100], [True,1],  [False,1]]
     
     #             Scr. Objects, Scr. Background, Scr.NOT objects, Scr.NOT Background   
     ScribbleTypes = [[True,5],    [True,10],         [True,10],       [True,1]]   

@@ -13,7 +13,7 @@ from torch import optim
 from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
 from LogicLossVOC.WeakLabelLogicLoss import calculateLogicLoss
-from evaluate import evaluate, evaluateWeaklySupervised
+from evaluate import evaluate, evaluateWeaklySupervised,evaluateWeaklySupervised2
 from unet import UNet
 from utils.data_loading import WeakLabelDataset,BasicDataset
 import numpy as np 
@@ -212,12 +212,16 @@ def train_model(
                             #     if not (torch.isinf(value.grad) | torch.isnan(value.grad)).any():
                             #         histograms['Gradients/' + tag] = wandb.Histogram(value.grad.data.cpu())
 
+                            #val_score = evaluateWeaklySupervised2(model, val_loader, device, amp)
+                          
                             val_score = evaluateWeaklySupervised(model, val_loader, device, amp)
-                            scheduler.step(val_score)
                             if epoch%10 == 5:
                                 print("TRAIN EVAL:",evaluateWeaklySupervised(model,train_loader,device,amp))
+                                
                             logging.info('Validation overlap score: {}'.format(val_score))
                             print( " new lr: ", optimizer.param_groups[0]['lr'])
+                            scheduler.step(val_score)
+
                             # try:
                             #     experiment.log({
                             #         'learning rate': optimizer.param_groups[0]['lr'],
