@@ -93,7 +93,7 @@ def evaluateWeaklySupervised2(net, dataloader, device, amp):
     return overlap_score / max(num_val_batches, 1)
 
 @torch.inference_mode()
-def evaluateWeaklySupervised(net, dataloader, device, amp):
+def evaluateWeaklySupervised3(net, dataloader, device, amp):
     net.eval()  # Set the model to evaluation mode
     num_val_batches = len(dataloader)
     overlap_score = 0
@@ -137,6 +137,7 @@ def evaluateWeaklySupervised(net, dataloader, device, amp):
                 if union > 0:  # Avoid division by zero
                     iou_per_class[cls] += intersection / union
                     valid_classes[cls] += 1
+
     missing_classes = [cls for cls in range(num_classes) if valid_classes[cls] == 0]
 
     if missing_classes:
@@ -153,3 +154,70 @@ def evaluateWeaklySupervised(net, dataloader, device, amp):
     net.train()
 
     return mean_iou
+@torch.inference_mode()
+def evaluateWeaklySupervised(net, dataloader, device, amp):
+    net.eval()  # Set the model to evaluation mode
+    num_classes = 21  # Pascal VOC
+
+    # Initialize IoU accumulators
+    iou_per_class = torch.zeros(num_classes, device=device)  # Stores cumulative IoU for each class
+    valid_classes = torch.zeros(num_classes, device=device)  # Tracks the count of valid images per class
+
+    # Iterate over the validation set
+    with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
+        valsize = 0
+        for batch in dataloader:
+            valsize += 1
+            image, mask_true = batch['image'], batch['mask']
+
+            # Move data to device and ensure correct data types
+            image = image.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
+            mask_true = mask_true.to(device=device, dtype=torch.long)
+
+            # Predict the mask
+            mask_pred = net(image)
+
+            # Compute softmax probabilities and get class predictions
+            mask_pred = F.softmax(mask_pred, dim=1)
+            mask_pred_class = torch.argmax(mask_pred, dim=1)
+
+            # Flatten masks for easier processing
+            mask_pred_class = mask_pred_class.view(-1)
+            mask_true = mask_true.view(-1)
+
+            # Compute IoU for each class
+            for cls in range(num_classes):
+                # Binary masks for the current class
+                pred_mask = (mask_pred_class == cls)
+                true_mask = (mask_true == cls)
+
+                # Only compute IoU if the ground truth mask is not empty
+                if true_mask.sum() > 0:
+                    intersection = (pred_mask & true_mask).sum().float()
+                    union = (pred_mask | true_mask).sum().float()
+
+
+                    iou_per_class[cls] += intersection / union
+                    valid_classes[cls] += 1
+
+    # Warn about classes not present in the evaluation set
+    missing_classes = [cls for cls in range(num_classes) if valid_classes[cls] == 0]
+    if missing_classes:
+        print(f"Warning: The following classes are not present in the evaluation set: {missing_classes}")
+
+    weights = valid_classes/valid_classes.sum()
+    print(weights,weights.sum())
+
+    meanIoUclasses = [iou_per_class[cl]/valid_classes[cl] for cl in range(num_classes) if valid_classes[cls] != 0 else "none"]
+
+    totalWeightedMeanIoU = 0
+    for cl in range(0,21):
+        if meanIoUclasses[cl] !== "none":
+            totalWeightedMeanIoU += meanIoUclasses[cl]*weights[cl]
+
+    # Print per-class IoU for debugging or analysis
+
+    # Restore model to training mode
+    net.train()
+
+    return totalWeightedMeanIoU

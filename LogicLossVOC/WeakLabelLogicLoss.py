@@ -84,7 +84,7 @@ def outsideBoundingBoxes(output_tensor,bounding_boxes,configuration,printLosses)
     
     if configuration[3][0]:
         for vv in non_bbox_regions.keys():
-            addloss = about_p_percent_is_class(non_bbox_regions[vv],[class_values[vv]],0,"single")
+            addloss = about_p_percent_is_class(non_bbox_regions[vv],[class_values[vv]],0,"single")/configuration[3][1]
             partloss += addloss
             if printLosses:
                 print("Loss for parts outside of bbox to be NOT for",vv," : ",addloss)
@@ -120,7 +120,7 @@ def parse_data(data):
 def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
    
     #             ImageLevelLoss, Adjacencies, BBoxObject, OutsideBBoxNotObject, BBoxBackground, Smoothness, Scribbles, Relations
-    configuration = [[True,5],   [False,1] ,    [True,1],        [True,1] ,        [True,10],     [False,100], [True,1],  [False,1]]
+    configuration = [[True,5],   [False,1] ,    [True,1,0.5],        [True,2] ,        [True,20],     [False,100], [True,1],  [False,1]]
     
     #             Scr. Objects, Scr. Background, Scr.NOT objects, Scr.NOT Background   
     ScribbleTypes = [[True,5],    [True,10],         [True,10],       [True,1]]   
@@ -231,7 +231,7 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
             if printLosses:
                 print("loss for boundingboxes for",objectt," : ",addloss.item())
             loss += addloss
-            addloss = atmost_p_percent_is_class_in_bounding_box(output_tensor,[class_values['background']],1-percentage,int(x1),int(x2),int(y1),int(y2))
+            addloss = atmost_p_percent_is_class_in_bounding_box(output_tensor,[class_values['background']],1-percentage,int(x1),int(x2),int(y1),int(y2))/configuration[2][2]
             if addloss != 0:
                 if printLosses:
                     print("loss for background to not take in boundingbox",objectt," : ",addloss.item())

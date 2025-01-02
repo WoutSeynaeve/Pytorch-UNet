@@ -1,11 +1,11 @@
 #!/bin/bash -l
 #SBATCH --account=intro_vsc37115 
 #SBATCH --cluster=wice
-#SBATCH --partition=gpu_a100
+#SBATCH --partition=interactive
 #SBATCH --nodes=1
-#SBATCH --ntasks=18
+#SBATCH --ntasks=16
 #SBATCH --gpus-per-node=1
-#SBATCH --time=16:00:00
+#SBATCH --time=17:00:00
 #SBATCH --job-name=weakSegmentation
 #SBATCH --output=%x.log
 #SBATCH --mail-type=BEGIN,FAIL,END
@@ -20,4 +20,4 @@ echo The node architecture is $VSC_ARCH_LOCAL
 echo Current path is $(pwd)
 
 
-python trainWeaklySupervised.py -l 1e-9
+python trainWeaklySupervised.py -l 1e-8

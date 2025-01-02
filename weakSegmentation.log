@@ -1,31 +1,30 @@
-SLURM_JOB_ID: 63342998
+SLURM_JOB_ID: 63347366
 SLURM_JOB_USER: vsc37115
 SLURM_JOB_ACCOUNT: intro_vsc37115
 SLURM_JOB_NAME: weakSegmentation
 SLURM_CLUSTER_NAME: wice
-SLURM_JOB_PARTITION: gpu_a100
+SLURM_JOB_PARTITION: batch_icelake
 SLURM_NNODES: 1
-SLURM_NODELIST: k28g32
-SLURM_JOB_CPUS_PER_NODE: 18
-SLURM_JOB_GPUS: 2
-Date: Sat Dec 28 10:53:24 CET 2024
-Walltime: 00-03:00:00
+SLURM_NODELIST: p33c20n4
+SLURM_JOB_CPUS_PER_NODE: 8
+Date: Wed Jan  1 22:49:13 CET 2025
+Walltime: 00-16:00:00
 ========================================================================
-Job starting at 2024.12.28-10:53:29
-Job is running on k28g32
+Job starting at 2025.01.01-22:49:21
+Job is running on p33c20n4
 Job is running on wice cluster
 The node architecture is icelake
 Current path is /lustre1/scratch/371/vsc37115/Thesis/SegmentationModel/Pytorch-UNet
-INFO: Using device cuda
+INFO: Using device cpu
 INFO: Network:
 	3 input channels
 	21 output channels (classes)
 	Transposed conv upscaling
 INFO: Creating dataset with 2913 examples
 INFO: Scanning mask files to determine unique values
-  0%|          | 0/2913 [00:00<?, ?it/s]  0%|          | 1/2913 [00:00<09:43,  4.99it/s]  9%|▉         | 270/2913 [00:00<00:02, 1096.19it/s] 21%|██        | 607/2913 [00:00<00:01, 1911.97it/s] 34%|███▍      | 990/2913 [00:00<00:00, 2549.11it/s] 45%|████▌     | 1319/2913 [00:00<00:00, 2783.87it/s] 59%|█████▉    | 1726/2913 [00:00<00:00, 3068.88it/s] 75%|███████▍  | 2174/2913 [00:00<00:00, 3425.65it/s] 87%|████████▋ | 2528/2913 [00:00<00:00, 3401.54it/s]100%|██████████| 2913/2913 [00:01<00:00, 2861.79it/s]
+  0%|          | 0/2913 [00:00<?, ?it/s]  0%|          | 1/2913 [00:00<12:15,  3.96it/s]  2%|▏         | 69/2913 [00:00<00:11, 247.92it/s]  7%|▋         | 196/2913 [00:00<00:04, 580.89it/s] 10%|█         | 304/2913 [00:00<00:03, 687.08it/s] 15%|█▍        | 435/2913 [00:00<00:02, 855.98it/s] 20%|██        | 596/2913 [00:00<00:02, 1073.69it/s] 28%|██▊       | 825/2913 [00:00<00:01, 1357.00it/s] 34%|███▍      | 985/2913 [00:01<00:01, 1407.24it/s] 39%|███▉      | 1131/2913 [00:01<00:01, 1364.06it/s] 44%|████▎     | 1271/2913 [00:01<00:01, 1368.27it/s] 49%|████▉     | 1423/2913 [00:01<00:01, 1399.52it/s] 54%|█████▎    | 1565/2913 [00:01<00:01, 1238.97it/s] 59%|█████▉    | 1720/2913 [00:01<00:00, 1292.59it/s] 64%|██████▍   | 1868/2913 [00:01<00:00, 1322.46it/s] 71%|███████   | 2065/2913 [00:01<00:00, 1451.57it/s] 78%|███████▊  | 2284/2913 [00:01<00:00, 1641.77it/s] 84%|████████▍ | 2451/2913 [00:02<00:00, 1532.51it/s] 90%|████████▉ | 2608/2913 [00:02<00:00, 1500.97it/s] 95%|█████████▍| 2760/2913 [00:02<00:00, 1388.89it/s]100%|██████████| 2913/2913 [00:02<00:00, 1261.50it/s]
 INFO: Unique mask values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 255]
-/apps/leuven/rocky8/icelake/2023a/software/PyTorch/2.1.2-foss-2023a-CUDA-12.1.1/lib/python3.11/site-packages/torch/utils/data/dataloader.py:557: UserWarning: This DataLoader will create 72 worker processes in total. Our suggested max number of worker in current system is 18, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+/apps/leuven/rocky8/icelake/2023a/software/PyTorch/2.1.2-foss-2023a-CUDA-12.1.1/lib/python3.11/site-packages/torch/utils/data/dataloader.py:557: UserWarning: This DataLoader will create 72 worker processes in total. Our suggested max number of worker in current system is 8, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
   warnings.warn(_create_warning_msg(
 INFO: Starting training:
         Epochs:          180
@@ -34,986 +33,141 @@ INFO: Starting training:
         Training size:   2622
         Validation size: 291
         Checkpoints:     True
-        Device:          cuda
+        Device:          cpu
         Images scaling:  1
         Mixed Precision: False
     
-Epoch 1/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6943145430938075
+Epoch 1/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.011915051378309727
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245]) tensor(1.0000)
+meanIoU for class 0  is:  tensor(8.0375e-05)
+meanIoU for class 1  is:  tensor(0.0008)
+meanIoU for class 2  is:  tensor(0.0275)
+meanIoU for class 3  is:  tensor(7.4824e-06)
+meanIoU for class 4  is:  tensor(0.0010)
+meanIoU for class 5  is:  tensor(0.0117)
+meanIoU for class 6  is:  tensor(0.0322)
+meanIoU for class 7  is:  tensor(0.0710)
+meanIoU for class 8  is:  tensor(0.0038)
+meanIoU for class 9  is:  tensor(0.0061)
+meanIoU for class 10  is:  tensor(0.0767)
+meanIoU for class 11  is:  tensor(0.0050)
+meanIoU for class 12  is:  tensor(1.5150e-05)
+meanIoU for class 13  is:  tensor(0.0893)
+meanIoU for class 14  is:  tensor(0.0056)
+meanIoU for class 15  is:  tensor(0.0156)
+meanIoU for class 16  is:  tensor(0.0014)
+meanIoU for class 17  is:  tensor(0.0791)
+meanIoU for class 18  is:  tensor(0.0238)
+meanIoU for class 19  is:  tensor(0.0031)
+meanIoU for class 20  is:  tensor(0.0091)
  new lr:  1e-08
-INFO: Validation overlap score: 0.6922895357115162
+INFO: Validation overlap score: 0.024651464074850082
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245]) tensor(1.0000)
+meanIoU for class 0  is:  tensor(0.0004)
+meanIoU for class 1  is:  tensor(0.0017)
+meanIoU for class 2  is:  tensor(0.0244)
+meanIoU for class 3  is:  tensor(1.3727e-05)
+meanIoU for class 4  is:  tensor(0.0009)
+meanIoU for class 5  is:  tensor(0.0132)
+meanIoU for class 6  is:  tensor(0.0478)
+meanIoU for class 7  is:  tensor(0.0747)
+meanIoU for class 8  is:  tensor(0.0068)
+meanIoU for class 9  is:  tensor(0.0115)
+meanIoU for class 10  is:  tensor(0.0821)
+meanIoU for class 11  is:  tensor(0.0065)
+meanIoU for class 12  is:  tensor(1.0260e-05)
+meanIoU for class 13  is:  tensor(0.0973)
+meanIoU for class 14  is:  tensor(0.0054)
+meanIoU for class 15  is:  tensor(0.1174)
+meanIoU for class 16  is:  tensor(0.0008)
+meanIoU for class 17  is:  tensor(0.0381)
+meanIoU for class 18  is:  tensor(0.0208)
+meanIoU for class 19  is:  tensor(0.0014)
+meanIoU for class 20  is:  tensor(0.0136)
  new lr:  1e-08
-INFO: Validation overlap score: 0.687852246206753
+INFO: Validation overlap score: 0.026726923882961273
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245]) tensor(1.0000)
+meanIoU for class 0  is:  tensor(0.0039)
+meanIoU for class 1  is:  tensor(0.0012)
+meanIoU for class 2  is:  tensor(0.0170)
+meanIoU for class 3  is:  tensor(1.0332e-05)
+meanIoU for class 4  is:  tensor(0.0009)
+meanIoU for class 5  is:  tensor(0.0077)
+meanIoU for class 6  is:  tensor(0.0159)
+meanIoU for class 7  is:  tensor(0.0548)
+meanIoU for class 8  is:  tensor(0.0104)
+meanIoU for class 9  is:  tensor(0.0169)
+meanIoU for class 10  is:  tensor(0.0461)
+meanIoU for class 11  is:  tensor(0.0061)
+meanIoU for class 12  is:  tensor(1.2765e-05)
+meanIoU for class 13  is:  tensor(0.0802)
+meanIoU for class 14  is:  tensor(0.0022)
+meanIoU for class 15  is:  tensor(0.1469)
+meanIoU for class 16  is:  tensor(0.0005)
+meanIoU for class 17  is:  tensor(0.0210)
+meanIoU for class 18  is:  tensor(0.0242)
+meanIoU for class 19  is:  tensor(0.0002)
+meanIoU for class 20  is:  tensor(0.0104)
  new lr:  1e-08
-INFO: Validation overlap score: 0.6941118062669059
+INFO: Validation overlap score: 0.03437908738851547
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245]) tensor(1.0000)
+meanIoU for class 0  is:  tensor(0.0141)
+meanIoU for class 1  is:  tensor(0.0008)
+meanIoU for class 2  is:  tensor(0.0154)
+meanIoU for class 3  is:  tensor(3.8187e-05)
+meanIoU for class 4  is:  tensor(0.0007)
+meanIoU for class 5  is:  tensor(0.0116)
+meanIoU for class 6  is:  tensor(0.0074)
+meanIoU for class 7  is:  tensor(0.0734)
+meanIoU for class 8  is:  tensor(0.0154)
+meanIoU for class 9  is:  tensor(0.0162)
+meanIoU for class 10  is:  tensor(0.0630)
+meanIoU for class 11  is:  tensor(0.0017)
+meanIoU for class 12  is:  tensor(1.2404e-05)
+meanIoU for class 13  is:  tensor(0.0803)
+meanIoU for class 14  is:  tensor(0.0009)
+meanIoU for class 15  is:  tensor(0.1717)
+meanIoU for class 16  is:  tensor(0.0030)
+meanIoU for class 17  is:  tensor(0.0138)
+meanIoU for class 18  is:  tensor(0.0239)
+meanIoU for class 19  is:  tensor(0.0010)
+meanIoU for class 20  is:  tensor(0.0068)
  new lr:  1e-08
-INFO: Validation overlap score: 0.6916401383700649
-Epoch 1/180:   0%|          | 0/2622 [02:30<?, ?img/s]
+INFO: Validation overlap score: 0.04529885947704315
+Epoch 1/180:   0%|          | 0/2622 [1:29:49<?, ?img/s]
 INFO: Checkpoint 1 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(520.6337, device='cuda:0')
-Epoch 2/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6789118258148125
- new lr:  1e-08
-INFO: Validation overlap score: 0.6837783156545302
- new lr:  1e-08
-INFO: Validation overlap score: 0.6768536791589457
- new lr:  1e-08
-INFO: Validation overlap score: 0.6848161687940052
- new lr:  1e-08
-INFO: Validation overlap score: 0.6924934226929936
-Epoch 2/180:   0%|          | 0/2622 [02:20<?, ?img/s]
-INFO: Checkpoint 2 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(457.0785, device='cuda:0')
-Epoch 3/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6657589767448271
- new lr:  1e-08
-INFO: Validation overlap score: 0.6862564562368638
- new lr:  1e-08
-INFO: Validation overlap score: 0.6876367280368543
- new lr:  1e-08
-INFO: Validation overlap score: 0.6901488103663799
- new lr:  1e-08
-INFO: Validation overlap score: 0.6966519716909456
-Epoch 3/180:   0%|          | 0/2622 [02:21<?, ?img/s]
-INFO: Checkpoint 3 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(450.7096, device='cuda:0')
-Epoch 4/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.679036422719046
- new lr:  1e-08
-INFO: Validation overlap score: 0.6739511045137632
- new lr:  1e-08
-INFO: Validation overlap score: 0.6804836358094134
- new lr:  1e-08
-INFO: Validation overlap score: 0.6883322904558525
- new lr:  1e-08
-INFO: Validation overlap score: 0.6904886584101674
-Epoch 4/180:   0%|          | 0/2622 [02:24<?, ?img/s]
-INFO: Checkpoint 4 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(467.0804, device='cuda:0')
-Epoch 5/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6882296758879911
- new lr:  1e-08
-INFO: Validation overlap score: 0.6913655780742258
- new lr:  1e-08
-INFO: Validation overlap score: 0.6742065571171721
- new lr:  1e-08
-INFO: Validation overlap score: 0.6886780392570594
- new lr:  1e-08
-INFO: Validation overlap score: 0.6891887981662226
-Epoch 5/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 5 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(485.7360, device='cuda:0')
-Epoch 6/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6917916095825201
- new lr:  1e-08
-INFO: Validation overlap score: 0.6626165656955382
- new lr:  1e-08
-INFO: Validation overlap score: 0.6831820540360569
- new lr:  1e-08
-INFO: Validation overlap score: 0.675092120350841
- new lr:  1e-08
-INFO: Validation overlap score: 0.6861308690326935
-Epoch 6/180:   0%|          | 0/2622 [02:21<?, ?img/s]
-INFO: Checkpoint 6 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(481.9989, device='cuda:0')
-Epoch 7/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6871454360866055
- new lr:  1e-08
-INFO: Validation overlap score: 0.6827080351431755
- new lr:  1e-08
-INFO: Validation overlap score: 0.6961034063595471
- new lr:  1e-08
-INFO: Validation overlap score: 0.6922595488208368
- new lr:  1e-08
-INFO: Validation overlap score: 0.6903102177985755
-Epoch 7/180:   0%|          | 0/2622 [02:21<?, ?img/s]
-INFO: Checkpoint 7 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(465.7062, device='cuda:0')
-Epoch 8/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6933139162298125
- new lr:  1e-08
-INFO: Validation overlap score: 0.6797841817806267
- new lr:  1e-08
-INFO: Validation overlap score: 0.6792162275293848
- new lr:  1e-08
-INFO: Validation overlap score: 0.6838538189421814
- new lr:  1e-08
-INFO: Validation overlap score: 0.6979394599513704
-Epoch 8/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 8 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(452.1467, device='cuda:0')
-Epoch 9/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6906484171901781
- new lr:  1e-08
-INFO: Validation overlap score: 0.6855019069567988
- new lr:  1e-08
-INFO: Validation overlap score: 0.7001008395860899
- new lr:  1e-08
-INFO: Validation overlap score: 0.6997443442440934
- new lr:  1e-08
-INFO: Validation overlap score: 0.6899646390165455
-Epoch 9/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 9 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(443.9988, device='cuda:0')
-Epoch 10/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6836623858109987
- new lr:  1e-08
-INFO: Validation overlap score: 0.7006619746806388
- new lr:  1e-08
-INFO: Validation overlap score: 0.7014282044804178
- new lr:  1e-08
-INFO: Validation overlap score: 0.6791089766137174
- new lr:  1e-08
-INFO: Validation overlap score: 0.6787039382940101
-Epoch 10/180:   0%|          | 0/2622 [02:20<?, ?img/s]
-INFO: Checkpoint 10 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(437.0380, device='cuda:0')
-Epoch 11/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6692537256737345
- new lr:  1e-08
-INFO: Validation overlap score: 0.6886352567175
- new lr:  1e-08
-INFO: Validation overlap score: 0.6797609867406464
- new lr:  1e-08
-INFO: Validation overlap score: 0.6930552750467435
- new lr:  1e-08
-INFO: Validation overlap score: 0.6957042042127589
-Epoch 11/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 11 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(412.1707, device='cuda:0')
-Epoch 12/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6883578836354604
- new lr:  1e-08
-INFO: Validation overlap score: 0.6636939091780751
- new lr:  1e-08
-INFO: Validation overlap score: 0.6728764242425407
- new lr:  1e-08
-INFO: Validation overlap score: 0.6724283836807582
- new lr:  1e-08
-INFO: Validation overlap score: 0.6924792246003331
-Epoch 12/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 12 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(410.9461, device='cuda:0')
-Epoch 13/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6910151686148136
- new lr:  1e-08
-INFO: Validation overlap score: 0.6753359327662442
- new lr:  1e-08
-INFO: Validation overlap score: 0.6925770009122149
- new lr:  1e-08
-INFO: Validation overlap score: 0.6873014796384421
- new lr:  1e-08
-INFO: Validation overlap score: 0.6957995080456292
-Epoch 13/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 13 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(403.1758, device='cuda:0')
-Epoch 14/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6923473017143015
- new lr:  1e-08
-INFO: Validation overlap score: 0.6611159485076711
- new lr:  1e-08
-INFO: Validation overlap score: 0.6733969863235336
- new lr:  1e-08
-INFO: Validation overlap score: 0.6798263055710858
- new lr:  1e-08
-INFO: Validation overlap score: 0.6945625046504936
-Epoch 14/180:   0%|          | 0/2622 [02:21<?, ?img/s]
-INFO: Checkpoint 14 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(393.0100, device='cuda:0')
-Epoch 15/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6840244842968446
- new lr:  1e-08
-INFO: Validation overlap score: 0.6403997980339831
- new lr:  1e-08
-INFO: Validation overlap score: 0.6753565894113374
- new lr:  1e-08
-INFO: Validation overlap score: 0.6817535446937552
- new lr:  1e-08
-INFO: Validation overlap score: 0.6819751049132691
-Epoch 15/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 15 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(391.2176, device='cuda:0')
-Epoch 16/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6744827218993833
- new lr:  1e-08
-INFO: Validation overlap score: 0.6764073205465304
- new lr:  1e-08
-INFO: Validation overlap score: 0.6744063758384117
- new lr:  1e-08
-INFO: Validation overlap score: 0.6612792573741212
- new lr:  1e-08
-INFO: Validation overlap score: 0.6858973403003618
-Epoch 16/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 16 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(377.7634, device='cuda:0')
-Epoch 17/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6815491490885359
- new lr:  1e-08
-INFO: Validation overlap score: 0.6507117003714505
- new lr:  1e-08
-INFO: Validation overlap score: 0.6457575611846963
- new lr:  1e-08
-INFO: Validation overlap score: 0.6850785944623636
- new lr:  1e-08
-INFO: Validation overlap score: 0.6922623360996804
-Epoch 17/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 17 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(361.5334, device='cuda:0')
-Epoch 18/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6735746646716013
- new lr:  1e-08
-INFO: Validation overlap score: 0.666567870687783
- new lr:  1e-08
-INFO: Validation overlap score: 0.6871557103220335
- new lr:  1e-08
-INFO: Validation overlap score: 0.6810211928695747
- new lr:  1e-08
-INFO: Validation overlap score: 0.6729319169349277
-Epoch 18/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 18 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(353.7152, device='cuda:0')
-Epoch 19/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6644599548064146
- new lr:  1e-08
-INFO: Validation overlap score: 0.6741690031953693
- new lr:  1e-08
-INFO: Validation overlap score: 0.6655512120817945
- new lr:  1e-08
-INFO: Validation overlap score: 0.674527129587234
- new lr:  1e-08
-INFO: Validation overlap score: 0.6662630178418356
-Epoch 19/180:   0%|          | 0/2622 [02:20<?, ?img/s]
-INFO: Checkpoint 19 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(361.3354, device='cuda:0')
-Epoch 20/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6753928894849167
- new lr:  1e-08
-INFO: Validation overlap score: 0.6809919814473575
- new lr:  1e-08
-INFO: Validation overlap score: 0.6658937056193647
- new lr:  1e-08
-INFO: Validation overlap score: 0.6577300994666582
- new lr:  1e-08
-INFO: Validation overlap score: 0.6855312159022515
-Epoch 20/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 20 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(345.7238, device='cuda:0')
-Epoch 21/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6676537177919113
- new lr:  1e-08
-INFO: Validation overlap score: 0.6908005009504528
- new lr:  1e-08
-INFO: Validation overlap score: 0.6553605910633847
- new lr:  1e-08
-INFO: Validation overlap score: 0.6937421220274725
- new lr:  1e-08
-INFO: Validation overlap score: 0.6850906921313801
-Epoch 21/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 21 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(336.2528, device='cuda:0')
-Epoch 22/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6509850835011587
- new lr:  1e-08
-INFO: Validation overlap score: 0.6539059321034405
- new lr:  1e-08
-INFO: Validation overlap score: 0.6789600788087574
- new lr:  1e-08
-INFO: Validation overlap score: 0.6880594571841132
- new lr:  1e-08
-INFO: Validation overlap score: 0.6863716586502557
-Epoch 22/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 22 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(337.4421, device='cuda:0')
-Epoch 23/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6654847226908936
- new lr:  1e-08
-INFO: Validation overlap score: 0.6758982666169655
- new lr:  1e-08
-INFO: Validation overlap score: 0.6833486529355196
- new lr:  1e-08
-INFO: Validation overlap score: 0.6875383747146302
- new lr:  1e-08
-INFO: Validation overlap score: 0.6821543184649903
-Epoch 23/180:   0%|          | 0/2622 [02:20<?, ?img/s]
-INFO: Checkpoint 23 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(326.6935, device='cuda:0')
-Epoch 24/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6659199548597189
- new lr:  1e-08
-INFO: Validation overlap score: 0.6546818137783366
- new lr:  1e-08
-INFO: Validation overlap score: 0.6589815163684055
- new lr:  1e-08
-INFO: Validation overlap score: 0.6709339774223333
- new lr:  1e-08
-INFO: Validation overlap score: 0.6759947276965449
-Epoch 24/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 24 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(327.7323, device='cuda:0')
-Epoch 25/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.678537792689407
- new lr:  1e-08
-INFO: Validation overlap score: 0.6215743490613204
- new lr:  1e-08
-INFO: Validation overlap score: 0.6612427197780806
- new lr:  1e-08
-INFO: Validation overlap score: 0.6498768020843723
- new lr:  1e-08
-INFO: Validation overlap score: 0.6780194458759732
-Epoch 25/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 25 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(322.3324, device='cuda:0')
-Epoch 26/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6842040516743341
- new lr:  1e-08
-INFO: Validation overlap score: 0.6805230729614746
- new lr:  1e-08
-INFO: Validation overlap score: 0.6690271260709697
- new lr:  1e-08
-INFO: Validation overlap score: 0.624784889506157
- new lr:  1e-08
-INFO: Validation overlap score: 0.6576017004108101
-Epoch 26/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 26 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(312.6026, device='cuda:0')
-Epoch 27/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6296135048378784
- new lr:  1e-08
-INFO: Validation overlap score: 0.6666873420534265
- new lr:  1e-08
-INFO: Validation overlap score: 0.624839750813045
- new lr:  1e-08
-INFO: Validation overlap score: 0.6949050573958564
- new lr:  1e-08
-INFO: Validation overlap score: 0.6351841284390987
-Epoch 27/180:   0%|          | 0/2622 [02:20<?, ?img/s]
-INFO: Checkpoint 27 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(312.6107, device='cuda:0')
-Epoch 28/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6561565637153244
- new lr:  1e-08
-INFO: Validation overlap score: 0.6506038775917181
- new lr:  1e-08
-INFO: Validation overlap score: 0.6780870073439739
- new lr:  1e-08
-INFO: Validation overlap score: 0.6615337318519956
- new lr:  1e-08
-INFO: Validation overlap score: 0.6483073033571652
-Epoch 28/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 28 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(318.6649, device='cuda:0')
-Epoch 29/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.661197335680121
- new lr:  1e-08
-INFO: Validation overlap score: 0.6624031769707031
- new lr:  1e-08
-INFO: Validation overlap score: 0.6631042968315357
- new lr:  1e-08
-INFO: Validation overlap score: 0.6476244814565911
- new lr:  1e-08
-INFO: Validation overlap score: 0.6637099082373672
-Epoch 29/180:   0%|          | 0/2622 [02:24<?, ?img/s]
-INFO: Checkpoint 29 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(314.0301, device='cuda:0')
-Epoch 30/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6663544029253455
- new lr:  1e-08
-INFO: Validation overlap score: 0.6684258303947465
- new lr:  1e-08
-INFO: Validation overlap score: 0.6753272973385054
- new lr:  1e-08
-INFO: Validation overlap score: 0.6624634069009745
- new lr:  1e-08
-INFO: Validation overlap score: 0.6641168758477952
-Epoch 30/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 30 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(308.5072, device='cuda:0')
-Epoch 31/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6892358479938147
- new lr:  1e-08
-INFO: Validation overlap score: 0.6806220179391685
- new lr:  1e-08
-INFO: Validation overlap score: 0.6307851850371999
- new lr:  1e-08
-INFO: Validation overlap score: 0.6569033450482228
- new lr:  1e-08
-INFO: Validation overlap score: 0.6369391471608398
-Epoch 31/180:   0%|          | 0/2622 [02:21<?, ?img/s]
-INFO: Checkpoint 31 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(297.4081, device='cuda:0')
-Epoch 32/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6788279290000597
- new lr:  1e-08
-INFO: Validation overlap score: 0.687904776307623
- new lr:  1e-08
-INFO: Validation overlap score: 0.673544617939446
- new lr:  1e-08
-INFO: Validation overlap score: 0.685885231916335
- new lr:  1e-08
-INFO: Validation overlap score: 0.6670597089883388
-Epoch 32/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 32 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(291.1373, device='cuda:0')
-Epoch 33/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6484838943813265
- new lr:  1e-08
-INFO: Validation overlap score: 0.6897296817441986
- new lr:  1e-08
-INFO: Validation overlap score: 0.6697725692053431
- new lr:  1e-08
-INFO: Validation overlap score: 0.6673347426904845
- new lr:  1e-08
-INFO: Validation overlap score: 0.6609916054608486
-Epoch 33/180:   0%|          | 0/2622 [02:24<?, ?img/s]
-INFO: Checkpoint 33 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(294.5825, device='cuda:0')
-Epoch 34/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6782148437913751
- new lr:  1e-08
-INFO: Validation overlap score: 0.6493455445797173
- new lr:  1e-08
-INFO: Validation overlap score: 0.6936594827350268
- new lr:  1e-08
-INFO: Validation overlap score: 0.6775974707863585
- new lr:  1e-08
-INFO: Validation overlap score: 0.649137364399597
-Epoch 34/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 34 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(292.9442, device='cuda:0')
-Epoch 35/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6712497723420051
- new lr:  1e-08
-INFO: Validation overlap score: 0.6613964079735205
- new lr:  1e-08
-INFO: Validation overlap score: 0.6602389638366568
- new lr:  1e-08
-INFO: Validation overlap score: 0.6791609656001694
- new lr:  1e-08
-INFO: Validation overlap score: 0.6538699574998974
-Epoch 35/180:   0%|          | 0/2622 [02:20<?, ?img/s]
-INFO: Checkpoint 35 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(285.9496, device='cuda:0')
-Epoch 36/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6765584734962978
- new lr:  1e-08
-INFO: Validation overlap score: 0.6871335647513777
- new lr:  1e-08
-INFO: Validation overlap score: 0.6873066180811305
- new lr:  1e-08
-INFO: Validation overlap score: 0.6687747163768486
- new lr:  1e-08
-INFO: Validation overlap score: 0.6823557432088041
-Epoch 36/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 36 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(283.8141, device='cuda:0')
-Epoch 37/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.68624220546527
- new lr:  1e-08
-INFO: Validation overlap score: 0.6700827906938762
- new lr:  1e-08
-INFO: Validation overlap score: 0.6714248024055228
- new lr:  1e-08
-INFO: Validation overlap score: 0.6691793084298212
- new lr:  1e-08
-INFO: Validation overlap score: 0.678334744128677
-Epoch 37/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 37 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(286.7530, device='cuda:0')
-Epoch 38/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6717654962822334
- new lr:  1e-08
-INFO: Validation overlap score: 0.67631482417436
- new lr:  1e-08
-INFO: Validation overlap score: 0.6594170464324378
- new lr:  1e-08
-INFO: Validation overlap score: 0.6444458986322085
- new lr:  1e-08
-INFO: Validation overlap score: 0.6810148349895919
-Epoch 38/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 38 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(278.0424, device='cuda:0')
-Epoch 39/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6743176963013882
- new lr:  1e-08
-INFO: Validation overlap score: 0.641739258984315
- new lr:  1e-08
-INFO: Validation overlap score: 0.6888860214207181
- new lr:  1e-08
-INFO: Validation overlap score: 0.6553499605314633
- new lr:  1e-08
-INFO: Validation overlap score: 0.6823134569777656
-Epoch 39/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 39 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(280.2571, device='cuda:0')
-Epoch 40/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6651978308392554
- new lr:  1e-08
-INFO: Validation overlap score: 0.6738564859806877
- new lr:  1e-08
-INFO: Validation overlap score: 0.6722256574664534
- new lr:  1e-08
-INFO: Validation overlap score: 0.6844180235927252
- new lr:  1e-08
-INFO: Validation overlap score: 0.6811741785085488
-Epoch 40/180:   0%|          | 0/2622 [02:20<?, ?img/s]
-INFO: Checkpoint 40 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(272.2018, device='cuda:0')
-Epoch 41/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6761907591033227
- new lr:  1e-08
-INFO: Validation overlap score: 0.654638444793593
- new lr:  1e-08
-INFO: Validation overlap score: 0.69467427918233
- new lr:  1e-08
-INFO: Validation overlap score: 0.6723555063387168
- new lr:  1e-08
-INFO: Validation overlap score: 0.6810381228929943
-Epoch 41/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 41 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(269.4012, device='cuda:0')
-Epoch 42/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6442364235616631
- new lr:  1e-08
-INFO: Validation overlap score: 0.6655384058651236
- new lr:  1e-08
-INFO: Validation overlap score: 0.6624946073337724
- new lr:  1e-08
-INFO: Validation overlap score: 0.6754228311536443
- new lr:  1e-08
-INFO: Validation overlap score: 0.6752814700846205
-Epoch 42/180:   0%|          | 0/2622 [02:24<?, ?img/s]
-INFO: Checkpoint 42 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(267.1245, device='cuda:0')
-Epoch 43/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6784293770508463
- new lr:  1e-08
-INFO: Validation overlap score: 0.6734815681436422
- new lr:  1e-08
-INFO: Validation overlap score: 0.6601866365144753
- new lr:  1e-08
-INFO: Validation overlap score: 0.6851938777311971
- new lr:  1e-08
-INFO: Validation overlap score: 0.6778040521768565
-Epoch 43/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 43 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(264.8896, device='cuda:0')
-Epoch 44/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6914054382451621
- new lr:  1e-08
-INFO: Validation overlap score: 0.6635627649801293
- new lr:  1e-08
-INFO: Validation overlap score: 0.6609716702675082
- new lr:  1e-08
-INFO: Validation overlap score: 0.6596119539921022
- new lr:  1e-08
-INFO: Validation overlap score: 0.6802583174504775
-Epoch 44/180:   0%|          | 0/2622 [02:21<?, ?img/s]
-INFO: Checkpoint 44 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(264.7812, device='cuda:0')
-Epoch 45/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6456564683787192
- new lr:  1e-08
-INFO: Validation overlap score: 0.6900486740382881
- new lr:  1e-08
-INFO: Validation overlap score: 0.6883097144285428
- new lr:  1e-08
-INFO: Validation overlap score: 0.6792411671189713
- new lr:  1e-08
-INFO: Validation overlap score: 0.6748040705355992
-Epoch 45/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 45 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(261.1071, device='cuda:0')
-Epoch 46/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6840599655362544
- new lr:  1e-08
-INFO: Validation overlap score: 0.6779645296690595
- new lr:  1e-08
-INFO: Validation overlap score: 0.6718055361376185
- new lr:  1e-08
-INFO: Validation overlap score: 0.6970679970822998
- new lr:  1e-08
-INFO: Validation overlap score: 0.6362174635439394
-Epoch 46/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 46 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(256.0921, device='cuda:0')
-Epoch 47/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6696697314273041
- new lr:  1e-08
-INFO: Validation overlap score: 0.6757262485466667
- new lr:  1e-08
-INFO: Validation overlap score: 0.6767828414197435
- new lr:  1e-08
-INFO: Validation overlap score: 0.6559774464194718
- new lr:  1e-08
-INFO: Validation overlap score: 0.6913059095170387
-Epoch 47/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 47 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(258.3839, device='cuda:0')
-Epoch 48/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6792513381600175
- new lr:  1e-08
-INFO: Validation overlap score: 0.6763007191499484
- new lr:  1e-08
-INFO: Validation overlap score: 0.6855902622015411
- new lr:  1e-08
-INFO: Validation overlap score: 0.6616962600204953
- new lr:  1e-08
-INFO: Validation overlap score: 0.6928106125482579
-Epoch 48/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 48 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(257.7695, device='cuda:0')
-Epoch 49/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6803727973431758
- new lr:  1e-08
-INFO: Validation overlap score: 0.6900198916837419
- new lr:  1e-08
-INFO: Validation overlap score: 0.6952835817875731
- new lr:  1e-08
-INFO: Validation overlap score: 0.6817716647618005
- new lr:  1e-08
-INFO: Validation overlap score: 0.6596478257469091
-Epoch 49/180:   0%|          | 0/2622 [02:21<?, ?img/s]
-INFO: Checkpoint 49 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(250.2577, device='cuda:0')
-Epoch 50/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6601271034567217
- new lr:  1e-08
-INFO: Validation overlap score: 0.6734607448078103
- new lr:  1e-08
-INFO: Validation overlap score: 0.6861086228151911
- new lr:  1e-08
-INFO: Validation overlap score: 0.6691201663099203
- new lr:  1e-08
-INFO: Validation overlap score: 0.6814130016464958
-Epoch 50/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 50 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(249.2035, device='cuda:0')
-Epoch 51/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6860350429550889
- new lr:  1e-08
-INFO: Validation overlap score: 0.682999737240707
- new lr:  1e-08
-INFO: Validation overlap score: 0.6881816299356955
- new lr:  1e-08
-INFO: Validation overlap score: 0.6834927224570123
- new lr:  1e-08
-INFO: Validation overlap score: 0.6767562079240161
-Epoch 51/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 51 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(250.9164, device='cuda:0')
-Epoch 52/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6773266640597397
- new lr:  1e-08
-INFO: Validation overlap score: 0.6764998279665548
- new lr:  1e-08
-INFO: Validation overlap score: 0.684835017521152
- new lr:  1e-08
-INFO: Validation overlap score: 0.6690970384531824
- new lr:  1e-08
-INFO: Validation overlap score: 0.6705208613034785
-Epoch 52/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 52 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(246.7112, device='cuda:0')
-Epoch 53/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.669828158422434
- new lr:  1e-08
-INFO: Validation overlap score: 0.6641674789366444
- new lr:  1e-08
-INFO: Validation overlap score: 0.6519426713054327
- new lr:  1e-08
-INFO: Validation overlap score: 0.6674870858769032
- new lr:  1e-08
-INFO: Validation overlap score: 0.6751464345841268
-Epoch 53/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 53 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(246.1749, device='cuda:0')
-Epoch 54/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6470436678616861
- new lr:  1e-08
-INFO: Validation overlap score: 0.6807416205476854
- new lr:  1e-08
-INFO: Validation overlap score: 0.6872434434176925
- new lr:  1e-08
-INFO: Validation overlap score: 0.6899950552437314
- new lr:  1e-08
-INFO: Validation overlap score: 0.6536536150167078
-Epoch 54/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 54 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(247.6951, device='cuda:0')
-Epoch 55/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6851081686651277
- new lr:  1e-08
-INFO: Validation overlap score: 0.6795203241798067
- new lr:  1e-08
-INFO: Validation overlap score: 0.6713858159751827
- new lr:  1e-08
-INFO: Validation overlap score: 0.6853294118061098
- new lr:  1e-08
-INFO: Validation overlap score: 0.688504363099734
-Epoch 55/180:   0%|          | 0/2622 [02:24<?, ?img/s]
-INFO: Checkpoint 55 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(241.3282, device='cuda:0')
-Epoch 56/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6711480525735113
- new lr:  1e-08
-INFO: Validation overlap score: 0.656539878663943
- new lr:  1e-08
-INFO: Validation overlap score: 0.6788009974555052
- new lr:  1e-08
-INFO: Validation overlap score: 0.688648236883465
- new lr:  1e-08
-INFO: Validation overlap score: 0.693079578463001
-Epoch 56/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 56 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(239.2785, device='cuda:0')
-Epoch 57/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6860452679808402
- new lr:  1e-08
-INFO: Validation overlap score: 0.6806848074383137
- new lr:  1e-08
-INFO: Validation overlap score: 0.6880063126151709
- new lr:  1e-08
-INFO: Validation overlap score: 0.6764407693008377
- new lr:  1e-08
-INFO: Validation overlap score: 0.6882708927174819
-Epoch 57/180:   0%|          | 0/2622 [02:21<?, ?img/s]
-INFO: Checkpoint 57 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(241.3390, device='cuda:0')
-Epoch 58/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.690328861225102
- new lr:  1e-08
-INFO: Validation overlap score: 0.6732352040708065
- new lr:  1e-08
-INFO: Validation overlap score: 0.6811126343573082
- new lr:  1e-08
-INFO: Validation overlap score: 0.6727730341486096
- new lr:  1e-08
-INFO: Validation overlap score: 0.6791925280510137
-Epoch 58/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 58 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(236.0633, device='cuda:0')
-Epoch 59/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6575732868920077
- new lr:  1e-08
-INFO: Validation overlap score: 0.6751436495775824
- new lr:  1e-08
-INFO: Validation overlap score: 0.6513234930708236
- new lr:  1e-08
-INFO: Validation overlap score: 0.6692113353265929
- new lr:  1e-08
-INFO: Validation overlap score: 0.6874531792265546
-Epoch 59/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 59 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(235.6465, device='cuda:0')
-Epoch 60/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6807229758025855
- new lr:  1e-08
-INFO: Validation overlap score: 0.673548116358285
- new lr:  1e-08
-INFO: Validation overlap score: 0.6696519575040161
- new lr:  1e-08
-INFO: Validation overlap score: 0.679100938384578
- new lr:  1e-08
-INFO: Validation overlap score: 0.6678188460210139
-Epoch 60/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 60 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(231.7087, device='cuda:0')
-Epoch 61/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6813270502381309
- new lr:  1e-08
-INFO: Validation overlap score: 0.6807136298173276
- new lr:  1e-08
-INFO: Validation overlap score: 0.6900664735009375
- new lr:  1e-08
-INFO: Validation overlap score: 0.6692573656023982
- new lr:  1e-08
-INFO: Validation overlap score: 0.67821420628027
-Epoch 61/180:   0%|          | 0/2622 [02:21<?, ?img/s]
-INFO: Checkpoint 61 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(230.1355, device='cuda:0')
-Epoch 62/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6924797781791916
- new lr:  1e-08
-INFO: Validation overlap score: 0.6841888776708305
- new lr:  1e-08
-INFO: Validation overlap score: 0.6820062531984037
- new lr:  1e-08
-INFO: Validation overlap score: 0.6694611375479355
- new lr:  1e-08
-INFO: Validation overlap score: 0.6742743573750007
-Epoch 62/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 62 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(232.5379, device='cuda:0')
-Epoch 63/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6911469171418971
- new lr:  1e-08
-INFO: Validation overlap score: 0.6761701910986959
- new lr:  1e-08
-INFO: Validation overlap score: 0.6900770322634131
- new lr:  1e-08
-INFO: Validation overlap score: 0.6858888241755123
- new lr:  1e-08
-INFO: Validation overlap score: 0.6852480969631795
-Epoch 63/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 63 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(229.3364, device='cuda:0')
-Epoch 64/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6922094674582538
- new lr:  1e-08
-INFO: Validation overlap score: 0.6811492393926247
- new lr:  1e-08
-INFO: Validation overlap score: 0.6938680044855023
- new lr:  1e-08
-INFO: Validation overlap score: 0.6654162877136274
- new lr:  1e-08
-INFO: Validation overlap score: 0.698567942463348
-Epoch 64/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 64 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(220.6953, device='cuda:0')
-Epoch 65/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6857805244138151
- new lr:  1e-08
-INFO: Validation overlap score: 0.6774319973982281
- new lr:  1e-08
-INFO: Validation overlap score: 0.6730912625277575
- new lr:  1e-08
-INFO: Validation overlap score: 0.6831928610461552
- new lr:  1e-08
-INFO: Validation overlap score: 0.6591161422277849
-Epoch 65/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 65 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(224.6352, device='cuda:0')
-Epoch 66/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6824190439424346
- new lr:  1e-08
-INFO: Validation overlap score: 0.6785286346368837
- new lr:  1e-08
-INFO: Validation overlap score: 0.6852628691557994
- new lr:  1e-08
-INFO: Validation overlap score: 0.6875400107911537
- new lr:  1e-08
-INFO: Validation overlap score: 0.6856597316794554
-Epoch 66/180:   0%|          | 0/2622 [02:21<?, ?img/s]
-INFO: Checkpoint 66 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(227.4886, device='cuda:0')
-Epoch 67/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6944063724167853
- new lr:  1e-08
-INFO: Validation overlap score: 0.6842251874348665
- new lr:  1e-08
-INFO: Validation overlap score: 0.6762789509165051
- new lr:  1e-08
-INFO: Validation overlap score: 0.6672653312125976
- new lr:  1e-08
-INFO: Validation overlap score: 0.6793386439226338
-Epoch 67/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 67 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(225.2055, device='cuda:0')
-Epoch 68/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6949010416225264
- new lr:  1e-08
-INFO: Validation overlap score: 0.6734228500331467
- new lr:  1e-08
-INFO: Validation overlap score: 0.6813235258094185
- new lr:  1e-08
-INFO: Validation overlap score: 0.6854565050556837
- new lr:  1e-08
-INFO: Validation overlap score: 0.6875751655871803
-Epoch 68/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 68 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(219.2468, device='cuda:0')
-Epoch 69/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6775809289228261
- new lr:  1e-08
-INFO: Validation overlap score: 0.6830555028778171
- new lr:  1e-08
-INFO: Validation overlap score: 0.6845617857713675
- new lr:  1e-08
-INFO: Validation overlap score: 0.680292849141714
- new lr:  1e-08
-INFO: Validation overlap score: 0.6932889787909091
-Epoch 69/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 69 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(218.7240, device='cuda:0')
-Epoch 70/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6858266118747467
- new lr:  1e-08
-INFO: Validation overlap score: 0.6813771550598013
- new lr:  1e-08
-INFO: Validation overlap score: 0.6807842333561059
- new lr:  1e-08
-INFO: Validation overlap score: 0.6595334435350668
- new lr:  1e-08
-INFO: Validation overlap score: 0.6778012344620072
-Epoch 70/180:   0%|          | 0/2622 [02:21<?, ?img/s]
-INFO: Checkpoint 70 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(212.7734, device='cuda:0')
-Epoch 71/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6663002031007174
- new lr:  1e-08
-INFO: Validation overlap score: 0.6974491362200523
- new lr:  1e-08
-INFO: Validation overlap score: 0.680130481889593
- new lr:  1e-08
-INFO: Validation overlap score: 0.6759808740460176
- new lr:  1e-08
-INFO: Validation overlap score: 0.6653389872605449
-Epoch 71/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 71 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(212.8750, device='cuda:0')
-Epoch 72/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6735014407655474
- new lr:  1e-08
-INFO: Validation overlap score: 0.6910234924815467
- new lr:  1e-08
-INFO: Validation overlap score: 0.6781462235472251
- new lr:  1e-08
-INFO: Validation overlap score: 0.6843049832309885
- new lr:  1e-08
-INFO: Validation overlap score: 0.6784429739443809
-Epoch 72/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 72 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(211.3916, device='cuda:0')
-Epoch 73/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6707317618800398
- new lr:  1e-08
-INFO: Validation overlap score: 0.6819330225146453
- new lr:  1e-08
-INFO: Validation overlap score: 0.68378054080499
- new lr:  1e-08
-INFO: Validation overlap score: 0.6895360236931865
- new lr:  1e-08
-INFO: Validation overlap score: 0.6727760164739237
-Epoch 73/180:   0%|          | 0/2622 [02:23<?, ?img/s]
-INFO: Checkpoint 73 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(210.2894, device='cuda:0')
-Epoch 74/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6867162330359936
- new lr:  1e-08
-INFO: Validation overlap score: 0.6878171736483312
- new lr:  1e-08
-INFO: Validation overlap score: 0.6715938721741854
- new lr:  1e-08
-INFO: Validation overlap score: 0.6722545779383776
- new lr:  1e-08
-INFO: Validation overlap score: 0.6849050741527498
-Epoch 74/180:   0%|          | 0/2622 [02:21<?, ?img/s]
-INFO: Checkpoint 74 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(208.4554, device='cuda:0')
-Epoch 75/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6937098410812645
- new lr:  1e-08
-INFO: Validation overlap score: 0.6595320466624195
- new lr:  1e-08
-INFO: Validation overlap score: 0.6841178233783269
- new lr:  1e-08
-INFO: Validation overlap score: 0.660328535211058
- new lr:  1e-08
-INFO: Validation overlap score: 0.6832629313558033
-Epoch 75/180:   0%|          | 0/2622 [02:22<?, ?img/s]
-INFO: Checkpoint 75 saved!
- new lr:  1e-08
-average loss during this epoch =  tensor(207.7044, device='cuda:0')
-Epoch 76/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.6634460222168067
- new lr:  1e-08
-INFO: Validation overlap score: 0.6716785630944031
-slurmstepd: error: *** JOB 63342998 ON k28g32 CANCELLED AT 2024-12-28T13:53:35 DUE TO TIME LIMIT ***
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245]) tensor(1.0000)
+meanIoU for class 0  is:  tensor(0.0350)
+meanIoU for class 1  is:  tensor(0.0021)
+meanIoU for class 2  is:  tensor(0.0210)
+meanIoU for class 3  is:  tensor(0.0003)
+meanIoU for class 4  is:  tensor(0.0008)
+meanIoU for class 5  is:  tensor(0.0148)
+meanIoU for class 6  is:  tensor(0.0103)
+meanIoU for class 7  is:  tensor(0.0557)
+meanIoU for class 8  is:  tensor(0.0255)
+meanIoU for class 9  is:  tensor(0.0344)
+meanIoU for class 10  is:  tensor(0.0433)
+meanIoU for class 11  is:  tensor(0.0024)
+meanIoU for class 12  is:  tensor(1.7902e-05)
+meanIoU for class 13  is:  tensor(0.0671)
+meanIoU for class 14  is:  tensor(0.0011)
+meanIoU for class 15  is:  tensor(0.1917)
+meanIoU for class 16  is:  tensor(0.0076)
+meanIoU for class 17  is:  tensor(0.0137)
+meanIoU for class 18  is:  tensor(0.0191)
+meanIoU for class 19  is:  tensor(0.0047)
+meanIoU for class 20  is:  tensor(0.0129)
+ new lr:  1e-08
+average loss during this epoch =  tensor(1431.4106)
+Epoch 2/180:   0%|          | 0/2622 [00:00<?, ?img/s]slurmstepd: error: Detected 1 oom_kill event in StepId=63347366.batch. Some of the step tasks have been OOM Killed.
