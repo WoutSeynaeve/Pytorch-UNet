@@ -121,7 +121,7 @@ def train_model(
                                 print(loss,"\n",masks_pred)
                                 report = 0
                                 assert(report == 1)
-                        if loss.item() < 0.5:
+                        if loss.item() < 0.1:
                             break
                         optimizer.zero_grad(set_to_none=True)
                         grad_scaler.scale(loss).backward()
@@ -140,6 +140,13 @@ def train_model(
                         #     'epoch': epoch
                         # })
                         pbar.set_postfix(**{'loss (batch)': loss.item()})
+
+                        # Evaluation round
+                        
+                        if i%10 == 5:
+                            print("TRAIN EVAL:",evaluateWeaklySupervised(model,train_loader,device,amp))
+                                
+
                     if save_checkpoint:
                         Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
                         state_dict = model.state_dict()

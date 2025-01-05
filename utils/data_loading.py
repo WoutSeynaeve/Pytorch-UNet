@@ -197,6 +197,7 @@ class WeakLabelDataset(Dataset):
             ))
 
         self.mask_values = list(sorted(np.unique(np.concatenate(unique), axis=0).tolist()))
+        self.mask_values = list([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,255]) #for PASCAL VOC
         logging.info(f'Unique mask values: {self.mask_values}')
         
 
@@ -218,7 +219,6 @@ class WeakLabelDataset(Dataset):
                     mask[img == v] = i
                 else:
                     mask[(img == v).all(-1)] = i
-
             return mask
 
         else:

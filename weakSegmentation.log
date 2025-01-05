@@ -1,30 +1,31 @@
-SLURM_JOB_ID: 63347366
+SLURM_JOB_ID: 63349148
 SLURM_JOB_USER: vsc37115
 SLURM_JOB_ACCOUNT: intro_vsc37115
 SLURM_JOB_NAME: weakSegmentation
 SLURM_CLUSTER_NAME: wice
-SLURM_JOB_PARTITION: batch_icelake
+SLURM_JOB_PARTITION: interactive
 SLURM_NNODES: 1
-SLURM_NODELIST: p33c20n4
+SLURM_NODELIST: k28i14
 SLURM_JOB_CPUS_PER_NODE: 8
-Date: Wed Jan  1 22:49:13 CET 2025
+SLURM_JOB_GPUS: 2
+Date: Sat Jan  4 01:44:34 CET 2025
 Walltime: 00-16:00:00
 ========================================================================
-Job starting at 2025.01.01-22:49:21
-Job is running on p33c20n4
+Job starting at 2025.01.04-01:44:39
+Job is running on k28i14
 Job is running on wice cluster
 The node architecture is icelake
 Current path is /lustre1/scratch/371/vsc37115/Thesis/SegmentationModel/Pytorch-UNet
-INFO: Using device cpu
+INFO: Using device cuda
 INFO: Network:
 	3 input channels
 	21 output channels (classes)
 	Transposed conv upscaling
 INFO: Creating dataset with 2913 examples
 INFO: Scanning mask files to determine unique values
-  0%|          | 0/2913 [00:00<?, ?it/s]  0%|          | 1/2913 [00:00<12:15,  3.96it/s]  2%|▏         | 69/2913 [00:00<00:11, 247.92it/s]  7%|▋         | 196/2913 [00:00<00:04, 580.89it/s] 10%|█         | 304/2913 [00:00<00:03, 687.08it/s] 15%|█▍        | 435/2913 [00:00<00:02, 855.98it/s] 20%|██        | 596/2913 [00:00<00:02, 1073.69it/s] 28%|██▊       | 825/2913 [00:00<00:01, 1357.00it/s] 34%|███▍      | 985/2913 [00:01<00:01, 1407.24it/s] 39%|███▉      | 1131/2913 [00:01<00:01, 1364.06it/s] 44%|████▎     | 1271/2913 [00:01<00:01, 1368.27it/s] 49%|████▉     | 1423/2913 [00:01<00:01, 1399.52it/s] 54%|█████▎    | 1565/2913 [00:01<00:01, 1238.97it/s] 59%|█████▉    | 1720/2913 [00:01<00:00, 1292.59it/s] 64%|██████▍   | 1868/2913 [00:01<00:00, 1322.46it/s] 71%|███████   | 2065/2913 [00:01<00:00, 1451.57it/s] 78%|███████▊  | 2284/2913 [00:01<00:00, 1641.77it/s] 84%|████████▍ | 2451/2913 [00:02<00:00, 1532.51it/s] 90%|████████▉ | 2608/2913 [00:02<00:00, 1500.97it/s] 95%|█████████▍| 2760/2913 [00:02<00:00, 1388.89it/s]100%|██████████| 2913/2913 [00:02<00:00, 1261.50it/s]
+  0%|          | 0/2913 [00:00<?, ?it/s]  0%|          | 1/2913 [00:00<15:04,  3.22it/s]  8%|▊         | 237/2913 [00:00<00:03, 706.62it/s] 15%|█▍        | 432/2913 [00:00<00:02, 1076.52it/s] 22%|██▏       | 629/2913 [00:00<00:01, 1325.86it/s] 27%|██▋       | 796/2913 [00:00<00:01, 1413.44it/s] 37%|███▋      | 1086/2913 [00:00<00:01, 1711.60it/s] 47%|████▋     | 1378/2913 [00:00<00:00, 1893.96it/s] 55%|█████▍    | 1600/2913 [00:01<00:00, 1812.53it/s] 64%|██████▍   | 1868/2913 [00:01<00:00, 1990.46it/s] 72%|███████▏  | 2100/2913 [00:01<00:00, 2068.02it/s] 81%|████████  | 2360/2913 [00:01<00:00, 2069.17it/s] 88%|████████▊ | 2571/2913 [00:01<00:00, 2059.19it/s] 96%|█████████▌| 2798/2913 [00:01<00:00, 2104.64it/s]100%|██████████| 2913/2913 [00:01<00:00, 1737.00it/s]
 INFO: Unique mask values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 255]
-/apps/leuven/rocky8/icelake/2023a/software/PyTorch/2.1.2-foss-2023a-CUDA-12.1.1/lib/python3.11/site-packages/torch/utils/data/dataloader.py:557: UserWarning: This DataLoader will create 72 worker processes in total. Our suggested max number of worker in current system is 8, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+/apps/leuven/rocky8/icelake/2023a/software/PyTorch/2.1.2-foss-2023a-CUDA-12.1.1/lib/python3.11/site-packages/torch/utils/data/dataloader.py:557: UserWarning: This DataLoader will create 64 worker processes in total. Our suggested max number of worker in current system is 8, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
   warnings.warn(_create_warning_msg(
 INFO: Starting training:
         Epochs:          180
@@ -33,141 +34,2680 @@ INFO: Starting training:
         Training size:   2622
         Validation size: 291
         Checkpoints:     True
-        Device:          cpu
+        Device:          cuda
         Images scaling:  1
         Mixed Precision: False
     
-Epoch 1/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.011915051378309727
+Epoch 1/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.04902827367186546
 tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
         0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
-        0.0272, 0.0190, 0.0245]) tensor(1.0000)
-meanIoU for class 0  is:  tensor(8.0375e-05)
-meanIoU for class 1  is:  tensor(0.0008)
-meanIoU for class 2  is:  tensor(0.0275)
-meanIoU for class 3  is:  tensor(7.4824e-06)
-meanIoU for class 4  is:  tensor(0.0010)
-meanIoU for class 5  is:  tensor(0.0117)
-meanIoU for class 6  is:  tensor(0.0322)
-meanIoU for class 7  is:  tensor(0.0710)
-meanIoU for class 8  is:  tensor(0.0038)
-meanIoU for class 9  is:  tensor(0.0061)
-meanIoU for class 10  is:  tensor(0.0767)
-meanIoU for class 11  is:  tensor(0.0050)
-meanIoU for class 12  is:  tensor(1.5150e-05)
-meanIoU for class 13  is:  tensor(0.0893)
-meanIoU for class 14  is:  tensor(0.0056)
-meanIoU for class 15  is:  tensor(0.0156)
-meanIoU for class 16  is:  tensor(0.0014)
-meanIoU for class 17  is:  tensor(0.0791)
-meanIoU for class 18  is:  tensor(0.0238)
-meanIoU for class 19  is:  tensor(0.0031)
-meanIoU for class 20  is:  tensor(0.0091)
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
  new lr:  1e-08
-INFO: Validation overlap score: 0.024651464074850082
+INFO: Validation overlap score: 0.13432477414608002
 tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
         0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
-        0.0272, 0.0190, 0.0245]) tensor(1.0000)
-meanIoU for class 0  is:  tensor(0.0004)
-meanIoU for class 1  is:  tensor(0.0017)
-meanIoU for class 2  is:  tensor(0.0244)
-meanIoU for class 3  is:  tensor(1.3727e-05)
-meanIoU for class 4  is:  tensor(0.0009)
-meanIoU for class 5  is:  tensor(0.0132)
-meanIoU for class 6  is:  tensor(0.0478)
-meanIoU for class 7  is:  tensor(0.0747)
-meanIoU for class 8  is:  tensor(0.0068)
-meanIoU for class 9  is:  tensor(0.0115)
-meanIoU for class 10  is:  tensor(0.0821)
-meanIoU for class 11  is:  tensor(0.0065)
-meanIoU for class 12  is:  tensor(1.0260e-05)
-meanIoU for class 13  is:  tensor(0.0973)
-meanIoU for class 14  is:  tensor(0.0054)
-meanIoU for class 15  is:  tensor(0.1174)
-meanIoU for class 16  is:  tensor(0.0008)
-meanIoU for class 17  is:  tensor(0.0381)
-meanIoU for class 18  is:  tensor(0.0208)
-meanIoU for class 19  is:  tensor(0.0014)
-meanIoU for class 20  is:  tensor(0.0136)
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
  new lr:  1e-08
-INFO: Validation overlap score: 0.026726923882961273
+INFO: Validation overlap score: 0.15369288623332977
 tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
         0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
-        0.0272, 0.0190, 0.0245]) tensor(1.0000)
-meanIoU for class 0  is:  tensor(0.0039)
-meanIoU for class 1  is:  tensor(0.0012)
-meanIoU for class 2  is:  tensor(0.0170)
-meanIoU for class 3  is:  tensor(1.0332e-05)
-meanIoU for class 4  is:  tensor(0.0009)
-meanIoU for class 5  is:  tensor(0.0077)
-meanIoU for class 6  is:  tensor(0.0159)
-meanIoU for class 7  is:  tensor(0.0548)
-meanIoU for class 8  is:  tensor(0.0104)
-meanIoU for class 9  is:  tensor(0.0169)
-meanIoU for class 10  is:  tensor(0.0461)
-meanIoU for class 11  is:  tensor(0.0061)
-meanIoU for class 12  is:  tensor(1.2765e-05)
-meanIoU for class 13  is:  tensor(0.0802)
-meanIoU for class 14  is:  tensor(0.0022)
-meanIoU for class 15  is:  tensor(0.1469)
-meanIoU for class 16  is:  tensor(0.0005)
-meanIoU for class 17  is:  tensor(0.0210)
-meanIoU for class 18  is:  tensor(0.0242)
-meanIoU for class 19  is:  tensor(0.0002)
-meanIoU for class 20  is:  tensor(0.0104)
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
  new lr:  1e-08
-INFO: Validation overlap score: 0.03437908738851547
+INFO: Validation overlap score: 0.16602005064487457
 tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
         0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
-        0.0272, 0.0190, 0.0245]) tensor(1.0000)
-meanIoU for class 0  is:  tensor(0.0141)
-meanIoU for class 1  is:  tensor(0.0008)
-meanIoU for class 2  is:  tensor(0.0154)
-meanIoU for class 3  is:  tensor(3.8187e-05)
-meanIoU for class 4  is:  tensor(0.0007)
-meanIoU for class 5  is:  tensor(0.0116)
-meanIoU for class 6  is:  tensor(0.0074)
-meanIoU for class 7  is:  tensor(0.0734)
-meanIoU for class 8  is:  tensor(0.0154)
-meanIoU for class 9  is:  tensor(0.0162)
-meanIoU for class 10  is:  tensor(0.0630)
-meanIoU for class 11  is:  tensor(0.0017)
-meanIoU for class 12  is:  tensor(1.2404e-05)
-meanIoU for class 13  is:  tensor(0.0803)
-meanIoU for class 14  is:  tensor(0.0009)
-meanIoU for class 15  is:  tensor(0.1717)
-meanIoU for class 16  is:  tensor(0.0030)
-meanIoU for class 17  is:  tensor(0.0138)
-meanIoU for class 18  is:  tensor(0.0239)
-meanIoU for class 19  is:  tensor(0.0010)
-meanIoU for class 20  is:  tensor(0.0068)
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
  new lr:  1e-08
-INFO: Validation overlap score: 0.04529885947704315
-Epoch 1/180:   0%|          | 0/2622 [1:29:49<?, ?img/s]
+INFO: Validation overlap score: 0.1563754826784134
+Epoch 1/180:   0%|          | 0/2622 [10:02<?, ?img/s]
 INFO: Checkpoint 1 saved!
 tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
         0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
-        0.0272, 0.0190, 0.0245]) tensor(1.0000)
-meanIoU for class 0  is:  tensor(0.0350)
-meanIoU for class 1  is:  tensor(0.0021)
-meanIoU for class 2  is:  tensor(0.0210)
-meanIoU for class 3  is:  tensor(0.0003)
-meanIoU for class 4  is:  tensor(0.0008)
-meanIoU for class 5  is:  tensor(0.0148)
-meanIoU for class 6  is:  tensor(0.0103)
-meanIoU for class 7  is:  tensor(0.0557)
-meanIoU for class 8  is:  tensor(0.0255)
-meanIoU for class 9  is:  tensor(0.0344)
-meanIoU for class 10  is:  tensor(0.0433)
-meanIoU for class 11  is:  tensor(0.0024)
-meanIoU for class 12  is:  tensor(1.7902e-05)
-meanIoU for class 13  is:  tensor(0.0671)
-meanIoU for class 14  is:  tensor(0.0011)
-meanIoU for class 15  is:  tensor(0.1917)
-meanIoU for class 16  is:  tensor(0.0076)
-meanIoU for class 17  is:  tensor(0.0137)
-meanIoU for class 18  is:  tensor(0.0191)
-meanIoU for class 19  is:  tensor(0.0047)
-meanIoU for class 20  is:  tensor(0.0129)
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
  new lr:  1e-08
-average loss during this epoch =  tensor(1431.4106)
-Epoch 2/180:   0%|          | 0/2622 [00:00<?, ?img/s]slurmstepd: error: Detected 1 oom_kill event in StepId=63347366.batch. Some of the step tasks have been OOM Killed.
+average loss during this epoch =  tensor(1396.8445, device='cuda:0')
+Epoch 2/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.1625482589006424
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.18162162601947784
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.18433994054794312
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.19450967013835907
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.15180131793022156
+Epoch 2/180:   0%|          | 0/2622 [09:54<?, ?img/s]
+INFO: Checkpoint 2 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(1352.0712, device='cuda:0')
+Epoch 3/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.2326192855834961
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.1920381337404251
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.22631213068962097
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.22451496124267578
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.2452097088098526
+Epoch 3/180:   0%|          | 0/2622 [09:55<?, ?img/s]
+INFO: Checkpoint 3 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(1332.0403, device='cuda:0')
+Epoch 4/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.2159174531698227
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.2678416073322296
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.23926328122615814
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.28318941593170166
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.2573581039905548
+Epoch 4/180:   0%|          | 0/2622 [09:53<?, ?img/s]
+INFO: Checkpoint 4 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(1331.5873, device='cuda:0')
+Epoch 5/180:   0%|          | 0/2622 [00:00<?, ?img/s]tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.2545817196369171
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.2679, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.2644021213054657
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.2768, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.23716163635253906
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.2492, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.2279389202594757
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.2387, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.25352317094802856
+Epoch 5/180:   0%|          | 0/2622 [19:10<?, ?img/s]
+INFO: Checkpoint 5 saved!
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.2597, device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(1326.5312, device='cuda:0')
+Epoch 6/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.29185357689857483
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.2697533369064331
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.2479042112827301
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.25462788343429565
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.28052911162376404
+Epoch 6/180:   0%|          | 0/2622 [09:53<?, ?img/s]
+INFO: Checkpoint 6 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(1317.9833, device='cuda:0')
+Epoch 7/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.2860347330570221
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.26529461145401
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.2688204348087311
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.27562618255615234
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.2911715507507324
+Epoch 7/180:   0%|          | 0/2622 [09:52<?, ?img/s]
+INFO: Checkpoint 7 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(1291.9891, device='cuda:0')
+Epoch 8/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.27537548542022705
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.26843345165252686
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.290332168340683
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.2733834385871887
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.2943618893623352
+Epoch 8/180:   0%|          | 0/2622 [09:53<?, ?img/s]
+INFO: Checkpoint 8 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(1262.5300, device='cuda:0')
+Epoch 9/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.262380987405777
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.29344502091407776
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.2842935025691986
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.2935050129890442
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.29532408714294434
+Epoch 9/180:   0%|          | 0/2622 [09:52<?, ?img/s]
+INFO: Checkpoint 9 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(1243.8500, device='cuda:0')
+Epoch 10/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.29296183586120605
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3011302351951599
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.2779269814491272
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.26604336500167847
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.28993457555770874
+Epoch 10/180:   0%|          | 0/2622 [09:53<?, ?img/s]
+INFO: Checkpoint 10 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(1209.3235, device='cuda:0')
+Epoch 11/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3119928240776062
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.2998115122318268
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.2872750163078308
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30450439453125
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.2652308940887451
+Epoch 11/180:   0%|          | 0/2622 [09:52<?, ?img/s]
+INFO: Checkpoint 11 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(1191.6742, device='cuda:0')
+Epoch 12/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.29387444257736206
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.302449107170105
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3036603033542633
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3118731379508972
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.28262758255004883
+Epoch 12/180:   0%|          | 0/2622 [09:53<?, ?img/s]
+INFO: Checkpoint 12 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(1163.2736, device='cuda:0')
+Epoch 13/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.2894345223903656
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.29553499817848206
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3146851062774658
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3124833106994629
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3042844831943512
+Epoch 13/180:   0%|          | 0/2622 [09:53<?, ?img/s]
+INFO: Checkpoint 13 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(1141.4622, device='cuda:0')
+Epoch 14/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3126228451728821
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.291252464056015
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30051150918006897
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.2921518087387085
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3069714903831482
+Epoch 14/180:   0%|          | 0/2622 [09:53<?, ?img/s]
+INFO: Checkpoint 14 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(1112.3715, device='cuda:0')
+Epoch 15/180:   0%|          | 0/2622 [00:00<?, ?img/s]tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.3209782838821411
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3376, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.2986568808555603
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3172, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.3068041503429413
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3233, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.29888713359832764
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3167, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.2955753803253174
+Epoch 15/180:   0%|          | 0/2622 [19:09<?, ?img/s]
+INFO: Checkpoint 15 saved!
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3135, device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(1079.2942, device='cuda:0')
+Epoch 16/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3053399920463562
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30951806902885437
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3033740222454071
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30562013387680054
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3237699866294861
+Epoch 16/180:   0%|          | 0/2622 [09:53<?, ?img/s]
+INFO: Checkpoint 16 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(1064.7844, device='cuda:0')
+Epoch 17/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3214523196220398
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31077462434768677
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3096778690814972
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30863064527511597
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31048890948295593
+Epoch 17/180:   0%|          | 0/2622 [09:52<?, ?img/s]
+INFO: Checkpoint 17 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(1038.8549, device='cuda:0')
+Epoch 18/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.31769245862960815
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32009392976760864
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3160960078239441
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30140450596809387
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.29646632075309753
+Epoch 18/180:   0%|          | 0/2622 [09:52<?, ?img/s]
+INFO: Checkpoint 18 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(1029.8389, device='cuda:0')
+Epoch 19/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3070133328437805
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3110898733139038
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3155716061592102
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31077852845191956
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3161758482456207
+Epoch 19/180:   0%|          | 0/2622 [09:51<?, ?img/s]
+INFO: Checkpoint 19 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(1011.6979, device='cuda:0')
+Epoch 20/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.31625643372535706
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3004458248615265
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3154781758785248
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.310037761926651
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32316094636917114
+Epoch 20/180:   0%|          | 0/2622 [09:53<?, ?img/s]
+INFO: Checkpoint 20 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(988.9265, device='cuda:0')
+Epoch 21/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.31349626183509827
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31186798214912415
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3156477212905884
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31421977281570435
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31052374839782715
+Epoch 21/180:   0%|          | 0/2622 [09:52<?, ?img/s]
+INFO: Checkpoint 21 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(971.4036, device='cuda:0')
+Epoch 22/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3118214011192322
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31372886896133423
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31154054403305054
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32248586416244507
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30221644043922424
+Epoch 22/180:   0%|          | 0/2622 [09:52<?, ?img/s]
+INFO: Checkpoint 22 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(949.2089, device='cuda:0')
+Epoch 23/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3161297142505646
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31953611969947815
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3118281364440918
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3101048767566681
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3140335977077484
+Epoch 23/180:   0%|          | 0/2622 [09:52<?, ?img/s]
+INFO: Checkpoint 23 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(932.1318, device='cuda:0')
+Epoch 24/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.31019699573516846
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3119281232357025
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3228010833263397
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31453970074653625
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3099514842033386
+Epoch 24/180:   0%|          | 0/2622 [09:52<?, ?img/s]
+INFO: Checkpoint 24 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(933.9226, device='cuda:0')
+Epoch 25/180:   0%|          | 0/2622 [00:00<?, ?img/s]tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.3163137137889862
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3352, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.310189425945282
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3290, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.3158295154571533
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3344, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.3223976492881775
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3370, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.30978453159332275
+Epoch 25/180:   0%|          | 0/2622 [19:05<?, ?img/s]
+INFO: Checkpoint 25 saved!
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3260, device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(909.5956, device='cuda:0')
+Epoch 26/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.31389689445495605
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31649109721183777
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31877991557121277
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3226795792579651
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3142903447151184
+Epoch 26/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 26 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(883.5388, device='cuda:0')
+Epoch 27/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3100854754447937
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32506033778190613
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32475337386131287
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3076169490814209
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31683549284935
+Epoch 27/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 27 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(872.7925, device='cuda:0')
+Epoch 28/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3086429834365845
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30559366941452026
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3217737674713135
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3115011751651764
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3110971450805664
+Epoch 28/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 28 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(853.7276, device='cuda:0')
+Epoch 29/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.31876879930496216
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31758755445480347
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30572792887687683
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3061508238315582
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3171924650669098
+Epoch 29/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 29 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(850.1058, device='cuda:0')
+Epoch 30/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.323091059923172
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3107636868953705
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3205571174621582
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31608206033706665
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32392093539237976
+Epoch 30/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 30 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(840.8245, device='cuda:0')
+Epoch 31/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.31612029671669006
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3181094229221344
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32027915120124817
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3248947858810425
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32685065269470215
+Epoch 31/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 31 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(811.7648, device='cuda:0')
+Epoch 32/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3126376271247864
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31132811307907104
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.315839022397995
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31566092371940613
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30863267183303833
+Epoch 32/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 32 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(788.6370, device='cuda:0')
+Epoch 33/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.28908616304397583
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30823642015457153
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3127988278865814
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32994788885116577
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3102700710296631
+Epoch 33/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 33 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(786.0897, device='cuda:0')
+Epoch 34/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.29955798387527466
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30472466349601746
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30661919713020325
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.29758039116859436
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31397387385368347
+Epoch 34/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 34 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(785.4584, device='cuda:0')
+Epoch 35/180:   0%|          | 0/2622 [00:00<?, ?img/s]tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.31423529982566833
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3355, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.315369576215744
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3367, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.31367337703704834
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3329, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.32081058621406555
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3384, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.29501357674598694
+Epoch 35/180:   0%|          | 0/2622 [19:04<?, ?img/s]
+INFO: Checkpoint 35 saved!
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3151, device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(763.2063, device='cuda:0')
+Epoch 36/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3195596933364868
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31860804557800293
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30320003628730774
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3244982361793518
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32315894961357117
+Epoch 36/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 36 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(744.5514, device='cuda:0')
+Epoch 37/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.31305497884750366
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31794285774230957
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3249537944793701
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3268009126186371
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.28684201836586
+Epoch 37/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 37 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(728.8585, device='cuda:0')
+Epoch 38/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3157491385936737
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32247623801231384
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32006725668907166
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.321361780166626
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3128187358379364
+Epoch 38/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 38 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(710.4237, device='cuda:0')
+Epoch 39/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3166698217391968
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3117673099040985
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32548630237579346
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31127601861953735
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3177746832370758
+Epoch 39/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 39 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(707.5455, device='cuda:0')
+Epoch 40/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3123267590999603
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31333035230636597
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31523963809013367
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3041331171989441
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3220638036727905
+Epoch 40/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 40 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(711.5940, device='cuda:0')
+Epoch 41/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3031599819660187
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31351137161254883
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32327374815940857
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3205650746822357
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32476386427879333
+Epoch 41/180:   0%|          | 0/2622 [09:49<?, ?img/s]
+INFO: Checkpoint 41 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(688.7411, device='cuda:0')
+Epoch 42/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3192601799964905
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3020549416542053
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3065780997276306
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3134663999080658
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30484533309936523
+Epoch 42/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 42 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(679.7730, device='cuda:0')
+Epoch 43/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3284091055393219
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3152974545955658
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3163607716560364
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3181968927383423
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.305976003408432
+Epoch 43/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 43 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(651.4520, device='cuda:0')
+Epoch 44/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.32390108704566956
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31959521770477295
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32146182656288147
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.307071328163147
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3129105865955353
+Epoch 44/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 44 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(637.5583, device='cuda:0')
+Epoch 45/180:   0%|          | 0/2622 [00:00<?, ?img/s]tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.31354057788848877
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3386, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.31636786460876465
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3381, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.30788373947143555
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3312, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.326068639755249
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3467, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.3184848129749298
+Epoch 45/180:   0%|          | 0/2622 [19:06<?, ?img/s]
+INFO: Checkpoint 45 saved!
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3344, device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(632.0236, device='cuda:0')
+Epoch 46/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3237875699996948
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31603124737739563
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3272901475429535
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32275208830833435
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31819823384284973
+Epoch 46/180:   0%|          | 0/2622 [09:51<?, ?img/s]
+INFO: Checkpoint 46 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(620.6860, device='cuda:0')
+Epoch 47/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.32625123858451843
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3163844347000122
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3185187876224518
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3169797360897064
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32594630122184753
+Epoch 47/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 47 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(616.6678, device='cuda:0')
+Epoch 48/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3120725750923157
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3144330680370331
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3053247332572937
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3190465271472931
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32640084624290466
+Epoch 48/180:   0%|          | 0/2622 [09:49<?, ?img/s]
+INFO: Checkpoint 48 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(601.1369, device='cuda:0')
+Epoch 49/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3143407106399536
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3219088315963745
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3197386860847473
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3066338896751404
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31647902727127075
+Epoch 49/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 49 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(601.9139, device='cuda:0')
+Epoch 50/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.30751749873161316
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32042044401168823
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31468987464904785
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3246324360370636
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32028552889823914
+Epoch 50/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 50 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(578.3502, device='cuda:0')
+Epoch 51/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.31455206871032715
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3171374499797821
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3147315979003906
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.309039831161499
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3178398013114929
+Epoch 51/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 51 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(574.7638, device='cuda:0')
+Epoch 52/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.32567283511161804
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3193216025829315
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.310403436422348
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3230524957180023
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3226425051689148
+Epoch 52/180:   0%|          | 0/2622 [09:49<?, ?img/s]
+INFO: Checkpoint 52 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(567.3325, device='cuda:0')
+Epoch 53/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.32432061433792114
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31127893924713135
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.2788955569267273
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32476940751075745
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3235796391963959
+Epoch 53/180:   0%|          | 0/2622 [09:49<?, ?img/s]
+INFO: Checkpoint 53 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(568.2848, device='cuda:0')
+Epoch 54/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3267604410648346
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3165513277053833
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31733596324920654
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3209960162639618
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3180776834487915
+Epoch 54/180:   0%|          | 0/2622 [09:52<?, ?img/s]
+INFO: Checkpoint 54 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(561.1605, device='cuda:0')
+Epoch 55/180:   0%|          | 0/2622 [00:00<?, ?img/s]tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.31837335228919983
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3384, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.32071974873542786
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3444, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.31920045614242554
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3400, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.3200034499168396
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3447, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.3058347702026367
+Epoch 55/180:   0%|          | 0/2622 [19:09<?, ?img/s]
+INFO: Checkpoint 55 saved!
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3280, device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(536.8154, device='cuda:0')
+Epoch 56/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.31236332654953003
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32270675897598267
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3195026218891144
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.309752881526947
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30848395824432373
+Epoch 56/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 56 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(528.2196, device='cuda:0')
+Epoch 57/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.31938493251800537
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32953914999961853
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3223194479942322
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3240383267402649
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3147462010383606
+Epoch 57/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 57 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(523.6400, device='cuda:0')
+Epoch 58/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.32804688811302185
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31484347581863403
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32898905873298645
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32162484526634216
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3181460499763489
+Epoch 58/180:   0%|          | 0/2622 [09:50<?, ?img/s]
+INFO: Checkpoint 58 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(512.2878, device='cuda:0')
+Epoch 59/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.31976810097694397
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31606587767601013
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3233601748943329
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3034459352493286
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3093404471874237
+Epoch 59/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 59 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(504.5452, device='cuda:0')
+Epoch 60/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3048013746738434
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32516053318977356
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3190244138240814
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31333181262016296
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.319963663816452
+Epoch 60/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 60 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(505.8672, device='cuda:0')
+Epoch 61/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3265690505504608
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3207310438156128
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3132784962654114
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3187193274497986
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30227094888687134
+Epoch 61/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 61 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(486.9846, device='cuda:0')
+Epoch 62/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.32772254943847656
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3174115717411041
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.28874891996383667
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30275025963783264
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3134518563747406
+Epoch 62/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 62 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(490.2751, device='cuda:0')
+Epoch 63/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.324307918548584
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3141418695449829
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3215363323688507
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31939515471458435
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31281399726867676
+Epoch 63/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 63 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(477.3812, device='cuda:0')
+Epoch 64/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3072075843811035
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3256378471851349
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3212151527404785
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31933873891830444
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32084882259368896
+Epoch 64/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 64 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(487.0883, device='cuda:0')
+Epoch 65/180:   0%|          | 0/2622 [00:00<?, ?img/s]tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.3147943317890167
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3385, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.32939788699150085
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3481, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.3254348337650299
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3511, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.32017332315444946
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3405, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.3253783881664276
+Epoch 65/180:   0%|          | 0/2622 [19:04<?, ?img/s]
+INFO: Checkpoint 65 saved!
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3505, device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(475.9286, device='cuda:0')
+Epoch 66/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.31838417053222656
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3238110840320587
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3097386062145233
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3159009516239166
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3224553167819977
+Epoch 66/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 66 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(479.7234, device='cuda:0')
+Epoch 67/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.32205691933631897
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.324601411819458
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3119121789932251
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.29181209206581116
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32437339425086975
+Epoch 67/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 67 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(467.7032, device='cuda:0')
+Epoch 68/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3110467791557312
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.33008599281311035
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3166567087173462
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3280888795852661
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32643580436706543
+Epoch 68/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 68 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(449.0591, device='cuda:0')
+Epoch 69/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.32076823711395264
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.328762024641037
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3125271201133728
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3061385452747345
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32094845175743103
+Epoch 69/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 69 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(439.5663, device='cuda:0')
+Epoch 70/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.31247979402542114
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.314644455909729
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3251270055770874
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3343868553638458
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31295251846313477
+Epoch 70/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 70 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(429.4532, device='cuda:0')
+Epoch 71/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.33013904094696045
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3288540840148926
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3187585473060608
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31390443444252014
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3174196779727936
+Epoch 71/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 71 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(434.7449, device='cuda:0')
+Epoch 72/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.32689398527145386
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30983561277389526
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3232495188713074
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3260917365550995
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3257324695587158
+Epoch 72/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 72 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(418.6015, device='cuda:0')
+Epoch 73/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3206137418746948
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3115604519844055
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32639309763908386
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3205496370792389
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3296312689781189
+Epoch 73/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 73 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(402.3143, device='cuda:0')
+Epoch 74/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.31471890211105347
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30646058917045593
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32147660851478577
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3210713863372803
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32080355286598206
+Epoch 74/180:   0%|          | 0/2622 [09:49<?, ?img/s]
+INFO: Checkpoint 74 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(399.9742, device='cuda:0')
+Epoch 75/180:   0%|          | 0/2622 [00:00<?, ?img/s]tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.31007811427116394
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3359, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.32393741607666016
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3415, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.30865296721458435
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3381, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.3154052793979645
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3438, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.31912440061569214
+Epoch 75/180:   0%|          | 0/2622 [19:04<?, ?img/s]
+INFO: Checkpoint 75 saved!
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3488, device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(408.2119, device='cuda:0')
+Epoch 76/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3164646625518799
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3225630819797516
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30929338932037354
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32840701937675476
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31841349601745605
+Epoch 76/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 76 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(402.9428, device='cuda:0')
+Epoch 77/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.325833797454834
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32449349761009216
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3283750116825104
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.328006774187088
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31121909618377686
+Epoch 77/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 77 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(392.4180, device='cuda:0')
+Epoch 78/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.31801360845565796
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3167838156223297
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32557088136672974
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31924453377723694
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31571537256240845
+Epoch 78/180:   0%|          | 0/2622 [09:46<?, ?img/s]
+INFO: Checkpoint 78 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(388.8008, device='cuda:0')
+Epoch 79/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.33209726214408875
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3207598626613617
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31660667061805725
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3283753991127014
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31551089882850647
+Epoch 79/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 79 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(381.2512, device='cuda:0')
+Epoch 80/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.32594481110572815
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31905892491340637
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3279151916503906
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3031672537326813
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3273927569389343
+Epoch 80/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 80 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(371.8388, device='cuda:0')
+Epoch 81/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.33128783106803894
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.33278563618659973
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31303077936172485
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3169679343700409
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.314755916595459
+Epoch 81/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 81 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(356.3181, device='cuda:0')
+Epoch 82/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3223261535167694
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3239350914955139
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.30347320437431335
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3173418939113617
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3276364803314209
+Epoch 82/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 82 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(370.7238, device='cuda:0')
+Epoch 83/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.30511176586151123
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32971715927124023
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.2932644188404083
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32478147745132446
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3193912208080292
+Epoch 83/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 83 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(373.9660, device='cuda:0')
+Epoch 84/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.2969237267971039
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3171590566635132
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32662081718444824
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3241156339645386
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31534403562545776
+Epoch 84/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 84 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(342.4193, device='cuda:0')
+Epoch 85/180:   0%|          | 0/2622 [00:00<?, ?img/s]tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.3143121302127838
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3424, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.3186074197292328
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3429, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.3092758357524872
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3269, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.319091796875
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3419, device='cuda:0')
+ new lr:  1e-08
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+INFO: Validation overlap score: 0.32885488867759705
+Epoch 85/180:   0%|          | 0/2622 [19:03<?, ?img/s]
+INFO: Checkpoint 85 saved!
+tensor([0.4032, 0.0251, 0.0194, 0.0284, 0.0211, 0.0250, 0.0207, 0.0355, 0.0347,
+        0.0373, 0.0187, 0.0213, 0.0335, 0.0204, 0.0225, 0.1235, 0.0225, 0.0171,
+        0.0251, 0.0236, 0.0214], device='cuda:0') tensor(1.0000, device='cuda:0')
+TRAIN EVAL: tensor(0.3530, device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(337.6326, device='cuda:0')
+Epoch 86/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.31754887104034424
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3264096677303314
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32081496715545654
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3238412141799927
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3176565170288086
+Epoch 86/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 86 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(345.1384, device='cuda:0')
+Epoch 87/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.32343602180480957
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31798678636550903
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31170305609703064
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3254878520965576
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31597045063972473
+Epoch 87/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 87 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(339.3103, device='cuda:0')
+Epoch 88/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3140386939048767
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.2986627519130707
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3264252543449402
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3356930613517761
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3107524514198303
+Epoch 88/180:   0%|          | 0/2622 [09:48<?, ?img/s]
+INFO: Checkpoint 88 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(334.1713, device='cuda:0')
+Epoch 89/180:   0%|          | 0/2622 [00:00<?, ?img/s]INFO: Validation overlap score: 0.3137693405151367
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31706923246383667
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.32328522205352783
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.3181028366088867
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+INFO: Validation overlap score: 0.31659066677093506
+Epoch 89/180:   0%|          | 0/2622 [09:47<?, ?img/s]
+INFO: Checkpoint 89 saved!
+tensor([0.3913, 0.0204, 0.0245, 0.0326, 0.0177, 0.0285, 0.0245, 0.0340, 0.0340,
+        0.0394, 0.0190, 0.0258, 0.0435, 0.0204, 0.0149, 0.1182, 0.0285, 0.0122,
+        0.0272, 0.0190, 0.0245], device='cuda:0') tensor(1., device='cuda:0')
+ new lr:  1e-08
+average loss during this epoch =  tensor(342.4930, device='cuda:0')
+Epoch 90/180:   0%|          | 0/2622 [00:00<?, ?img/s]slurmstepd: error: *** JOB 63349148 ON k28i14 CANCELLED AT 2025-01-04T17:44:42 DUE TO TIME LIMIT ***

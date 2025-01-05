@@ -169,7 +169,6 @@ def evaluateWeaklySupervised(net, dataloader, device, amp):
         for batch in dataloader:
             valsize += 1
             image, mask_true = batch['image'], batch['mask']
-
             # Move data to device and ensure correct data types
             image = image.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
             mask_true = mask_true.to(device=device, dtype=torch.long)
@@ -180,16 +179,18 @@ def evaluateWeaklySupervised(net, dataloader, device, amp):
             # Compute softmax probabilities and get class predictions
             mask_pred = F.softmax(mask_pred, dim=1)
             mask_pred_class = torch.argmax(mask_pred, dim=1)
-
+            
             # Flatten masks for easier processing
             mask_pred_class = mask_pred_class.view(-1)
             mask_true = mask_true.view(-1)
-
+            print(torch.unique(mask_pred_class))
+            print(torch.unique(mask_true))
+            assert(mask_true.shape == mask_pred_class.shape)
             # Compute IoU for each class
-            for cls in range(num_classes):
+            for clss in range(num_classes):
                 # Binary masks for the current class
-                pred_mask = (mask_pred_class == cls)
-                true_mask = (mask_true == cls)
+                pred_mask = (mask_pred_class == clss)
+                true_mask = (mask_true == clss)
 
                 # Only compute IoU if the ground truth mask is not empty
                 if true_mask.sum() > 0:
@@ -197,23 +198,21 @@ def evaluateWeaklySupervised(net, dataloader, device, amp):
                     union = (pred_mask | true_mask).sum().float()
 
 
-                    iou_per_class[cls] += intersection / union
-                    valid_classes[cls] += 1
+                    iou_per_class[clss] += intersection / union
+                    valid_classes[clss] += 1
 
     # Warn about classes not present in the evaluation set
-    missing_classes = [cls for cls in range(num_classes) if valid_classes[cls] == 0]
+    missing_classes = [clss for clss in range(num_classes) if valid_classes[clss] == 0]
     if missing_classes:
         print(f"Warning: The following classes are not present in the evaluation set: {missing_classes}")
 
     weights = valid_classes/valid_classes.sum()
-    print(weights,weights.sum())
 
-    meanIoUclasses = [iou_per_class[cl]/valid_classes[cl] for cl in range(num_classes) if valid_classes[cls] != 0 else "none"]
-
+    meanIoUclasses = [iou_per_class[cl]/valid_classes[cl] for cl in range(num_classes)]
+    print(meanIoUclasses)
     totalWeightedMeanIoU = 0
     for cl in range(0,21):
-        if meanIoUclasses[cl] !== "none":
-            totalWeightedMeanIoU += meanIoUclasses[cl]*weights[cl]
+        totalWeightedMeanIoU += meanIoUclasses[cl]*weights[cl]
 
     # Print per-class IoU for debugging or analysis
 

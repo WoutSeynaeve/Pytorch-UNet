@@ -105,6 +105,8 @@ def ifXthenYatRelation(normalized_tensor, X, Y, relation,NOT = None):
     probs_J = normalized_tensor[Y, :, :]  # Shape: (H, W)
     probs_I = torch.clamp(probs_I, 0, 1 - 1e-7)
     probs_J = torch.clamp(probs_J, 0, 1 - 1e-7)
+    probs_I = probs_I[::50, ::50] #downscale
+    probs_J = probs_J[::50, ::50]
 
     # Preprocess based on the specified relation
     if relation == "left":
@@ -243,7 +245,7 @@ def about_p_percent_is_class(normalized_tensor,classesList,p,single=None):
 
 
     
-    maxloss = 1000
+    maxloss = 100
     NumberOfPixels = p*totalPixels
   
     loss = maxloss*torch.abs(ExpectedPixels-NumberOfPixels)/totalPixels #REMOVED SQUARE!!!!!
@@ -258,7 +260,7 @@ def alteast_p_percent_is_class(normalized_tensor,classesList,p):
     print("expected pixels being classes",classesList,"=",ExpectedPixels) 
     _, H, W = normalized_tensor.shape
 
-    maxloss = 1000
+    maxloss = 100
 
     totalPixels = H*W
     NumberOfPixels = p*totalPixels
@@ -276,7 +278,7 @@ def almost_p_percent_is_class(normalized_tensor,classesList,p):
 
     _, H, W = normalized_tensor.shape
 
-    maxloss = 1000
+    maxloss = 100
 
     totalPixels = H*W
     NumberOfPixels = p*totalPixels

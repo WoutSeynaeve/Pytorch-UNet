@@ -120,10 +120,10 @@ def parse_data(data):
 def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
    
     #             ImageLevelLoss, Adjacencies, BBoxObject, OutsideBBoxNotObject, BBoxBackground, Smoothness, Scribbles, Relations
-    configuration = [[True,5],   [False,1] ,    [True,1,0.5],        [True,2] ,        [True,20],     [False,100], [True,1],  [False,1]]
+    configuration = [[False,5],   [False,100] ,  [True,1,100],    [True,1] ,       [False,20],  [False,5000], [True,1],  [False,100]]
     
     #             Scr. Objects, Scr. Background, Scr.NOT objects, Scr.NOT Background   
-    ScribbleTypes = [[True,5],    [True,10],         [True,10],       [True,1]]   
+    ScribbleTypes = [[True,1],    [False,10],         [True,1],       [False,1]]   
 
     output_tensor = output_tensor[0,:,:,:]
     output_tensor = F.softmax(output_tensor, dim=0)
@@ -142,13 +142,19 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
                     print("loss for adjacency between",objects,": ",addloss)
 
     if configuration[7][0]:
+        counter = 0
         for i in relations:
-            i = i[0]
-            objects = i.split(',')
-            X = objects[2]
-            Y = objects[0]
-            relation = objects[1]
-            loss += ifXthenYatRelation(output_tensor, class_values[X], class_values[Y],relation)
+            counter += 1
+            if counter % 2 != 0:
+                i = i[0]
+                objects = i.split(',')
+                X = objects[2]
+                Y = objects[0]
+                relation = objects[1]
+                addloss = ifXthenYatRelation(output_tensor, class_values[X], class_values[Y],relation)
+                if printLosses:
+                    print("loss for realtion:",i," : ",addloss)
+                loss += addloss
     
     if configuration[6][0]:
         for i in scribbles:
@@ -171,6 +177,7 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
                     else:
                         if ScribbleTypes[1][0]:
                             if len(scribbleCoords) != 0:
+                                assert(objects == "background")
                                 addloss = scribble(output_tensor,np.array(scribbleCoords),class_values[objects])/ScribbleTypes[1][1]
                                 if printLosses:
                                     print("loss for 'background scribble shoud be class (lowered loss)",objects,": ",addloss.item())
@@ -244,11 +251,13 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
             i = i[0]
             info = i.split(',')
             objects = info[0::2]
-            for i in objects:
-                if loss != np.inf:
-                    addloss = ifXthenXadjecent(output_tensor, class_values[i])/configuration[5][1]
-                    if addloss > 0.1:
-                        loss += addloss  
+            for i in objects: #background is included
+                addloss = ifXthenXadjecent(output_tensor, class_values[i])/configuration[5][1]
+                if addloss > 0.1 and addloss < 1000:
+                    if printLosses:
+                        print("loss for smoothenss object",i," : ",addloss)
+                    loss += addloss 
+
     # if loss.item() < 22:
     #     print(weaklabels[0][3],loss)
     return loss
