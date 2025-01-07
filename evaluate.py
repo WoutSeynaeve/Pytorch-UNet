@@ -183,8 +183,7 @@ def evaluateWeaklySupervised(net, dataloader, device, amp):
             # Flatten masks for easier processing
             mask_pred_class = mask_pred_class.view(-1)
             mask_true = mask_true.view(-1)
-            print(torch.unique(mask_pred_class))
-            print(torch.unique(mask_true))
+       
             assert(mask_true.shape == mask_pred_class.shape)
             # Compute IoU for each class
             for clss in range(num_classes):
