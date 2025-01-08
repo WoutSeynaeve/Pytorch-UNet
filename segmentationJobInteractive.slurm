@@ -20,4 +20,4 @@ echo The node architecture is $VSC_ARCH_LOCAL
 echo Current path is $(pwd)
 
 
-python trainWeaklySupervised.py -l 1e-7
+python trainWeaklySupervised.py -l 1e-8 --load './savedModels/83lossWbackground.pth'
