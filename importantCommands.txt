@@ -1,8 +1,11 @@
-module load PyTorch-bundle/2.1.2-foss-2023a-CUDA-12.1.1
-module load matplotlib/3.7.2-gfbf-2023a
+module load PyTorch-bundle/2.1.2-foss-2023a-CUDA-12.1.1 matplotlib/3.7.2-gfbf-2023a
  
 cd SegmentationModel/Pytorch-UNet/
 
-train: python trainWeaklySupervisedV2.py --classes 21 --amp --scale 1
+train: python trainWeaklySupervisedV2.py --classes 21 --scale 1
 
-predict: python predict.py -i ./testImages/2007_001834.jpg -o output.jpg --classes 21 --scale 1 -m './checkpoints/checkpoint_epoch1.pth'
+predict: 
+python predict.py -i ./testImages/2007_001834.jpg -o output.jpg --classes 21 --scale 1 -m './checkpoints/checkpoint_epoch1.pth'
+python predict.py -i ./testImages/2007_001834.jpg -o output.jpg --classes 21 --scale 1 -m './...'
+
+python predict.py -i ../../DebugDataset/JPEGImages/2007_001185.jpg -o output.jpg --classes 21 --scale 1 -m './DebugCheckpoints/checkpoint_epoch1.pth'
