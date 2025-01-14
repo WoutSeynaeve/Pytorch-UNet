@@ -117,13 +117,18 @@ def parse_data(data):
     return adjacency, relations, scribbles, image_level, bboxes
 
 
-def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
+def calculateLogicLoss(output_tensor,weaklabels,printLosses = False,signal):
    
-    #             ImageLevelLoss, Adjacencies, BBoxObject, OutsideBBoxNotObject, BBoxBackground, Smoothness, Scribbles, Relations
-    configuration = [[False,5],   [False,100] ,  [True,1,100],    [True,1] ,       [False,20],  [False,5000], [True,1],  [False,100]]
+    #             ImageLevelLoss, Adjacencies, BBoxObject, OutsideBBoxNotObject, BBoxBackground, Smoothness, Scribbles, Relations, BBoxObjectNotBackground
+    configuration = [[False,5],   [False,5] ,  [False,1],    [False,1] ,       [False,20],      [False,5000], [True,1],  [False,5] ,     [False,1]]
     
     #             Scr. Objects, Scr. Background, Scr.NOT objects, Scr.NOT Background   
     ScribbleTypes = [[True,1],    [False,10],         [True,1],       [False,1]]   
+    
+    if signal == 1:    #allows for dynamic changing of loss
+        configuration[1][0] = True
+    if signal == 2:
+        configuration[7][0] = True
 
     output_tensor = output_tensor[0,:,:,:]
     output_tensor = F.softmax(output_tensor, dim=0)
@@ -135,7 +140,7 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
         for i in adjacencies:
             i = i[0]
             objects = i.split(',')
-            addloss = adjacency(output_tensor, class_values[objects[0]], class_values[objects[1]])
+            addloss = adjacency(output_tensor, class_values[objects[0]], class_values[objects[1]])/configuration[1][1]
             if addloss > 0.1:
                 loss += addloss
                 if printLosses:
@@ -151,7 +156,7 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
                 X = objects[2]
                 Y = objects[0]
                 relation = objects[1]
-                addloss = ifXthenYatRelation(output_tensor, class_values[X], class_values[Y],relation)
+                addloss = ifXthenYatRelation(output_tensor, class_values[X], class_values[Y],relation)/configuration[7][1]
                 if printLosses:
                     print("loss for realtion:",i," : ",addloss)
                 loss += addloss
@@ -190,7 +195,7 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
                             print("loss for scribbles for class",objectString,": ",addloss.item())
                         loss += addloss
                     if ScribbleTypes[3][0]:
-                        addloss = scribble(output_tensor,np.array(scribbleCoords),class_values["background"],"not")
+                        addloss = scribble(output_tensor,np.array(scribbleCoords),class_values["background"],"not")/ScribbleTypes[3][1]
                         if printLosses:
                             print("loss for scribble of class",objectString,"should not be background",addloss.item())
                         loss += addloss
@@ -238,11 +243,12 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False):
             if printLosses:
                 print("loss for boundingboxes for",objectt," : ",addloss.item())
             loss += addloss
-            addloss = atmost_p_percent_is_class_in_bounding_box(output_tensor,[class_values['background']],1-percentage,int(x1),int(x2),int(y1),int(y2))/configuration[2][2]
-            if addloss != 0:
-                if printLosses:
-                    print("loss for background to not take in boundingbox",objectt," : ",addloss.item())
-                loss += addloss
+            if configuration[8][0]:
+                addloss = atmost_p_percent_is_class_in_bounding_box(output_tensor,[class_values['background']],1-percentage,int(x1),int(x2),int(y1),int(y2))/configuration[8][1]
+                if addloss != 0:
+                    if printLosses:
+                        print("loss for background to not take in boundingbox",objectt," : ",addloss.item())
+                    loss += addloss
             
     
     #GLOBAL SMOOTHNESS CONSTRAINT

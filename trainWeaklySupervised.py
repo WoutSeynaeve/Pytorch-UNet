@@ -157,6 +157,7 @@ def train_model(
                    
     else:
         showPbar = False
+        signal = 0
         # 5. Begin training
         for epoch in range(1, epochs + 1):
             model.train()
@@ -177,8 +178,11 @@ def train_model(
                     with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
                         masks_pred = model(images)
                         #after a while, mask_pred becomes all NAN !! problem!!
-                     
-                        loss = calculateLogicLoss(masks_pred,weaklabel)
+                        if epoch > 30:
+                            signal = 1
+                        if epoch > 50:  #testing purposes
+                            signal = 2
+                        loss = calculateLogicLoss(masks_pred,weaklabel,signal)
                         if loss.item() > 0 and loss.item() < np.inf:
                             pass
                         else:
