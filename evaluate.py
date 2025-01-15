@@ -211,14 +211,17 @@ def evaluateWeaklySupervised(net, dataloader, device, amp):
     print(meanIoUclasses)
     totalWeightedMeanIoU = 0
     for cl in range(0,21):
-        totalWeightedMeanIoU += meanIoUclasses[cl]*weights[cl]
+        if meanIoUclasses[cl] >= 0 and meanIoUclasses[cl] <= 1 :
+            totalWeightedMeanIoU += meanIoUclasses[cl]*weights[cl]
 
     weightsWithoutbackground = valid_classes/(valid_classes.sum()-valid_classes[0])
     totalWeightedMeanIoUWithoutBackground = 0
     for cl in range(1,21):
-        totalWeightedMeanIoUWithoutBackground += meanIoUclasses[cl]*weightsWithoutbackground[cl]
+        if meanIoUclasses[cl] >= 0 and meanIoUclasses[cl] <= 1 :
+            totalWeightedMeanIoUWithoutBackground += meanIoUclasses[cl]*weightsWithoutbackground[cl]
     checksumWeights = sum(weightsWithoutbackground[1:])
-    print("eval withouth background",totalWeightedMeanIoUWithoutBackground, checksumWeights," == 1?")
+    assert(checksumWeights.item() == 1)
+    print("eval withouth background",totalWeightedMeanIoUWithoutBackground)
 
     # Print per-class IoU for debugging or analysis
 

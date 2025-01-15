@@ -105,8 +105,8 @@ def ifXthenYatRelation(normalized_tensor, X, Y, relation,NOT = None):
     probs_J = normalized_tensor[Y, :, :]  # Shape: (H, W)
     probs_I = torch.clamp(probs_I, 0, 1 - 1e-7)
     probs_J = torch.clamp(probs_J, 0, 1 - 1e-7)
-    probs_I = probs_I[::50, ::50] #downscale
-    probs_J = probs_J[::50, ::50]
+    probs_I = probs_I[::10, ::10] #downscale
+    probs_J = probs_J[::10, ::10]
 
     # Preprocess based on the specified relation
     if relation == "left":

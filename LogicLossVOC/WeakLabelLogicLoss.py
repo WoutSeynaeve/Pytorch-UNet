@@ -117,18 +117,18 @@ def parse_data(data):
     return adjacency, relations, scribbles, image_level, bboxes
 
 
-def calculateLogicLoss(output_tensor,weaklabels,printLosses = False,signal):
+def calculateLogicLoss(output_tensor,weaklabels,signal,printLosses = False):
    
     #             ImageLevelLoss, Adjacencies, BBoxObject, OutsideBBoxNotObject, BBoxBackground, Smoothness, Scribbles, Relations, BBoxObjectNotBackground
-    configuration = [[False,5],   [False,5] ,  [False,1],    [False,1] ,       [False,20],      [False,5000], [True,1],  [False,5] ,     [False,1]]
+    configuration = [[False,5],   [False,5] ,  [False,1],    [False,1] ,       [False,20],      [False,5000], [True,1],  [True,5] ,     [False,1]]
     
     #             Scr. Objects, Scr. Background, Scr.NOT objects, Scr.NOT Background   
     ScribbleTypes = [[True,1],    [False,10],         [True,1],       [False,1]]   
     
-    if signal == 1:    #allows for dynamic changing of loss
-        configuration[1][0] = True
-    if signal == 2:
-        configuration[7][0] = True
+    # if signal == 1:    #allows for dynamic changing of loss
+    #     configuration[1][0] = True
+    # if signal == 2:
+    #     configuration[7][0] = True
 
     output_tensor = output_tensor[0,:,:,:]
     output_tensor = F.softmax(output_tensor, dim=0)
@@ -150,7 +150,7 @@ def calculateLogicLoss(output_tensor,weaklabels,printLosses = False,signal):
         counter = 0
         for i in relations:
             counter += 1
-            if counter % 2 != 0:
+            if True: #counter % 2 != 0:
                 i = i[0]
                 objects = i.split(',')
                 X = objects[2]

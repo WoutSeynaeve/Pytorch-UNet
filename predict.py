@@ -99,10 +99,10 @@ def mask_to_image(mask: np.ndarray, mask_values):
 
     # Count class frequencies in the mask
     class_counts = Counter(mask.flatten())
-    top_classes = class_counts.most_common(5)
+    top_classes = class_counts.most_common(15)
     print(top_classes)
-    # Print top 5 classes
-    print("Top 5 classes in the image (class: count):")
+    # Print top classes
+    print("Top classes in the image (class: count):")
     for cls, count in top_classes:
         print(f"Class {class_values[cls]}: {count} pixels")
 

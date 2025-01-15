@@ -13,7 +13,7 @@ from torch import optim
 from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
 
-from evaluate import evaluate
+from evaluate import evaluate, evaluateWeaklySupervised
 from unet import UNet
 from utils.data_loading import BasicDataset, CarvanaDataset
 from utils.dice_score import dice_loss
@@ -77,8 +77,11 @@ def train_model(
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'max', patience=5)  # goal: maximize Dice score
     grad_scaler = torch.cuda.amp.GradScaler(enabled=amp)
 
+    weightsVOC = torch.ones(21)
+    weightsVOC[0] = 0.000001
+    weightsVOC = weightsVOC.cuda(0)
     #added ignore_index to ignore uncertain-labelled pixels in the ground truth masks
-    criterion = nn.CrossEntropyLoss(ignore_index=255) if model.n_classes > 1 else nn.BCEWithLogitsLoss()
+    criterion = nn.CrossEntropyLoss(weight = weightsVOC, ignore_index=21) if model.n_classes > 1 else nn.BCEWithLogitsLoss()
     global_step = 0
 
     # 5. Begin training
@@ -99,16 +102,17 @@ def train_model(
 
                 with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
                     masks_pred = model(images)
-                    if model.n_classes == 1:
-                        loss = criterion(masks_pred.squeeze(1), true_masks.float())
-                        loss += dice_loss(F.sigmoid(masks_pred.squeeze(1)), true_masks.float(), multiclass=False)
-                    else:
-                        loss = criterion(masks_pred, true_masks)
-                        loss += dice_loss(
-                            F.softmax(masks_pred, dim=1).float(),
-                            F.one_hot(true_masks, model.n_classes).permute(0, 3, 1, 2).float(),
-                            multiclass=True
-                        )
+                    # if model.n_classes == 1:
+                    #     loss = criterion(masks_pred.squeeze(1), true_masks.float())
+                    #     loss += dice_loss(F.sigmoid(masks_pred.squeeze(1)), true_masks.float(), multiclass=False)
+                    # else:
+                    #     loss = criterion(masks_pred, true_masks)
+                    #     loss += dice_loss(
+                    #         F.softmax(masks_pred, dim=1).float(),
+                    #         F.one_hot(true_masks, model.n_classes).permute(0, 3, 1, 2).float(),
+                    #         multiclass=True
+                    #     )
+                    loss = criterion(masks_pred, true_masks)
 
                 optimizer.zero_grad(set_to_none=True)
                 grad_scaler.scale(loss).backward()
@@ -117,7 +121,7 @@ def train_model(
                 grad_scaler.step(optimizer)
                 grad_scaler.update()
 
-                pbar.update(images.shape[0])
+                
                 global_step += 1
                 epoch_loss += loss.item()
                 # experiment.log({
@@ -125,7 +129,9 @@ def train_model(
                 #     'step': global_step,
                 #     'epoch': epoch
                 # })
-                pbar.set_postfix(**{'loss (batch)': loss.item()})
+                if False:
+                    pbar.update(images.shape[0])
+                    pbar.set_postfix(**{'loss (batch)': loss.item()})
 
                 # Evaluation round
                 division_step = (n_train // (5 * batch_size))
@@ -139,10 +145,13 @@ def train_model(
                         #     if not (torch.isinf(value.grad) | torch.isnan(value.grad)).any():
                         #         histograms['Gradients/' + tag] = wandb.Histogram(value.grad.data.cpu())
 
-                        val_score = evaluate(model, val_loader, device, amp)
+                        #val_score = evaluate(model, val_loader, device, amp)
+                        val_score = evaluateWeaklySupervised(model, val_loader, device, amp)
                         scheduler.step(val_score)
-
-                        logging.info('Validation Dice score: {}'.format(val_score))
+                        if epoch%10 == 5:
+                                print("TRAIN EVAL:",evaluateWeaklySupervised(model,train_loader,device,amp))
+                                
+                        logging.info('Validation IoU score: {}'.format(val_score))
                         # try:
                         #     experiment.log({
                         #         'learning rate': optimizer.param_groups[0]['lr'],
@@ -170,17 +179,17 @@ def train_model(
 def get_args():
     #note: Batch size can be upped, but the images must be resized (scaled or padded) to have the same format!!
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')
-    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=5, help='Number of epochs')
+    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=180, help='Number of epochs')
     parser.add_argument('--batch-size', '-b', dest='batch_size', metavar='B', type=int, default=1, help='Batch size')
-    parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-5,
+    parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-7,
                         help='Learning rate', dest='lr')
     parser.add_argument('--load', '-f', type=str, default=False, help='Load model from a .pth file')
-    parser.add_argument('--scale', '-s', type=float, default=0.5, help='Downscaling factor of the images')
+    parser.add_argument('--scale', '-s', type=float, default=1, help='Downscaling factor of the images')
     parser.add_argument('--validation', '-v', dest='val', type=float, default=10.0,
                         help='Percent of the data that is used as validation (0-100)')
     parser.add_argument('--amp', action='store_true', default=False, help='Use mixed precision')
     parser.add_argument('--bilinear', action='store_true', default=False, help='Use bilinear upsampling')
-    parser.add_argument('--classes', '-c', type=int, default=2, help='Number of classes')
+    parser.add_argument('--classes', '-c', type=int, default=21, help='Number of classes')
 
     return parser.parse_args()
 

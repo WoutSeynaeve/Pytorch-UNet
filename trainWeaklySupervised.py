@@ -18,7 +18,7 @@ from unet import UNet
 from utils.data_loading import WeakLabelDataset,BasicDataset
 import numpy as np 
 
-debug = False
+debug = True
 if debug:
     dir_img = Path('../../DebugDataset/JPEGImages/')
     dir_mask = Path('../../DebugDataset/segmentationGroundTruth/')
@@ -95,6 +95,7 @@ def train_model(
     configuration_instance = configurations[configuration]
     if debug:
         epochs = 1
+        signal = 0
             # 5. Begin training
         for epoch in range(1, epochs + 1):
             model.train()
@@ -114,14 +115,14 @@ def train_model(
                             masks_pred = model(images)
                             #after a while, mask_pred becomes all NAN !! problem!!
 
-                            loss = calculateLogicLoss(masks_pred,weaklabel,True)
+                            loss = calculateLogicLoss(masks_pred,weaklabel,signal, True)
                             if loss.item() > 0 and loss.item() < np.inf:
                                 pass
                             else:
                                 print(loss,"\n",masks_pred)
                                 report = 0
                                 assert(report == 1)
-                        if loss.item() < 0.1:
+                        if loss.item() < 0.5:
                             break
                         optimizer.zero_grad(set_to_none=True)
                         grad_scaler.scale(loss).backward()
@@ -178,10 +179,10 @@ def train_model(
                     with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
                         masks_pred = model(images)
                         #after a while, mask_pred becomes all NAN !! problem!!
-                        if epoch > 30:
-                            signal = 1
-                        if epoch > 50:  #testing purposes
-                            signal = 2
+                        # if epoch > 30:
+                        #     signal = 1
+                        # if epoch > 50:  #testing purposes
+                        #     signal = 2
                         loss = calculateLogicLoss(masks_pred,weaklabel,signal)
                         if loss.item() > 0 and loss.item() < np.inf:
                             pass
