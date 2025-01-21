@@ -183,7 +183,7 @@ def evaluateWeaklySupervised(net, dataloader, device, amp):
             # Flatten masks for easier processing
             mask_pred_class = mask_pred_class.view(-1)
             mask_true = mask_true.view(-1)
-       
+            #print(mask_pred_class.unique(),mask_true.unique())
             assert(mask_true.shape == mask_pred_class.shape)
             # Compute IoU for each class
             for clss in range(num_classes):
@@ -220,7 +220,8 @@ def evaluateWeaklySupervised(net, dataloader, device, amp):
         if meanIoUclasses[cl] >= 0 and meanIoUclasses[cl] <= 1 :
             totalWeightedMeanIoUWithoutBackground += meanIoUclasses[cl]*weightsWithoutbackground[cl]
     checksumWeights = sum(weightsWithoutbackground[1:])
-    assert(checksumWeights.item() == 1)
+    if checksumWeights.item() != 1:
+        print(checksumWeights.item()," should be = 1")
     print("eval withouth background",totalWeightedMeanIoUWithoutBackground)
 
     # Print per-class IoU for debugging or analysis

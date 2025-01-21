@@ -77,17 +77,40 @@ def train_model(
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'max', patience=5)  # goal: maximize Dice score
     grad_scaler = torch.cuda.amp.GradScaler(enabled=amp)
 
-    weightsVOC = torch.ones(21)
-    weightsVOC[0] = 0.000001
+    class_counts = torch.tensor([ #these are the class frequencies of the dataset !! for background some arbritray weight is chosen
+    10000, 327, 268, 395, 260, 365, 213, 590, 539, 566, 
+    151, 269, 632, 237, 265, 1994, 269, 171, 257, 273, 290])
+    # Compute the weight for each class (inverse frequency)
+    weightsVOC = 1.0 / class_counts.float()
+    print(weightsVOC)
+    weightsVOC /= torch.sum(weightsVOC)
+    print(weightsVOC)
     weightsVOC = weightsVOC.cuda(0)
     #added ignore_index to ignore uncertain-labelled pixels in the ground truth masks
-    criterion = nn.CrossEntropyLoss(weight = weightsVOC, ignore_index=21) if model.n_classes > 1 else nn.BCEWithLogitsLoss()
+    criterion = nn.CrossEntropyLoss(weight = weightsVOC, ignore_index=21)
+
     global_step = 0
 
     # 5. Begin training
     for epoch in range(1, epochs + 1):
         model.train()
         epoch_loss = 0
+
+        """added"""
+        if epoch == 40:
+            weightsVOC = weightsVOC**2
+            criterion = nn.CrossEntropyLoss(weight = weightsVOC, ignore_index=21)
+        if epoch == 60:
+            weightsVOC = weightsVOC**2
+            criterion = nn.CrossEntropyLoss(weight = weightsVOC, ignore_index=21)
+        if epoch == 80:
+            optimizer = optim.RMSprop(model.parameters(),
+                                lr=1e-6, weight_decay=weight_decay, momentum=momentum, foreach=True)
+        if epoch == 96:
+            optimizer = optim.RMSprop(model.parameters(),
+                                lr=1e-10, weight_decay=weight_decay, momentum=momentum, foreach=True)                     
+        """^^added^^^"""
+
         with tqdm(total=n_train, desc=f'Epoch {epoch}/{epochs}', unit='img') as pbar:
             for batch in train_loader:
                 images, true_masks = batch['image'], batch['mask']
@@ -167,7 +190,7 @@ def train_model(
                         #     })
                         # except:
                         #     pass
-
+        print("loss this epoch:",epoch_loss)
         if save_checkpoint:
             Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
             state_dict = model.state_dict()
@@ -181,7 +204,7 @@ def get_args():
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')
     parser.add_argument('--epochs', '-e', metavar='E', type=int, default=180, help='Number of epochs')
     parser.add_argument('--batch-size', '-b', dest='batch_size', metavar='B', type=int, default=1, help='Batch size')
-    parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-7,
+    parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-8,
                         help='Learning rate', dest='lr')
     parser.add_argument('--load', '-f', type=str, default=False, help='Load model from a .pth file')
     parser.add_argument('--scale', '-s', type=float, default=1, help='Downscaling factor of the images')
