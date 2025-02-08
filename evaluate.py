@@ -208,7 +208,7 @@ def evaluateWeaklySupervised(net, dataloader, device, amp):
     weights = valid_classes/valid_classes.sum()
 
     meanIoUclasses = [iou_per_class[cl]/valid_classes[cl] for cl in range(num_classes)]
-    print(meanIoUclasses)
+    print([meanIoUclass.item() for meanIoUclass in meanIoUclasses])
     totalWeightedMeanIoU = 0
     for cl in range(0,21):
         if meanIoUclasses[cl] >= 0 and meanIoUclasses[cl] <= 1 :
