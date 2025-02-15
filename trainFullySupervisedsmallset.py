@@ -89,7 +89,7 @@ def train_model(
 
     #these are the class frequencies of the dataset !! for background some arbritray weight is chosen
     class_counts = torch.tensor([
-    80000,178, 144, 208, 150, 183, 152, 255, 250, 271, 135, 
+    500000,178, 144, 208, 150, 183, 152, 255, 250, 271, 135, 
     157, 249, 147, 157, 887, 167, 120, 183, 167, 158
     ])
     # Compute the weight for each class (inverse frequency)
@@ -131,7 +131,7 @@ def train_model(
                             masks_pred = model(images)
                             #after a while, mask_pred becomes all NAN !! problem!!
 
-                            loss = criterion(masks_pred, true_masks)
+                            loss = multiclass_tversky_loss(masks_pred, true_masks,class_counts,alpha, beta)
                             if loss.item() > 0 and loss.item() < np.inf:
                                 pass
                             else:
@@ -179,10 +179,26 @@ def train_model(
             epoch_loss = 0
 
             """added"""
-            if epoch == 60 and False:
+            if epoch == 100:
                 print("changing weights")
-                weightsVOC[0] = 0.000009
-                criterion = nn.CrossEntropyLoss(weight = weightsVOC, ignore_index=21)                    
+                class_counts[0] = 50000
+            if epoch == 150:
+                print("changing weights")
+                class_counts[0] = 10000
+            if epoch == 200:
+                print("changing weights")
+                class_counts[0] = 5000
+            if epoch == 240:
+                print("changing lr")
+                print("and class counts back to ignore more background")
+                class_counts[0] = 50000
+                optimizer = optim.RMSprop(model.parameters(),
+                lr=1e-10, weight_decay=weight_decay, momentum=momentum, foreach=True)    
+            if epoch == 300:
+                print("changing lr")
+                class_counts[0] = 5000
+                optimizer = optim.RMSprop(model.parameters(),
+                lr=1e-8, weight_decay=weight_decay, momentum=momentum, foreach=True)            
             """^^added^^^"""
 
             with tqdm(total=n_train, desc=f'Epoch {epoch}/{epochs}', unit='img') as pbar:
@@ -209,7 +225,10 @@ def train_model(
                         #         F.one_hot(true_masks, model.n_classes).permute(0, 3, 1, 2).float(),
                         #         multiclass=True
                         #     )
-                        loss = criterion(masks_pred, true_masks)
+                        
+                        #loss = multiclass_tversky_loss(masks_pred, true_masks,class_counts,0.5,0.5)  # Computes loss
+                        loss = multiclass_tversky_loss2(masks_pred, true_masks,class_counts,0.5,0.5)
+
 
                     optimizer.zero_grad(set_to_none=True)
                     grad_scaler.scale(loss).backward()
@@ -232,9 +251,9 @@ def train_model(
                     if False:
                         pbar.update(images.shape[0])
                         pbar.set_postfix(**{'loss (batch)': loss.item()})
-
+                    
                     # Evaluation round
-                    division_step = (n_train // (5 * batch_size))
+                    division_step = (n_train // (2 * batch_size))
                     if division_step > 0:
                         if global_step % division_step == 0:
                             # histograms = {}
@@ -248,8 +267,6 @@ def train_model(
                             #val_score = evaluate(model, val_loader, device, amp)
                             val_score = evaluateWeaklySupervised(model, val_loader, device, amp)
                             scheduler.step(val_score)
-                            if epoch%10 == 5:
-                                    print("TRAIN EVAL:",evaluateWeaklySupervised(model,train_loader,device,amp))
                                     
                             logging.info('Validation IoU score: {}'.format(val_score))
                             # try:
@@ -267,6 +284,9 @@ def train_model(
                             #     })
                             # except:
                             #     pass
+                    
+            if epoch%10 == 5:
+                print("TRAIN EVAL:",evaluateWeaklySupervised(model,train_loader,device,amp))
             print("average loss this epoch:",epoch_loss/2622)
             if save_checkpoint:
                 Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
@@ -274,17 +294,101 @@ def train_model(
                 state_dict['mask_values'] = dataset.mask_values
                 torch.save(state_dict, str(dir_checkpoint / 'checkpoint_epoch{}.pth'.format(epoch)))
                 logging.info(f'Checkpoint {epoch} saved!')
+def multiclass_tversky_loss(logits, true_mask,class_counts,alpha, beta, num_classes=21, ignore_index=21, smooth=1e-6):
+    """
+    Computes multi-class Tversky loss for segmentation.
 
+    Args:
+        logits (Tensor): Model output of shape (B, C, H, W) (before softmax).
+        true_mask (Tensor): Ground truth of shape (B, H, W) with class indices (0 to 21).
+        num_classes (int): Number of relevant classes (excluding ignored class).
+        ignore_index (int): Class index to ignore in loss computation.
+        alpha (float): Controls penalty for false positives.
+        beta (float): Controls penalty for false negatives.
+        smooth (float): Small constant to avoid division by zero.
+
+    Returns:
+        Tensor: Scalar Tversky loss value.
+    """
+    # Convert logits to probabilities
+    probs = F.softmax(logits, dim=1)  # Shape: (B, C, H, W)
+
+    # Create one-hot encoding of true_mask, ignoring ignore_index
+    true_mask = true_mask.clone()
+    true_mask[true_mask == ignore_index] = num_classes  # Temporarily set ignored pixels to an out-of-range value
+    true_one_hot = F.one_hot(true_mask, num_classes=num_classes + 1).permute(0, 3, 1, 2).float()  # Shape: (B, C+1, H, W)
+
+    # Remove ignored class channel
+    true_one_hot = true_one_hot[:, :num_classes, :, :]  # Shape: (B, num_classes, H, W)
+
+    # Compute per-class Tversky index
+    TP = (probs * true_one_hot).sum(dim=(2, 3))  # True positives (sum over H, W)
+    FP = ((1 - true_one_hot) * probs).sum(dim=(2, 3))  # False positives
+    FN = (true_one_hot * (1 - probs)).sum(dim=(2, 3))  # False negatives
+    # Compute per-class Tversky score
+    tversky_score = (TP + smooth) / (TP + alpha * FP + beta * FN + smooth)
+    # Compute class weights as inverse class frequencies
+    class_weights = 1.0 / (class_counts.float() + 1e-6)
+    class_weights = class_weights / class_weights.sum()  # Normalize to sum to 1
+
+    # Compute weighted mean Tversky loss
+    weighted_loss = (1 - tversky_score) * class_weights.to(logits.device)  # Move to GPU if needed
+    return weighted_loss.sum()  # Sum ensures proper weighting
+def multiclass_tversky_loss2(logits, true_mask, class_counts, alpha, beta, num_classes=21, ignore_index=21, smooth=1e-6):
+    """
+    Computes multi-class Tversky loss for segmentation, only using classes present in the true mask.
+    """
+    # Convert logits to probabilities
+    probs = F.softmax(logits, dim=1)  # Shape: (B, C, H, W)
+    
+    # Identify unique classes in the mask (excluding ignore_index)
+    unique_classes = torch.unique(true_mask)
+    unique_classes = unique_classes[unique_classes != ignore_index]  # Remove ignored class
+    
+    if unique_classes.numel() == 0:  # If no valid classes exist, return zero loss
+        return torch.tensor(0.0, device=logits.device, dtype=logits.dtype)
+    # Create one-hot encoding of true_mask, ignoring ignore_index
+    true_mask = true_mask.clone()
+    true_mask[true_mask == ignore_index] = num_classes  # Temporarily set ignored pixels to an out-of-range value
+    true_one_hot = F.one_hot(true_mask, num_classes=num_classes + 1).permute(0, 3, 1, 2).float()  # Shape: (B, C+1, H, W)
+    
+    # Remove ignored class channel
+    true_one_hot = true_one_hot[:, :num_classes, :, :]
+    
+    # Compute per-class Tversky index
+    TP = (probs * true_one_hot).sum(dim=(2, 3))  # True positives
+    FP = ((1 - true_one_hot) * probs).sum(dim=(2, 3))  # False positives
+    FN = (true_one_hot * (1 - probs)).sum(dim=(2, 3))  # False negatives
+    
+    # Compute per-class Tversky score
+    tversky_score = (TP + smooth) / (TP + alpha * FP + beta * FN + smooth)
+    
+    # Filter to only use present classes
+    present_class_mask = torch.zeros(num_classes, device=logits.device, dtype=torch.bool)
+    present_class_mask[unique_classes] = True  # Mark present classes
+    
+    # Compute class weights as inverse class frequencies
+    class_weights = 1.0 / (class_counts.float() + 1e-6)
+    class_weights = class_weights / class_weights.sum()  # Normalize
+    class_weights = class_weights.to(logits.device)  # Ensure it is on the same device
+    # Apply mask to ignore absent classes
+    filtered_tversky_score = tversky_score[present_class_mask.expand_as(tversky_score)]
+    filtered_class_weights = class_weights[present_class_mask.squeeze(0)]
+    
+    # Compute weighted mean Tversky loss
+    weighted_loss = (1 - filtered_tversky_score) * filtered_class_weights.to(logits.device)
+    return weighted_loss.sum()
+   
 
 def get_args():
     #note: Batch size can be upped, but the images must be resized (scaled or padded) to have the same format!!
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')
-    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=180, help='Number of epochs')
+    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=360, help='Number of epochs')
     parser.add_argument('--batch-size', '-b', dest='batch_size', metavar='B', type=int, default=1, help='Batch size')
-    parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-8,
+    parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-9,
                         help='Learning rate', dest='lr')
     parser.add_argument('--load', '-f', type=str, default=False, help='Load model from a .pth file')
-    parser.add_argument('--scale', '-s', type=float, default=1, help='Downscaling factor of the images')
+    parser.add_argument('--scale', '-s', type=float, default=0.5, help='Downscaling factor of the images')
     parser.add_argument('--validation', '-v', dest='val', type=float, default=10.0,
                         help='Percent of the data that is used as validation (0-100)')
     parser.add_argument('--amp', action='store_true', default=True, help='Use mixed precision')
