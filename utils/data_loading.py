@@ -12,7 +12,7 @@ from pathlib import Path
 from torch.utils.data import Dataset
 from tqdm import tqdm
 from LogicLossVOC.WeakLabelLogicLoss import read_dataset,parse_data
-
+from LogicLossVOC.WeakLabelLogicLossCLEVR import parse_dataCLEVR
 def load_image(filename):
     ext = splitext(filename)[1]
     if ext == '.npy':
@@ -118,63 +118,6 @@ class CarvanaDataset(BasicDataset):
         super().__init__(images_dir, mask_dir, scale, mask_suffix='_mask')
 
 
-class WeaklyLabelledDataset(Dataset):
-    def __init__(self, images_dir: str, mask_dir: str, scale: float = 1.0, mask_suffix: str = ''):
-        self.images_dir = Path(images_dir)
-        self.mask_dir = Path(mask_dir)
-        assert 0 < scale <= 1, 'Scale must be between 0 and 1'
-        self.scale = scale
-        self.mask_suffix = mask_suffix
-
-        self.ids = [splitext(file)[0] for file in listdir(images_dir) if isfile(join(images_dir, file)) and not file.startswith('.')]
-        if not self.ids:
-            raise RuntimeError(f'No input file found in {images_dir}, make sure you put your images there')
-
-        logging.info(f'Creating dataset with {len(self.ids)} examples')
-        
-        
-
-    def __len__(self):
-        return len(self.ids)
-
-    @staticmethod
-    def preprocess(pil_img, scale, is_mask = False):
-        w, h = pil_img.size
-        newW, newH = int(scale * w), int(scale * h)
-        assert newW > 0 and newH > 0, 'Scale is too small, resized images would have no pixel'
-        pil_img = pil_img.resize((newW, newH), resample=Image.NEAREST if is_mask else Image.BICUBIC)
-        img = np.asarray(pil_img)
-        
-        if img.ndim == 2:
-            img = img[np.newaxis, ...]
-        else:
-            img = img.transpose((2, 0, 1))
-
-        if (img > 1).any():
-            img = img / 255.0
-
-        return img
-
-    def __getitem__(self, idx):
-        name = self.ids[idx]
-        mask_file = list(self.mask_dir.glob(name + self.mask_suffix + '.*'))
-        img_file = list(self.images_dir.glob(name + '.*'))
-
-        assert len(img_file) == 1, f'Either no image or multiple images found for the ID {name}: {img_file}'
-        assert len(mask_file) == 1, f'Either no mask or multiple masks found for the ID {name}: {mask_file}'
-        mask = mask_file
-        extracted_data = read_dataset(mask_file[0])
-        parsed_data = parse_data(extracted_data)
-
-        img = load_image(img_file[0])
-
-        img = self.preprocess(img, self.scale)
-
-        return {
-            'image': torch.as_tensor(img.copy()).float().contiguous(),
-            'mask': [parsed_data]
-        }
-
 class WeakLabelDataset(Dataset):
     def __init__(self, images_dir: str, mask_dir: str, weaklabel_dir: str, scale: float = 1.0, mask_suffix: str = ''):
         self.images_dir = Path(images_dir)
@@ -259,5 +202,82 @@ class WeakLabelDataset(Dataset):
         return {
             'image': torch.as_tensor(img.copy()).float().contiguous(),
             'mask': torch.as_tensor(mask.copy()).long().contiguous(),
+            'weaklabel': weaklabel
+        }
+
+
+class WeakLabelDatasetCLEVR(Dataset):
+    def __init__(self, images_dir: str, weaklabel_dir: str, scale: float = 1.0, mask_suffix: str = ''):
+        self.images_dir = Path(images_dir)
+        self.weaklabel_dir = Path(weaklabel_dir)
+        assert 0 < scale <= 1, 'Scale must be between 0 and 1'
+        self.scale = scale
+        self.mask_suffix = mask_suffix
+
+        self.ids = [splitext(file)[0] for file in listdir(images_dir) if isfile(join(images_dir, file)) and not file.startswith('.')]
+        if not self.ids:
+            raise RuntimeError(f'No input file found in {images_dir}, make sure you put your images there')
+
+        logging.info(f'Creating dataset with {len(self.ids)} examples')
+       
+        
+
+    def __len__(self):
+        return len(self.ids)
+
+    @staticmethod
+    def preprocess(mask_values, pil_img, scale, is_mask):
+        w, h = pil_img.size
+        newW, newH = int(scale * w), int(scale * h)
+        assert newW > 0 and newH > 0, 'Scale is too small, resized images would have no pixel'
+
+        # Ensure image is RGB (removes Alpha channel if present)
+        if not is_mask:
+            pil_img = pil_img.convert("RGB")  
+
+        pil_img = pil_img.resize((newW, newH), resample=Image.NEAREST if is_mask else Image.BICUBIC)
+        img = np.asarray(pil_img)
+
+        if is_mask:
+            mask = np.zeros((newH, newW), dtype=np.int64)
+            for i, v in enumerate(mask_values):
+                if img.ndim == 2:
+                    mask[img == v] = i
+                else:
+                    mask[(img == v).all(-1)] = i
+            return mask
+
+        else:
+            if img.ndim == 2:  
+                img = img[np.newaxis, ...]  # Convert grayscale to (1, H, W)
+            else:
+                img = img[:, :, :3]  # Ensure only 3 channels (RGB)
+                img = img.transpose((2, 0, 1))  # Convert to (C, H, W)
+
+            if (img > 1).any():
+                img = img / 255.0  # Normalize to [0,1]
+
+            return img
+    @staticmethod
+    def processWeaklabel(weaklabel_file):
+        extracted_data = read_dataset(weaklabel_file[0])
+        parsed_data = parse_dataCLEVR(extracted_data)
+        return [parsed_data]
+
+    def __getitem__(self, idx):
+        name = self.ids[idx]
+        img_file = list(self.images_dir.glob(name + '.*'))
+        weaklabel_file = list(self.weaklabel_dir.glob(name + '.*'))
+
+        assert len(img_file) == 1, f'Either no image or multiple images found for the ID {name}: {img_file}'
+        assert len(weaklabel_file) == 1, f'Either no mask or multiple weaklabels found for the ID {name}: {weaklabel_file}'
+        img = load_image(img_file[0])
+
+       
+        img = self.preprocess(None, img, self.scale, is_mask=False)
+        weaklabel = self.processWeaklabel(weaklabel_file)
+
+        return {
+            'image': torch.as_tensor(img.copy()).float().contiguous(),
             'weaklabel': weaklabel
         }

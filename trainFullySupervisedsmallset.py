@@ -92,13 +92,22 @@ def train_model(
     500000,178, 144, 208, 150, 183, 152, 255, 250, 271, 135, 
     157, 249, 147, 157, 887, 167, 120, 183, 167, 158
     ])
+    class_counts = torch.tensor([ #ADJUSTED
+    5000,70, 50, 80, 75, 60, 152, 150, 100, 100, 100, 
+    157, 249, 147, 100, 150, 167, 60, 183, 167, 158
+    ])
+    class_countsIoU = torch.tensor([ #ADJUSTED
+    4000,70, 50, 60, 50, 30, 60, 80, 100, 100, 60, 
+    80, 120, 70, 100, 150, 80, 60, 100, 120, 100
+    ])
+    class_weights = 1.0 / (class_counts.float() + 1e-6)
+    class_weights = class_weights / class_weights.sum()  # Normalize
+    print(class_weights)
     # Compute the weight for each class (inverse frequency)
     weightsVOC = 1.0 / class_counts.float()
-    print(weightsVOC)
     weightsVOC /= torch.sum(weightsVOC)
     weightsVOC = weightsVOC**2
     weightsVOC /= torch.sum(weightsVOC)
-    print(weightsVOC)
     weightsVOC = weightsVOC.cuda(0)
     #added ignore_index to ignore uncertain-labelled pixels in the ground truth masks
     criterion = nn.CrossEntropyLoss(weight = weightsVOC, ignore_index=21)
@@ -116,7 +125,7 @@ def train_model(
             epoch_loss = 0
             with tqdm(total=n_train, desc=f'Epoch {epoch}/{epochs}', unit='img') as pbar:
                 for batch in train_loader:
-                    for i in range(300):
+                    for i in range(800):
                         images, true_masks = batch['image'], batch['mask']
                         
                         assert images.shape[1] == model.n_channels, \
@@ -131,14 +140,15 @@ def train_model(
                             masks_pred = model(images)
                             #after a while, mask_pred becomes all NAN !! problem!!
 
-                            loss = multiclass_tversky_loss(masks_pred, true_masks,class_counts,alpha, beta)
+                            #loss = multiclass_tversky_loss(masks_pred, true_masks,class_counts,alpha, beta)
+                            loss = multiclass_iou_loss(masks_pred,true_masks,class_countsIoU)
                             if loss.item() > 0 and loss.item() < np.inf:
                                 pass
                             else:
                                 print(loss,"\n",masks_pred)
                                 report = 0
                                 assert(report == 1)
-                        if loss.item() < 0.0005:
+                        if loss.item() < 0.00005:
                             break
                         optimizer.zero_grad(set_to_none=True)
                         grad_scaler.scale(loss).backward()
@@ -179,26 +189,26 @@ def train_model(
             epoch_loss = 0
 
             """added"""
-            if epoch == 100:
-                print("changing weights")
-                class_counts[0] = 50000
-            if epoch == 150:
-                print("changing weights")
-                class_counts[0] = 10000
-            if epoch == 200:
-                print("changing weights")
-                class_counts[0] = 5000
-            if epoch == 240:
-                print("changing lr")
-                print("and class counts back to ignore more background")
-                class_counts[0] = 50000
-                optimizer = optim.RMSprop(model.parameters(),
-                lr=1e-10, weight_decay=weight_decay, momentum=momentum, foreach=True)    
-            if epoch == 300:
-                print("changing lr")
-                class_counts[0] = 5000
-                optimizer = optim.RMSprop(model.parameters(),
-                lr=1e-8, weight_decay=weight_decay, momentum=momentum, foreach=True)            
+            # if epoch == 100:
+            #     print("changing weights")
+            #     class_counts[0] = 50000
+            # if epoch == 150:
+            #     print("changing weights")
+            #     class_counts[0] = 10000
+            # if epoch == 200:
+            #     print("changing weights")
+            #     class_counts[0] = 5000
+            # if epoch == 240:
+            #     print("changing lr")
+            #     print("and class counts back to ignore more background")
+            #     class_counts[0] = 50000
+            #     optimizer = optim.RMSprop(model.parameters(),
+            #     lr=1e-10, weight_decay=weight_decay, momentum=momentum, foreach=True)    
+            # if epoch == 300:
+            #     print("changing lr")
+            #     class_counts[0] = 5000
+            #     optimizer = optim.RMSprop(model.parameters(),
+            #     lr=1e-8, weight_decay=weight_decay, momentum=momentum, foreach=True)            
             """^^added^^^"""
 
             with tqdm(total=n_train, desc=f'Epoch {epoch}/{epochs}', unit='img') as pbar:
@@ -225,9 +235,11 @@ def train_model(
                         #         F.one_hot(true_masks, model.n_classes).permute(0, 3, 1, 2).float(),
                         #         multiclass=True
                         #     )
-                        
-                        #loss = multiclass_tversky_loss(masks_pred, true_masks,class_counts,0.5,0.5)  # Computes loss
-                        loss = multiclass_tversky_loss2(masks_pred, true_masks,class_counts,0.5,0.5)
+                        loss = 0
+                        loss += multiclass_tversky_loss(masks_pred, true_masks,class_counts,0.9,0.1)/2  # Computes loss
+                        loss += multiclass_tversky_loss2(masks_pred, true_masks,class_counts,0.5,0.5)
+                        loss += multiclass_iou_loss(masks_pred,true_masks,class_countsIoU)
+                        #best is using lr 1e-7 or something, it can reach non background IoU of 12% 
 
 
                     optimizer.zero_grad(set_to_none=True)
@@ -378,14 +390,70 @@ def multiclass_tversky_loss2(logits, true_mask, class_counts, alpha, beta, num_c
     # Compute weighted mean Tversky loss
     weighted_loss = (1 - filtered_tversky_score) * filtered_class_weights.to(logits.device)
     return weighted_loss.sum()
-   
+
+def multiclass_iou_loss(logits, true_mask, class_counts, num_classes=21, ignore_index=21, smooth=1e-6):
+    """
+    Computes multi-class IoU loss for segmentation, only using classes present in the true mask.
+    
+    Args:
+        logits (torch.Tensor): The predicted logits (BxCxHxW).
+        true_mask (torch.Tensor): The true mask (BxHxW), class indices.
+        class_counts (torch.Tensor): The frequency of each class in the dataset.
+        num_classes (int): Number of classes.
+        ignore_index (int): The value representing the background class.
+        smooth (float): Smoothing constant to avoid division by zero.
+    
+    Returns:
+        torch.Tensor: The weighted multi-class IoU loss.
+    """
+    # Convert logits to probabilities (softmax)
+    probs = F.softmax(logits, dim=1)  # Shape: (B, C, H, W)
+
+    # Identify unique classes in the mask (excluding ignore_index)
+    unique_classes = torch.unique(true_mask)
+    unique_classes = unique_classes[unique_classes != ignore_index]  # Remove ignored class
+
+    if unique_classes.numel() == 0:  # If no valid classes exist, return zero loss
+        return torch.tensor(0.0, device=logits.device, dtype=logits.dtype)
+
+    # Create one-hot encoding of true_mask, ignoring ignore_index
+    true_mask = true_mask.clone()
+    true_mask[true_mask == ignore_index] = num_classes  # Temporarily set ignored pixels to an out-of-range value
+    true_one_hot = F.one_hot(true_mask, num_classes=num_classes + 1).permute(0, 3, 1, 2).float()  # Shape: (B, C+1, H, W)
+    
+    # Remove ignored class channel
+    true_one_hot = true_one_hot[:, :num_classes, :, :]
+
+    # Compute intersection and union for each class
+    intersection = (probs * true_one_hot).sum(dim=(2, 3))  # Intersection per class
+    union = probs.sum(dim=(2, 3)) + true_one_hot.sum(dim=(2, 3)) - intersection  # Union per class
+
+    # Compute per-class IoU
+    iou = (intersection + smooth) / (union + smooth)
+
+    # Filter to only use present classes
+    present_class_mask = torch.zeros(num_classes, device=logits.device, dtype=torch.bool)
+    present_class_mask[unique_classes] = True  # Mark present classes
+
+    # Compute class weights as inverse class frequencies
+    class_weights = 1.0 / (class_counts.float() + 1e-6)
+    class_weights = class_weights / class_weights.sum()  # Normalize
+    class_weights = class_weights.to(logits.device)  # Ensure it is on the same device
+
+    # Apply mask to ignore absent classes
+    filtered_iou = iou[present_class_mask.expand_as(iou)]
+    filtered_class_weights = class_weights[present_class_mask.squeeze(0)]
+
+    # Compute weighted IoU loss
+    weighted_loss = (1 - filtered_iou) * filtered_class_weights.to(logits.device)
+    return weighted_loss.sum()
 
 def get_args():
     #note: Batch size can be upped, but the images must be resized (scaled or padded) to have the same format!!
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')
-    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=360, help='Number of epochs')
+    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=200, help='Number of epochs')
     parser.add_argument('--batch-size', '-b', dest='batch_size', metavar='B', type=int, default=1, help='Batch size')
-    parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-9,
+    parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-8,
                         help='Learning rate', dest='lr')
     parser.add_argument('--load', '-f', type=str, default=False, help='Load model from a .pth file')
     parser.add_argument('--scale', '-s', type=float, default=0.5, help='Downscaling factor of the images')
