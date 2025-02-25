@@ -122,9 +122,79 @@ def evaluateWeaklySupervised(net, dataloader, device, amp):
     net.train()
 
     return totalWeightedMeanIoU
-
 @torch.inference_mode()
 def evaluateWeaklySupervisedCLEVR(net, dataloader, device, amp):
+    net.eval()  # Set the model to evaluation mode
+    num_classes = 4  # CLEVR
+
+    # Initialize IoU accumulators
+    valid_classes = torch.zeros(num_classes, device=device)  # Tracks the count of valid images per class
+    iou_per_class = torch.zeros(num_classes, device=device)
+    # Iterate over the validation set
+    with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
+        valsize = 0
+        for batch in dataloader:
+            valsize += 1
+            image, weaklabel = batch['image'], batch["weaklabel"]
+            image = image.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
+            _, _, H, W = image.shape  # Extract height (H) and width (W)
+
+            # Initialize the mask with background (0)
+            # Predict the mask
+
+            mask_pred = net(image)
+
+            # Compute softmax probabilities and get class predictions
+            mask_pred = F.softmax(mask_pred, dim=1)
+            mask_pred_class = torch.argmax(mask_pred, dim=1)
+            mask_pred_class.squeeze(0)
+            # Flatten masks for easier processing
+            bboxlist = weaklabel[0][4]
+            indd = 0
+            for i in bboxlist:
+                indd += 1
+                if indd % 2 != 0:
+                    mask = torch.zeros((H, W), dtype=torch.long, device=device)
+                    i = i[0]
+                    i = i.split(',')
+                    objecIndex = class_values[i[0]]
+                    x1, x2, y1, y2 = map(int, i[1:5])
+                    mask[y1:y2+1, x1:x2+1] = objecIndex
+
+                    gt_mask = (mask == objecIndex)  # Ground truth mask for class
+                    pred_mask = (mask_pred_class == objecIndex)  # Predicted mask for class
+
+                    intersection = torch.sum(gt_mask & pred_mask)  # Logical AND
+                    union = torch.sum(gt_mask | pred_mask)  # Logical OR
+
+                    iou = intersection / union if union > 0 else torch.tensor(0.0, device=mask.device)
+                    assert(iou <= 1)
+                    iou_per_class[objecIndex] += iou
+            mask = torch.zeros((H, W), dtype=torch.long, device=device)
+            for i in bboxlist:
+                i = i[0]
+                i = i.split(',')
+                objecIndex = class_values[i[0]]
+                x1, x2, y1, y2 = map(int, i[1:5])
+                mask[y1:y2+1, x1:x2+1] = objecIndex
+
+            gt_mask = (mask == 0)  # Ground truth mask for class
+            pred_mask = (mask_pred_class == 0)  # Predicted mask for class
+
+            intersection = torch.sum(gt_mask & pred_mask)  # Logical AND
+            union = torch.sum(gt_mask | pred_mask)  # Logical OR
+
+            iou = intersection / union if union > 0 else torch.tensor(0.0, device=mask.device)
+            assert(iou <= 1)
+            iou_per_class[0] += iou
+        for i in range(0,4):
+            iou_per_class[i] /= valsize
+            assert(iou_per_class[i] <= 1)
+        print("val result",iou_per_class)
+        net.train()
+        return iou_per_class.mean()
+@torch.inference_mode()
+def evaluateWeaklySupervisedCLEVROLD(net, dataloader, device, amp):
     net.eval()  # Set the model to evaluation mode
     num_classes = 4  # CLEVR
 

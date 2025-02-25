@@ -13,7 +13,7 @@ from torch import optim
 from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
 from LogicLossVOC.WeakLabelLogicLossCLEVR import calculateLogicLoss
-from evaluate import evaluate, evaluateWeaklySupervised, evaluateWeaklySupervisedCLEVR
+from evaluate import evaluate, evaluateWeaklySupervised, evaluateWeaklySupervisedCLEVR,evaluateWeaklySupervisedCLEVROLD
 from unet import UNet
 from utils.data_loading import WeakLabelDataset,BasicDataset,WeakLabelDatasetCLEVR
 import numpy as np 
@@ -31,7 +31,12 @@ else:
     dir_weaklabel = Path('../../datasetCLEVRaug/scaledAnnotationsTrain4/')
     dir_checkpoint = Path('./checkpoints/')
 
-
+class_values = {
+    "background": 0,
+    "cylinder": 1,
+    "sphere": 2,
+    "cube": 3
+}
 def train_model(
         model,
         device,
@@ -92,11 +97,7 @@ def train_model(
 
     global_step = 0
 
-    #             ImageLevelLoss, Adjacencies, BBoxObject, OutsideBBoxNotObject, BBoxBackground, Smoothness, Scribbles, Relations
-    configuration1 = [[True,5],   [False,1] ,    [True,0.1],     [True,1] ,        [True,10],     [False,100], [False,1],  [False,1]]
-    
-    configurations = [configuration1]
-    configuration_instance = configurations[configuration]
+ 
     if debug:
         epochs = 1
         signal = 0
@@ -184,7 +185,9 @@ def train_model(
                         #     signal = 1
                         # if epoch > 50:  #testing purposes
                         #     signal = 2
-                        loss = calculateLogicLoss(masks_pred,weaklabel,signal)
+                        #loss = calculateLogicLoss(masks_pred,weaklabel,signal)
+                        _, _, H, W = images.shape  # Get image dimensions
+                        loss = diceLoss(masks_pred,weaklabel,H,W,device)
                         if loss.item() > 0 and loss.item() < np.inf:
                             optimizer.zero_grad(set_to_none=True)
                             grad_scaler.scale(loss).backward()
@@ -228,6 +231,7 @@ def train_model(
                             #val_score = evaluateWeaklySupervised2(model, val_loader, device, amp)
                           
                             val_score = evaluateWeaklySupervisedCLEVR(model, val_loader, device, amp)
+                            val_score = evaluateWeaklySupervisedCLEVROLD(model, val_loader, device, amp)
                             if epoch%10 == 5:
                             
                                 print("TRAIN EVAL:",evaluateWeaklySupervisedCLEVR(model,train_loader,device,amp))
@@ -260,6 +264,100 @@ def train_model(
                 logging.info(f'Checkpoint {epoch} saved!')
 
 
+def diceLoss(mask_pred, weaklabel, H, W, device, smooth=1.0):
+    """
+    Compute Dice Loss with bounding box supervision.
+    Uses softmax probabilities directly for class predictions.
+    """
+
+    # Convert logits to probabilities
+    mask_pred = F.softmax(mask_pred, dim=1)  # (1, C, H, W)
+
+    total_dice_loss = 0.0  # Initialize variable to accumulate loss
+
+    # Process weak labels (bounding boxes)
+    bboxlist = weaklabel[0][4]
+    indd = 0
+    for i in bboxlist:
+        indd += 1
+        if indd % 2 == 1:
+            i = i[0].split(',')
+            objecIndex = class_values[i[0]]  # Convert class label to index
+            x1, x2, y1, y2 = map(int, i[1:5])
+
+            # Initialize the ground truth for this bounding box (class-specific)
+            mask_gt = torch.zeros((H, W), dtype=torch.float32, device=device)
+            mask_gt[y1:y2+1, x1:x2+1] = 1
+
+            # Get the softmax probability for the specific class
+            pred_mask = mask_pred[:, objecIndex, :, :]  # Softmax probabilities for class objecIndex
+
+            # Compute intersection and union for Dice calculation
+            intersection = torch.sum(mask_gt * pred_mask)  # Intersection (AND)
+            union = torch.sum(mask_gt) + torch.sum(pred_mask)  # Union (OR)
+
+            # Dice coefficient calculation
+            dice_score = (2.0 * intersection + smooth) / (union + smooth)
+            
+            # Accumulate the loss without in-place operation
+            total_dice_loss += (1 - dice_score)  # Minimize (1 - Dice)
+
+    # Return the average Dice loss over all bounding boxes
+    return total_dice_loss / (len(bboxlist)/2)  # Average Dice loss over all bounding boxes
+
+def diceLoss3(mask_pred, weaklabel, H, W, device, num_classes=4, smooth=1.0):
+    """
+    Compute Dice Loss with bounding box supervision.
+    Uses softmax probabilities directly for class predictions.
+    """
+
+    # Convert logits to probabilities
+    mask_pred = F.softmax(mask_pred, dim=1)  # (1, C, H, W)
+
+    # Create ground truth mask initialized with background (0)
+    mask_gt = torch.zeros((H, W), dtype=torch.long, device=device)
+
+    # Process weak labels (bounding boxes)
+    bboxlist = weaklabel[0][4]
+    for i in bboxlist:
+        i = i[0].split(',')
+        objecIndex = class_values[i[0]]  # Convert class label to index
+        x1, x2, y1, y2 = map(int, i[1:5])
+        
+        # Assign the label only if the region is background (0)
+        mask_region = mask_gt[y1:y2+1, x1:x2+1]
+        mask_gt[y1:y2+1, x1:x2+1] = torch.where(mask_region == 0, objecIndex, mask_region)
+
+    dice_loss = torch.tensor(0.0, device=device, requires_grad=True)  # Ensure differentiability
+    num_fg_classes = num_classes - 1  # Excluding background (index 0)
+
+    # Compute Dice Loss per class (excluding background)
+    for c in range(1, num_classes):  # Start from 1 to exclude background
+        gt_mask = (mask_gt == c).float()  # Ground truth mask for class c (binary)
+        pred_mask = mask_pred[:, c, :, :]  # Softmax probabilities for class c
+
+        intersection = torch.sum(gt_mask * pred_mask)  # Intersection (AND)
+        union = torch.sum(gt_mask) + torch.sum(pred_mask)  # Union (OR)
+
+        # Dice coefficient calculation
+        dice_score = (2.0 * intersection + smooth) / (union + smooth)
+        dice_loss = dice_loss + (1 - dice_score)  # Minimize (1 - Dice)
+
+    return dice_loss / num_fg_classes  # Average Dice loss over foreground classes
+
+    # Compute Dice Loss per class (excluding background)
+    for c in range(1, num_classes):  
+        gt_mask = (mask_gt == c).float()  # Ground truth binary mask for class c
+        pred_mask = (mask_pred_class == c).float()  # Predicted binary mask for class c
+
+        intersection = torch.sum(gt_mask * pred_mask)  # Element-wise multiplication (AND)
+        union = torch.sum(gt_mask) + torch.sum(pred_mask)  # Total pixels of both masks
+
+        dice_score = (2.0 * intersection + smooth) / (union + smooth)  # Dice coefficient
+        dice_loss += (1 - dice_score)  # Minimize (1 - Dice)
+
+    return dice_loss / num_fg_classes  # Average Dice loss over foreground classes
+    
 def get_args():
     #note: Batch size can be upped, but the images must be resized (scaled or padded) to have the same format!!
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')

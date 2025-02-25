@@ -213,7 +213,7 @@ class WeakLabelDatasetCLEVR(Dataset):
         assert 0 < scale <= 1, 'Scale must be between 0 and 1'
         self.scale = scale
         self.mask_suffix = mask_suffix
-
+       
         self.ids = [splitext(file)[0] for file in listdir(images_dir) if isfile(join(images_dir, file)) and not file.startswith('.')]
         if not self.ids:
             raise RuntimeError(f'No input file found in {images_dir}, make sure you put your images there')
@@ -229,6 +229,7 @@ class WeakLabelDatasetCLEVR(Dataset):
     def preprocess(mask_values, pil_img, scale, is_mask):
         w, h = pil_img.size
         newW, newH = int(scale * w), int(scale * h)
+
         assert newW > 0 and newH > 0, 'Scale is too small, resized images would have no pixel'
 
         # Ensure image is RGB (removes Alpha channel if present)
@@ -268,7 +269,6 @@ class WeakLabelDatasetCLEVR(Dataset):
         name = self.ids[idx]
         img_file = list(self.images_dir.glob(name + '.*'))
         weaklabel_file = list(self.weaklabel_dir.glob(name + '.*'))
-
         assert len(img_file) == 1, f'Either no image or multiple images found for the ID {name}: {img_file}'
         assert len(weaklabel_file) == 1, f'Either no mask or multiple weaklabels found for the ID {name}: {weaklabel_file}'
         img = load_image(img_file[0])

@@ -59,7 +59,7 @@ def predict_img(net,
             mask = output.argmax(dim=1)  # Assign pixels to the class with the highest probability
             # Create a condition where the max probability must be above 0.5
             max_probs, _ = output.max(dim=1)  # Get the maximum probability for each pixel
-            mask[max_probs <= 0.2] = 0  # Set mask to 0 for pixels where no class has prob > th
+            mask[max_probs <= 0] = 0  # Set mask to 0 for pixels where no class has prob > th
         else:
             mask = torch.sigmoid(output) > out_threshold
 
