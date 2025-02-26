@@ -62,7 +62,7 @@ def get_args():
                         help='Minimum probability value to consider a mask pixel white')
     parser.add_argument('--scale', '-s', type=float, default=1, #changed from 0.5
                         help='Scale factor for the input images')
-    parser.add_argument('--bilinear', action='store_true', default=False, help='Use bilinear upsampling')
+    parser.add_argument('--bilinear', action='store_true', default=True, help='Use bilinear upsampling')
     parser.add_argument('--classes', '-c', type=int, default=2, help='Number of classes')
     
     return parser.parse_args()
@@ -91,9 +91,9 @@ def mask_to_image(mask: np.ndarray, mask_values):
 
     manual_colors = [
     (0, 0, 0),  # Class 0: Background (black)
-    (255, 0, 0),  # Class 1: Red
+    (0, 0, 255),  # Class 1: Blue
     (0, 255, 0),  # Class 2: Green
-    (0, 0, 255),  # Class 3: Blue
+    (255, 0, 0),  # Class 3: Red
     (255, 255, 0),  # Class 4: Yellow
     (255, 0, 255),  # Class 5: Magenta
     (0, 255, 255),  # Class 6: Cyan

@@ -247,3 +247,49 @@ def evaluateWeaklySupervisedCLEVROLD(net, dataloader, device, amp):
         print("val result",iou_per_class)
         net.train()
         return iou_per_class.mean()
+        
+@torch.inference_mode()
+def evaluateFullySupervisedCLEVR(net, dataloader, device, amp):
+    net.eval()  # Set the model to evaluation mode
+    num_classes = 4  # CLEVR has 4 classes
+
+    # Initialize IoU accumulators
+    valid_classes = torch.zeros(num_classes, device=device)  # Track class presence
+    iou_per_class = torch.zeros(num_classes, device=device)
+
+    # Iterate over the validation set
+    with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
+        valsize = 0  # Count the number of validation samples
+        for batch in dataloader:
+            valsize += 1
+            image, true_mask = batch['image'], batch["mask"]
+            image = image.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
+            true_mask = true_mask.to(device=device)
+
+            # Predict the mask
+            mask_pred = net(image)
+
+            # Compute softmax probabilities and get class predictions
+            mask_pred = F.softmax(mask_pred, dim=1)
+            mask_pred_class = torch.argmax(mask_pred, dim=1)  # Get predicted class per pixel
+
+            # Compute IoU for each class
+            for i in range(num_classes):
+                pred_i = (mask_pred_class == i)
+                true_i = (true_mask == i)
+
+                intersection = torch.sum(pred_i & true_i).float()
+                union = torch.sum(pred_i | true_i).float()
+
+                if union > 0:
+                    iou_per_class[i] += (intersection / union)
+                    valid_classes[i] += 1  # Class i is present in this batch
+
+        # Average IoU over valid classes
+        for i in range(num_classes):
+            if valid_classes[i] > 0:
+                iou_per_class[i] /= valid_classes[i]
+
+        print("Validation IoU per class:", iou_per_class)
+        net.train()
+        return iou_per_class.mean()  # Return mean IoU over all classes

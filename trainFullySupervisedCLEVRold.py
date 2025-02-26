@@ -13,9 +13,9 @@ from torch import optim
 from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
 from LogicLossVOC.WeakLabelLogicLossCLEVR import calculateLogicLoss
-from evaluate import evaluate, evaluateWeaklySupervised, evaluateWeaklySupervisedCLEVR,evaluateWeaklySupervisedCLEVROLD,evaluateFullySupervisedCLEVR
+from evaluate import evaluate, evaluateWeaklySupervised, evaluateWeaklySupervisedCLEVR,evaluateWeaklySupervisedCLEVROLD
 from unet import UNet
-from utils.data_loading import WeakLabelDataset,BasicDataset,WeakLabelDatasetCLEVR,BasicDatasetCLEVR
+from utils.data_loading import WeakLabelDataset,BasicDataset,WeakLabelDatasetCLEVR
 import numpy as np 
 
 debug = False
@@ -28,7 +28,7 @@ else:
     # dir_weaklabel = Path('../../datasetCLEVR/annotationsTrain/')
     # dir_checkpoint = Path('./checkpoints/')
     dir_img = Path('../../datasetCLEVRaug/augmented/')
-    dir_weaklabel = Path('../../datasetCLEVRaug/segmentationMasks/generatedMasksCLEVR/generatedMasksCLEVR')
+    dir_weaklabel = Path('../../datasetCLEVRaug/scaledAnnotationsTrain4/')
     dir_checkpoint = Path('./checkpoints/')
 
 class_values = {
@@ -56,7 +56,7 @@ def train_model(
     # try:
     #     dataset = CarvanaDataset(dir_img, dir_mask, img_scale)
     # except (AssertionError, RuntimeError, IndexError):
-    dataset = BasicDatasetCLEVR(dir_img, dir_weaklabel, img_scale)
+    dataset = WeakLabelDatasetCLEVR(dir_img, dir_weaklabel, img_scale)
 
     # 2. Split into train / validation partitions
     n_val = int(len(dataset) * val_percent)
@@ -149,7 +149,7 @@ def train_model(
                         # Evaluation round
                         
                         if i%10 == 5:
-                            print("TRAIN EVAL:",evaluateFullySupervisedCLEVR(model,train_loader,device,amp))
+                            print("TRAIN EVAL:",evaluateWeaklySupervisedCLEVR(model,train_loader,device,amp))
                                 
 
                     if save_checkpoint:
@@ -170,7 +170,7 @@ def train_model(
             with tqdm(total=n_train, desc=f'Epoch {epoch}/{epochs}', unit='img') as pbar:
                 
                 for batch in train_loader:
-                    images, weaklabel = batch['image'], batch["mask"]
+                    images, weaklabel = batch['image'], batch["weaklabel"]
                     assert images.shape[1] == model.n_channels, \
                         f'Network has been defined with {model.n_channels} input channels, ' \
                         f'but loaded images have {images.shape[1]} channels. Please check that ' \
@@ -230,11 +230,11 @@ def train_model(
 
                             #val_score = evaluateWeaklySupervised2(model, val_loader, device, amp)
                           
-                            val_score = evaluateFullySupervisedCLEVR(model, val_loader, device, amp)
-                            #val_score = evaluateFullySupervisedCLEVR(model, val_loader, device, amp)
+                            val_score = evaluateWeaklySupervisedCLEVR(model, val_loader, device, amp)
+                            #val_score = evaluateWeaklySupervisedCLEVROLD(model, val_loader, device, amp)
                             if epoch%10 == 5:
                             
-                                print("TRAIN EVAL:",evaluateFullySupervisedCLEVR(model,train_loader,device,amp))
+                                print("TRAIN EVAL:",evaluateWeaklySupervisedCLEVR(model,train_loader,device,amp))
                                 
                             logging.info('Validation overlap score: {}'.format(val_score))
                             print( " new lr: ", optimizer.param_groups[0]['lr'])
@@ -264,38 +264,46 @@ def train_model(
                 logging.info(f'Checkpoint {epoch} saved!')
 
 
-def diceLoss(mask_pred, true_mask, H, W, device, smooth=1.0):
+def diceLoss(mask_pred, weaklabel, H, W, device, smooth=1.0):
     """
-    Computes the Dice Loss for multi-class segmentation.
-    
-    Parameters:
-    mask_pred (torch.Tensor): Predicted logits (before softmax) of shape [1, C, H, W]
-    true_mask (torch.Tensor): Ground truth mask of shape [1, H, W] with class indices
-    H (int): Height of the image
-    W (int): Width of the image
-    device (torch.device): Device to perform computations on
-    smooth (float): Smoothing factor to prevent division by zero
-    
-    Returns:
-    torch.Tensor: Dice loss value
+    Compute Dice Loss with bounding box supervision.
+    Uses softmax probabilities directly for class predictions.
     """
-    # Apply softmax to obtain class probabilities
-    mask_pred = F.softmax(mask_pred, dim=1)  # Shape: [1, C, H, W]
-    
-    # Convert true_mask to one-hot encoding
-    C = mask_pred.shape[1]  # Number of classes
-    true_mask_one_hot = F.one_hot(true_mask.long(), num_classes=C).permute(0, 3, 1, 2)  # Shape: [1, C, H, W]
-    true_mask_one_hot = true_mask_one_hot.to(device, dtype=torch.float32)
-    
-    # Compute Dice coefficient per class
-    intersection = torch.sum(mask_pred * true_mask_one_hot, dim=(2, 3))  # Sum over spatial dimensions
-    union = torch.sum(mask_pred, dim=(2, 3)) + torch.sum(true_mask_one_hot, dim=(2, 3))
-    dice_score = (2. * intersection + smooth) / (union + smooth)
-    
-    # Compute mean Dice loss across all classes
-    dice_loss = 1 - dice_score.mean()
-    
-    return dice_loss
+
+    # Convert logits to probabilities
+    mask_pred = F.softmax(mask_pred, dim=1)  # (1, C, H, W)
+
+    total_dice_loss = 0.0  # Initialize variable to accumulate loss
+
+    # Process weak labels (bounding boxes)
+    bboxlist = weaklabel[0][4]
+    indd = 0
+    for i in bboxlist:
+        indd += 1
+        if indd % 2 == 1:
+            i = i[0].split(',')
+            objecIndex = class_values[i[0]]  # Convert class label to index
+            x1, x2, y1, y2 = map(int, i[1:5])
+
+            # Initialize the ground truth for this bounding box (class-specific)
+            mask_gt = torch.zeros((H, W), dtype=torch.float32, device=device)
+            mask_gt[y1:y2+1, x1:x2+1] = 1
+
+            # Get the softmax probability for the specific class
+            pred_mask = mask_pred[:, objecIndex, :, :]  # Softmax probabilities for class objecIndex
+
+            # Compute intersection and union for Dice calculation
+            intersection = torch.sum(mask_gt * pred_mask)  # Intersection (AND)
+            union = torch.sum(mask_gt) + torch.sum(pred_mask)  # Union (OR)
+
+            # Dice coefficient calculation
+            dice_score = (2.0 * intersection + smooth) / (union + smooth)
+            
+            # Accumulate the loss without in-place operation
+            total_dice_loss += (1 - dice_score)  # Minimize (1 - Dice)
+
+    # Return the average Dice loss over all bounding boxes
+    return total_dice_loss / (len(bboxlist)/2)  # Average Dice loss over all bounding boxes
 
 
 def get_args():
