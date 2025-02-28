@@ -79,34 +79,55 @@ def read_dataset(file_path):
     return data
 
 def parse_dataCLEVR(data):
+    image_level_label = []
+    bounding_box = []
+    point = []
+    relation = []
+    soft_relation = []
+    scribble = []
+    area = []
     adjacency = []
-    relations = []
-    scribbles = []
-    image_level = []
-    bboxes = []
+    full_bounding_box = []
     for line in data:
-        if line.startswith("Adjacency:"):
-            adjacency.append(line.strip().split(": ")[1])
-        elif line.startswith("Relation:"):
-            relations.append(line.strip().split(": ")[1])
-        elif line.startswith("Scribble:"):
-            scribbles.append(line.strip().split(": ")[1])
-        elif line.startswith("Image-level:"):
-            image_level.append(line.strip().split(": ")[1])
-        elif line.startswith("Bbox:"):
-            bboxes.append(line.strip().split(": ")[1])
-    
-    return adjacency, relations, scribbles, image_level, bboxes
+        if line.startswith("Image-level"):
+            image_level_label.append(line.strip().split(",")[1:])
+        elif line.startswith("BoundingBox"):
+            bounding_box.append(line.strip().split(",")[1:])
+        elif line.startswith("Point"):
+            point.append(line.strip().split(",")[1:])
+        elif line.startswith("Relation"):
+            relation.append(line.strip().split(",")[1:])
+        elif line.startswith("SoftRelation"):
+            soft_relation.append(line.strip().split(",")[1:])
+        elif line.startswith("Scribble"):
+            scribble.append(line.strip().split(",")[1:])
+        elif line.startswith("Area"):
+            area.append(line.strip().split(",")[1:])
+        elif line.startswith("FullBoundingBox"):
+            full_bounding_box.append(line.strip().split(",")[1:])
+        elif line.startswith("Adjacency"):
+            adjacency.append(line.strip().split(",")[1:])
+        else:
+            print("should not be here")
+    return image_level_label, bounding_box, point, relation, soft_relation, scribble, area, full_bounding_box, adjacency
 
 
 def calculateLogicLoss(output_tensor,weaklabels,configuration,printLosses = False):
-   
+    #               ImageLevel, BBox
+    configuration = [False,    True]
 
     output_tensor = output_tensor[0, :, :, :]  # Remove batch dimension
     output_tensor = F.softmax(output_tensor, dim=0)  # Apply softmax over class dimension
-    
-    print(weaklabels)
-    
+ 
+    image_level_label, bounding_box, point, relation, soft_relation, scribble, area, full_bounding_box, adjacency = weaklabels[0]
+    loss = 0
+    if configuration[1]:
+        for bbox in bounding_box:
+            shape,x1,x2,y1,y2,percentage = bbox
+            shape,x1,x2,y1,y2,percentage = shape[0],x1[0],x2[0],y1[0],y2[0],percentage[0]
+            loss += about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],float(percentage[:-1])/100,int(x1),int(x2),int(y1),int(y2))
+        
+    return loss
     """
     adjacencies, relations, scribbles, image_level, bboxes = weaklabels[0]
     loss = 0

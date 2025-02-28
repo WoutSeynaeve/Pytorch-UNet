@@ -20,15 +20,15 @@ import numpy as np
 
 debug = False
 if debug:
-    dir_img = Path('../../DebugDatasetCLEVR/imagesWeakDataset/')
+    dir_img = Path('../../DebugDatasetCLEVR/ImagesTraining/')
     dir_weaklabel = Path('../../DebugDatasetCLEVR/annotationsTrain/')
     dir_checkpoint = Path('./DebugCheckpoints/')
-else:   
+else:
     # dir_img = Path('../../datasetCLEVR/imagesWeakDataset/')
     # dir_weaklabel = Path('../../datasetCLEVR/annotationsTrain/')
     # dir_checkpoint = Path('./checkpoints/')
-    dir_img = Path('../../datasetCLEVRaug/augmented/')
-    dir_weaklabel = Path('../../datasetCLEVRaug/scaledAnnotationsTrain4/')
+    dir_img = Path('../../datasetCLEVRaug/ImagesTraining/')
+    dir_weaklabel = Path('../../datasetCLEVRaug/WeakLabelsTraining/')
     dir_checkpoint = Path('./checkpoints/')
 
 
@@ -117,7 +117,6 @@ def train_model(
                         with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
                             masks_pred = model(images)
                             #after a while, mask_pred becomes all NAN !! problem!!
-
                             loss = calculateLogicLoss(masks_pred,weaklabel,configuration_instance, True)
                             if loss.item() > 0 and loss.item() < np.inf:
                                 pass
@@ -176,7 +175,6 @@ def train_model(
                         'the images are loaded correctly.'
 
                     images = images.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
-
                     with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
                         masks_pred = model(images)
                         #after a while, mask_pred becomes all NAN !! problem!!

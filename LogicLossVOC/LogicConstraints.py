@@ -226,6 +226,7 @@ def ifXthenXadjecent(normalized_tensor, class_I):
 
     
 def about_p_percent_is_class_in_bounding_box(normalized_tensor,classesList,p,x1,x2,y1,y2):
+    #print(classesList, p, x1, x2, y1, y2)
     bounding_box_tensor = normalized_tensor[:,y1:y2+1, x1:x2+1]
     return about_p_percent_is_class(bounding_box_tensor,classesList,p)
 
