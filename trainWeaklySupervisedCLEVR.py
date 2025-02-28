@@ -118,7 +118,7 @@ def train_model(
                             masks_pred = model(images)
                             #after a while, mask_pred becomes all NAN !! problem!!
 
-                            loss = calculateLogicLoss(masks_pred,weaklabel,signal, True)
+                            loss = calculateLogicLoss(masks_pred,weaklabel,configuration_instance, True)
                             if loss.item() > 0 and loss.item() < np.inf:
                                 pass
                             else:
@@ -184,7 +184,7 @@ def train_model(
                         #     signal = 1
                         # if epoch > 50:  #testing purposes
                         #     signal = 2
-                        loss = calculateLogicLoss(masks_pred,weaklabel,signal)
+                        loss = calculateLogicLoss(masks_pred,weaklabel,configuration_instance)
                         if loss.item() > 0 and loss.item() < np.inf:
                             optimizer.zero_grad(set_to_none=True)
                             grad_scaler.scale(loss).backward()

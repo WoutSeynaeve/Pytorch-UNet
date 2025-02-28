@@ -105,8 +105,9 @@ def ifXthenYatRelation(normalized_tensor, X, Y, relation,NOT = None):
     probs_J = normalized_tensor[Y, :, :]  # Shape: (H, W)
     probs_I = torch.clamp(probs_I, 0, 1 - 1e-7)
     probs_J = torch.clamp(probs_J, 0, 1 - 1e-7)
-    probs_I = probs_I[::10, ::10] #downscale
-    probs_J = probs_J[::10, ::10]
+    scalingFactor = 1
+    probs_I = probs_I[::scalingFactor, ::scalingFactor] #downscale
+    probs_J = probs_J[::scalingFactor, ::scalingFactor]
 
     # Preprocess based on the specified relation
     if relation == "left":
@@ -291,3 +292,23 @@ def almost_p_percent_is_class(normalized_tensor,classesList,p):
 def atmost_p_percent_is_class_in_bounding_box(normalized_tensor,classesList,p,x1,x2,y1,y2):
     bounding_box_tensor = normalized_tensor[:,y1:y2+1, x1:x2+1]
     return almost_p_percent_is_class(bounding_box_tensor,classesList,p)
+
+
+def onehot(normalized_tensor):
+    C, H, W = normalized_tensor.shape  # Get tensor dimensions
+    normalized_tensor = torch.clamp(normalized_tensor, min=1e-5, max=1-1e-5)
+    results = []
+    for i in range(C):
+        new_probs = torch.zeros(C, H, W, device=normalized_tensor.device)  # Ensure device consistency
+        for j in range(C):
+            if i != j:
+                new_probs[j] = torch.log(1-normalized_tensor[j])
+            else:
+                new_probs[j] = torch.log(normalized_tensor[j])
+        result = new_probs.sum(dim=0)
+        results.append(torch.log1p(-torch.exp(result)))
+    
+    summed_results = torch.stack(results).sum(dim=0)
+    ll = -torch.log1p(-torch.exp(summed_results))
+ 
+    return ll.sum()

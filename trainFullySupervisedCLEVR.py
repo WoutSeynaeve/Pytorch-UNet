@@ -21,15 +21,28 @@ import numpy as np
 debug = False
 if debug:
     dir_img = Path('../../DebugDatasetCLEVR/imagesWeakDataset/')
-    dir_weaklabel = Path('../../DebugDatasetCLEVR/annotationsTrain/')
+    dir_mask = Path('../../DebugDatasetCLEVR/annotationsTrain/')
     dir_checkpoint = Path('./DebugCheckpoints/')
 else:   
     # dir_img = Path('../../datasetCLEVR/imagesWeakDataset/')
     # dir_weaklabel = Path('../../datasetCLEVR/annotationsTrain/')
     # dir_checkpoint = Path('./checkpoints/')
-    dir_img = Path('../../datasetCLEVRaug/augmented/')
-    dir_weaklabel = Path('../../datasetCLEVRaug/segmentationMasks/generatedMasksCLEVR/generatedMasksCLEVR')
+    dir_img = Path('../../datasetCLEVRaug/ImagesTraining/')
+    dir_mask = Path('../../datasetCLEVRaug/MasksTraining')
+    dir_img_test = Path('../../datasetCLEVRaug/ImagesValidation/')
+    dir_mask_test = Path('../../datasetCLEVRaug/MasksValidation')
     dir_checkpoint = Path('./checkpoints/')
+
+
+
+"""
+MODEL SHOULD GET AROUND 81% meanIoU, with bilinear, amp, lr = 1e-8
+e.g.
+Validation IoU per class: tensor([0.9978, 0.7378, 0.7432, 0.7668], device='cuda:0')
+INFO: Validation overlap score: 0.8113822937011719
+
+I think it helps switching to learning rate 1e-9 after a while for more steady last convergence
+"""
 
 class_values = {
     "background": 0,
@@ -56,8 +69,8 @@ def train_model(
     # try:
     #     dataset = CarvanaDataset(dir_img, dir_mask, img_scale)
     # except (AssertionError, RuntimeError, IndexError):
-    dataset = BasicDatasetCLEVR(dir_img, dir_weaklabel, img_scale)
-
+    dataset = BasicDatasetCLEVR(dir_img, dir_mask, img_scale)
+    dataset_test = BasicDatasetCLEVR(dir_img_test, dir_mask_test, img_scale)
     # 2. Split into train / validation partitions
     n_val = int(len(dataset) * val_percent)
     n_train = len(dataset) - n_val
@@ -69,6 +82,7 @@ def train_model(
     loader_args = dict(batch_size=batch_size, num_workers=os.cpu_count(), pin_memory=True)
     train_loader = DataLoader(train_set, shuffle=True, **loader_args)
     val_loader = DataLoader(val_set, shuffle=False, drop_last=True, **loader_args)
+    test_loader = DataLoader(dataset_test,shuffle=True,**loader_args)
   
     # # (Initialize logging)
     # experiment = wandb.init(project='U-Net', resume='allow', anonymous='must')
@@ -233,7 +247,7 @@ def train_model(
                             val_score = evaluateFullySupervisedCLEVR(model, val_loader, device, amp)
                             #val_score = evaluateFullySupervisedCLEVR(model, val_loader, device, amp)
                             if epoch%10 == 5:
-                            
+                                print("TEST EVAL: ",evaluateFullySupervisedCLEVR(model,test_loader,device,amp) )
                                 print("TRAIN EVAL:",evaluateFullySupervisedCLEVR(model,train_loader,device,amp))
                                 
                             logging.info('Validation overlap score: {}'.format(val_score))
@@ -259,7 +273,7 @@ def train_model(
             if save_checkpoint:
                 Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
                 state_dict = model.state_dict()
-                #state_dict['mask_values'] = dataset.mask_values
+                state_dict['mask_values'] = dataset.mask_values
                 torch.save(state_dict, str(dir_checkpoint / 'checkpoint_epoch{}.pth'.format(epoch)))
                 logging.info(f'Checkpoint {epoch} saved!')
 

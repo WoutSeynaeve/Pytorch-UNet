@@ -99,21 +99,15 @@ def parse_dataCLEVR(data):
     return adjacency, relations, scribbles, image_level, bboxes
 
 
-def calculateLogicLoss(output_tensor,weaklabels,signal,printLosses = False):
+def calculateLogicLoss(output_tensor,weaklabels,configuration,printLosses = False):
    
-    #             ImageLevelLoss, Adjacencies, BBoxObject, OutsideBBoxNotObject, BBoxBackground, Smoothness, Scribbles, Relations, BBoxObjectNotBackground
-    configuration = [[False,5],   [False,5] ,  [True,1],    [True,1] ,       [False,20],      [False,5000], [False,1],  [False,5] ,     [False,1]]
-    
-    #             Scr. Objects, Scr. Background, Scr.NOT objects, Scr.NOT Background   
-    ScribbleTypes = [[False,1],    [False,10],         [False,1],       [False,1]]   
-    
-    # if signal == 1:    #allows for dynamic changing of loss
-    #     configuration[1][0] = True
-    # if signal == 2:
-    #     configuration[7][0] = True
 
-    output_tensor = output_tensor[0,:,:,:]
-    output_tensor = F.softmax(output_tensor, dim=0)
+    output_tensor = output_tensor[0, :, :, :]  # Remove batch dimension
+    output_tensor = F.softmax(output_tensor, dim=0)  # Apply softmax over class dimension
+    
+    print(weaklabels)
+    
+    """
     adjacencies, relations, scribbles, image_level, bboxes = weaklabels[0]
     loss = 0
     #print(adjacencies, relations, scribbles, image_level,bboxes)
@@ -254,3 +248,4 @@ def calculateLogicLoss(output_tensor,weaklabels,signal,printLosses = False):
     # if loss.item() < 22:
     #     print(weaklabels[0][3],loss)
     return loss
+    """
