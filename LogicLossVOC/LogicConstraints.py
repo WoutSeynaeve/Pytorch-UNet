@@ -226,7 +226,6 @@ def ifXthenXadjecent(normalized_tensor, class_I):
 
     
 def about_p_percent_is_class_in_bounding_box(normalized_tensor,classesList,p,x1,x2,y1,y2):
-    #print(classesList, p, x1, x2, y1, y2)
     bounding_box_tensor = normalized_tensor[:,y1:y2+1, x1:x2+1]
     return about_p_percent_is_class(bounding_box_tensor,classesList,p)
 
@@ -249,7 +248,6 @@ def about_p_percent_is_class(normalized_tensor,classesList,p,single=None):
     
     maxloss = 100
     NumberOfPixels = p*totalPixels
-  
     loss = maxloss*torch.abs(ExpectedPixels-NumberOfPixels)/totalPixels #REMOVED SQUARE!!!!!
     return loss
 
@@ -259,7 +257,6 @@ def alteast_p_percent_is_class(normalized_tensor,classesList,p):
     for classs in classesList:
         ExpectedPixels += normalized_tensor[classs].sum()
 
-    print("expected pixels being classes",classesList,"=",ExpectedPixels) 
     _, H, W = normalized_tensor.shape
 
     maxloss = 100
@@ -272,7 +269,7 @@ def alteast_p_percent_is_class(normalized_tensor,classesList,p):
         loss = maxloss*torch.abs(ExpectedPixels-NumberOfPixels)/totalPixels
         return loss
     
-def almost_p_percent_is_class(normalized_tensor,classesList,p):
+def atmost_p_percent_is_class(normalized_tensor,classesList,p):
     assert(p <= 1)
     ExpectedPixels = 0
     for classs in classesList:
@@ -292,7 +289,7 @@ def almost_p_percent_is_class(normalized_tensor,classesList,p):
     
 def atmost_p_percent_is_class_in_bounding_box(normalized_tensor,classesList,p,x1,x2,y1,y2):
     bounding_box_tensor = normalized_tensor[:,y1:y2+1, x1:x2+1]
-    return almost_p_percent_is_class(bounding_box_tensor,classesList,p)
+    return atmost_p_percent_is_class(bounding_box_tensor,classesList,p)
 
 
 def onehot(normalized_tensor):
@@ -312,4 +309,4 @@ def onehot(normalized_tensor):
     summed_results = torch.stack(results).sum(dim=0)
     ll = -torch.log1p(-torch.exp(summed_results))
  
-    return ll.sum()
+    return ll.sum()/(H*W)

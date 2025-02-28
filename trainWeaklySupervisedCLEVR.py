@@ -13,15 +13,17 @@ from torch import optim
 from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
 from LogicLossVOC.WeakLabelLogicLossCLEVR import calculateLogicLoss
-from evaluate import evaluate, evaluateWeaklySupervised, evaluateWeaklySupervisedCLEVR
+from evaluate import evaluate, evaluateWeaklySupervised, evaluateWeaklySupervisedCLEVR, evaluateFullySupervisedCLEVR,evaluateFullySupervisedCLEVRwPrecisionRecall
 from unet import UNet
-from utils.data_loading import WeakLabelDataset,BasicDataset,WeakLabelDatasetCLEVR
+from utils.data_loading import WeakLabelDataset,BasicDataset,WeakLabelDatasetCLEVR,BasicDatasetCLEVR
 import numpy as np 
 
-debug = False
+debug = True
+printLosses = False
 if debug:
-    dir_img = Path('../../DebugDatasetCLEVR/ImagesTraining/')
+    dir_img = Path('../../DebugDatasetCLEVR/imagesWeakDataset/')
     dir_weaklabel = Path('../../DebugDatasetCLEVR/annotationsTrain/')
+    dir_mask = Path('../../DebugDatasetCLEVR/maskstrain')
     dir_checkpoint = Path('./DebugCheckpoints/')
 else:
     # dir_img = Path('../../datasetCLEVR/imagesWeakDataset/')
@@ -29,6 +31,9 @@ else:
     # dir_checkpoint = Path('./checkpoints/')
     dir_img = Path('../../datasetCLEVRaug/ImagesTraining/')
     dir_weaklabel = Path('../../datasetCLEVRaug/WeakLabelsTraining/')
+    dir_mask = Path('../../datasetCLEVRaug/MasksTraining')
+    dir_img_test = Path('../../datasetCLEVRaug/ImagesValidation/')
+    dir_mask_test = Path('../../datasetCLEVRaug/MasksValidation')
     dir_checkpoint = Path('./checkpoints/')
 
 
@@ -52,6 +57,9 @@ def train_model(
     #     dataset = CarvanaDataset(dir_img, dir_mask, img_scale)
     # except (AssertionError, RuntimeError, IndexError):
     dataset = WeakLabelDatasetCLEVR(dir_img, dir_weaklabel, img_scale)
+    if not debug:
+        dataset_test = BasicDatasetCLEVR(dir_img_test, dir_mask_test, img_scale)
+    dataset_test_trainset = BasicDatasetCLEVR(dir_img, dir_mask, img_scale)
 
     # 2. Split into train / validation partitions
     n_val = int(len(dataset) * val_percent)
@@ -64,7 +72,9 @@ def train_model(
     loader_args = dict(batch_size=batch_size, num_workers=os.cpu_count(), pin_memory=True)
     train_loader = DataLoader(train_set, shuffle=True, **loader_args)
     val_loader = DataLoader(val_set, shuffle=False, drop_last=True, **loader_args)
-  
+    if not debug:
+        test_loader = DataLoader(dataset_test,shuffle=True,**loader_args)
+    test_trainset_loader = DataLoader(dataset_test_trainset,shuffle=True,**loader_args)
     # # (Initialize logging)
     # experiment = wandb.init(project='U-Net', resume='allow', anonymous='must')
     # experiment.config.update(
@@ -106,7 +116,7 @@ def train_model(
             epoch_loss = 0
             with tqdm(total=n_train, desc=f'Epoch {epoch}/{epochs}', unit='img') as pbar:
                 for batch in train_loader:
-                    for i in range(300):
+                    for i in range(500):
                         images, weaklabel = batch['image'], batch["weaklabel"]
                         assert images.shape[1] == model.n_channels, \
                             f'Network has been defined with {model.n_channels} input channels, ' \
@@ -117,7 +127,7 @@ def train_model(
                         with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
                             masks_pred = model(images)
                             #after a while, mask_pred becomes all NAN !! problem!!
-                            loss = calculateLogicLoss(masks_pred,weaklabel,configuration_instance, True)
+                            loss = calculateLogicLoss(masks_pred,weaklabel,configuration_instance,printLosses)
                             if loss.item() > 0 and loss.item() < np.inf:
                                 pass
                             else:
@@ -135,8 +145,7 @@ def train_model(
                         
                         pbar.update(images.shape[0])
                         global_step += 1
-                        epoch_loss += loss
-                        print("average loss so far:",epoch_loss/(global_step))
+                        
                         # experiment.log({
                         #     'train loss': loss.item(),
                         #     'step': global_step,
@@ -145,15 +154,18 @@ def train_model(
                         pbar.set_postfix(**{'loss (batch)': loss.item()})
 
                         # Evaluation round
-                        
-                        if i%10 == 5:
-                            print("TRAIN EVAL:",evaluateWeaklySupervisedCLEVR(model,train_loader,device,amp))
+                        if i%10 == 0:
+                            print("TRAIN EVAL:",evaluateFullySupervisedCLEVR(model,test_trainset_loader,device,amp))
+                            print(evaluateFullySupervisedCLEVRwPrecisionRecall(model,test_trainset_loader,device,amp))
+                            
                                 
 
                     if save_checkpoint:
+                        print("TRAIN EVAL:",evaluateFullySupervisedCLEVR(model,test_trainset_loader,device,amp))
+                        print(evaluateFullySupervisedCLEVRwPrecisionRecall(model,test_trainset_loader,device,amp))
                         Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
                         state_dict = model.state_dict()
-                        #state_dict['mask_values'] = dataset.mask_values
+                        state_dict['mask_values'] = dataset_test_trainset.mask_values
                         torch.save(state_dict, str(dir_checkpoint / 'checkpoint_epoch{}.pth'.format(epoch)))
                         logging.info(f'Checkpoint {epoch} saved!')
 
@@ -193,7 +205,7 @@ def train_model(
                         else:
                             print(loss,"\n",masks_pred)
                             report = 0
-                            #assert(report == 1)
+                            assert(report == 1)
                     
                     
                     if showPbar:
@@ -225,14 +237,14 @@ def train_model(
 
                             #val_score = evaluateWeaklySupervised2(model, val_loader, device, amp)
                           
-                            val_score = evaluateWeaklySupervisedCLEVR(model, val_loader, device, amp)
-                            if epoch%10 == 5:
-                            
-                                print("TRAIN EVAL:",evaluateWeaklySupervisedCLEVR(model,train_loader,device,amp))
+                            test_score = evaluateFullySupervisedCLEVR(model, test_loader, device, amp)
+                            if epoch%5 == 0:
+                                print("TRAIN EVAL:",evaluateFullySupervisedCLEVR(model,test_trainset_loader,device,amp))
+                                print(evaluateFullySupervisedCLEVRwPrecisionRecall(model,test_trainset_loader,device,amp))
                                 
-                            logging.info('Validation overlap score: {}'.format(val_score))
+                            logging.info('Validation overlap score: {}'.format(test_score))
                             print( " new lr: ", optimizer.param_groups[0]['lr'])
-                            scheduler.step(val_score)
+                            scheduler.step(test_score)
 
                             # try:
                             #     experiment.log({
@@ -249,11 +261,11 @@ def train_model(
                             #     })
                             # except:
                             #     pass
-            print("average loss during this epoch = ",epoch_loss/431) #pas dit nog aan eventueel
+            print("average loss during this epoch = ",epoch_loss/478) #pas dit nog aan eventueel
             if save_checkpoint:
                 Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
                 state_dict = model.state_dict()
-                #state_dict['mask_values'] = dataset.mask_values
+                state_dict['mask_values'] = dataset_test_trainset.mask_values
                 torch.save(state_dict, str(dir_checkpoint / 'checkpoint_epoch{}.pth'.format(epoch)))
                 logging.info(f'Checkpoint {epoch} saved!')
 
@@ -267,7 +279,7 @@ def get_args():
                         help='Learning rate', dest='lr')
     parser.add_argument('--load', '-f', type=str, default=False, help='Load model from a .pth file')
     parser.add_argument('--scale', '-s', type=float, default=1, help='Downscaling factor of the images')
-    parser.add_argument('--validation', '-v', dest='val', type=float, default=10.0,
+    parser.add_argument('--validation', '-v', dest='val', type=float, default=0,
                         help='Percent of the data that is used as validation (0-100)')
     parser.add_argument('--amp', action='store_true', default=True, help='Use mixed precision')
     parser.add_argument('--bilinear', action='store_true', default=True, help='Use bilinear upsampling')

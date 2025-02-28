@@ -1,5 +1,5 @@
 import os
-from LogicLossVOC.LogicConstraints import adjacency,alteast_p_percent_is_class, ifXthenXadjecent,atmost_p_percent_is_class_in_bounding_box, ifXthenYatRelation, scribble, image_level_label, about_p_percent_is_class, about_p_percent_is_class_in_bounding_box
+from LogicLossVOC.LogicConstraints import onehot,adjacency,alteast_p_percent_is_class, ifXthenXadjecent,atmost_p_percent_is_class_in_bounding_box, ifXthenYatRelation, scribble, image_level_label, about_p_percent_is_class, about_p_percent_is_class_in_bounding_box
 import torch.nn.functional as F
 import torch
 import random
@@ -113,21 +113,81 @@ def parse_dataCLEVR(data):
 
 
 def calculateLogicLoss(output_tensor,weaklabels,configuration,printLosses = False):
-    #               ImageLevel, BBox
-    configuration = [False,    True]
+
+    #               ImageLevel           BBox --> outside, atmost         OneHot      Atleast70%BackgroundGlobal    Smoothess
+    configuration = [ [True,1],       [[True,1],[True,1],[True,1]],   [True,10],         [True,1],                 [True,1]]
 
     output_tensor = output_tensor[0, :, :, :]  # Remove batch dimension
+    
     output_tensor = F.softmax(output_tensor, dim=0)  # Apply softmax over class dimension
- 
+  
+    C,H,W = output_tensor.shape
     image_level_label, bounding_box, point, relation, soft_relation, scribble, area, full_bounding_box, adjacency = weaklabels[0]
     loss = 0
-    if configuration[1]:
+
+    #Image-level
+    if configuration[0][0]:
+        for label in image_level_label:
+            shape,percentage = label[0][0],label[1][0]
+            addloss = about_p_percent_is_class(output_tensor,[class_values[shape]],float(percentage[:-1])/100)
+            if printLosses:
+                print("Loss for imageLevel label for shape",shape," to be percentage", percentage, " = ",addloss)
+            loss += addloss*configuration[0][1]
+
+    #Bounding Boxes
+    if configuration[1][0][0]:
         for bbox in bounding_box:
             shape,x1,x2,y1,y2,percentage = bbox
             shape,x1,x2,y1,y2,percentage = shape[0],x1[0],x2[0],y1[0],y2[0],percentage[0]
-            loss += about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],float(percentage[:-1])/100,int(x1),int(x2),int(y1),int(y2))
-        
+            addloss = about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],float(percentage[:-1])/100,int(x1),int(x2),int(y1),int(y2))
+            loss += addloss*configuration[1][0][1]
+            if printLosses:
+                print("loss for",shape," bounding box to be filled",percentage,"= ",addloss)
+
+            #implied constraint: "outside bounding box dont predict object"
+            if configuration[1][1][0]:
+                addloss = 0
+                if int(x1) > 1:
+                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],0,0,int(x1)-1,0,H)
+                if int(y1) > 1:
+                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],0,int(x1),int(x2),0,int(y1)-1)
+                if int(y2) < H:
+                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],0,int(x1),int(x2),int(y2)+1,H)
+                if int(x2) < W:
+                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],0,int(x2)+1,W,0,H)
+                if printLosses:
+                    print("loss for not predicting",shape, " outside its bounding box",addloss)
+                loss += addloss*configuration[1][1][1]
+
+            #Implied constraint: for each other class, it cannot take up more than 1-p percent of bbox
+            if configuration[1][2][0]:
+                addloss = 0
+                for i in range(4): 
+                    if i != class_values[shape]:
+                        addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor,[i],1-float(percentage[:-1])/100,int(x1),int(x2),int(y1),int(y2))
+                if printLosses:
+                    print("loss for other classes to not take in too much of Bbox: ",addloss)
+                loss += addloss*configuration[1][2][1]
+
+    if configuration[2][0]:
+        addloss = onehot(output_tensor)*configuration[2][1]
+        if printLosses:
+            print("oneHot loss = ",addloss)
+        loss += addloss
+    
+    if configuration[3][0]:
+        addloss = alteast_p_percent_is_class(output_tensor,[0],0.7)
+        if printLosses:
+            print("loss for atleast 70% to be background")
+        loss += addloss*configuration[3][1]
+
     return loss
+
+
+
+
+
+
     """
     adjacencies, relations, scribbles, image_level, bboxes = weaklabels[0]
     loss = 0
