@@ -302,16 +302,19 @@ def evaluateFullySupervisedCLEVRwPrecisionRecall(net, dataloader, device, amp):
                 precision_per_class[i] /= valid_classes[i]
                 recall_per_class[i] /= valid_classes[i]
 
-        print("Validation IoU per class:", iou_per_class)
-        print("Validation Precision per class:", precision_per_class)
-        print("Validation Recall per class:", recall_per_class)
+        iouPerClass = [round(iou_per_class[i].item(), 3) for i in range(len(iou_per_class))]
+
+        print(
+            "IoU per class:", iouPerClass, 
+            "mIoU:", round(iou_per_class.mean().item(), 3), 
+            "mIoU_shapes:", round(iou_per_class[1:].mean().item(), 3)
+        )
+        # print("Validation Precision per class:", precision_per_class)
+        # print("Validation Recall per class:", recall_per_class)
 
         net.train()
-        return {
-            "mean_iou": iou_per_class.mean().item(),
-            "mean_precision": precision_per_class.mean().item(),
-            "mean_recall": recall_per_class.mean().item()
-        }
+        return iou_per_class.mean()
+            
 @torch.inference_mode()
 def evaluateFullySupervisedCLEVR(net, dataloader, device, amp):
     net.eval()  # Set the model to evaluation mode

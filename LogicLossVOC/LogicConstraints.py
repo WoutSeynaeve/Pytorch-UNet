@@ -200,6 +200,7 @@ def ifXthenXadjecent(normalized_tensor, class_I):
     # Extract probabilities for class I and class J
     probs_I = normalized_tensor[class_I, :, :]  # Shape: (H, W)
     probs_I = torch.clamp(probs_I, 1e-7, 1 - 1e-7)
+    _, H, W = normalized_tensor.shape
 
     # Define adjacency kernel (3x3 neighborhood excluding center)
     adjacency_kernel = torch.tensor([[1, 1, 1],
@@ -222,7 +223,7 @@ def ifXthenXadjecent(normalized_tensor, class_I):
     log_probability = torch.sum(log_pixelwise_no_adjacency)
     logicLoss = -log_probability
 
-    return logicLoss
+    return logicLoss/(H*W)
 
     
 def about_p_percent_is_class_in_bounding_box(normalized_tensor,classesList,p,x1,x2,y1,y2):

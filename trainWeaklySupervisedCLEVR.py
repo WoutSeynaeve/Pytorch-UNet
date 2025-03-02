@@ -18,8 +18,17 @@ from unet import UNet
 from utils.data_loading import WeakLabelDataset,BasicDataset,WeakLabelDatasetCLEVR,BasicDatasetCLEVR
 import numpy as np 
 
-debug = True
-printLosses = False
+seed = 42
+torch.manual_seed(seed)
+random.seed(seed)
+np.random.seed(seed)
+
+torch.cuda.manual_seed(seed)
+torch.cuda.manual_seed_all(seed)
+
+debug = False
+printLosses = True
+debugIts = 400
 if debug:
     dir_img = Path('../../DebugDatasetCLEVR/imagesWeakDataset/')
     dir_weaklabel = Path('../../DebugDatasetCLEVR/annotationsTrain/')
@@ -116,7 +125,7 @@ def train_model(
             epoch_loss = 0
             with tqdm(total=n_train, desc=f'Epoch {epoch}/{epochs}', unit='img') as pbar:
                 for batch in train_loader:
-                    for i in range(500):
+                    for i in range(debugIts):
                         images, weaklabel = batch['image'], batch["weaklabel"]
                         assert images.shape[1] == model.n_channels, \
                             f'Network has been defined with {model.n_channels} input channels, ' \
@@ -127,7 +136,10 @@ def train_model(
                         with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
                             masks_pred = model(images)
                             #after a while, mask_pred becomes all NAN !! problem!!
-                            loss = calculateLogicLoss(masks_pred,weaklabel,configuration_instance,printLosses)
+                            if i == debugIts-1:
+                                loss = calculateLogicLoss(masks_pred,weaklabel,configuration_instance,True)
+                            else:
+                                loss = calculateLogicLoss(masks_pred,weaklabel,configuration_instance,printLosses)
                             if loss.item() > 0 and loss.item() < np.inf:
                                 pass
                             else:
@@ -173,101 +185,112 @@ def train_model(
     else:
         showPbar = False
         signal = 0
+        old_learning_rate = optimizer.param_groups[0]['lr']
         # 5. Begin training
         for epoch in range(1, epochs + 1):
             model.train()
             epoch_loss = 0
-            with tqdm(total=n_train, desc=f'Epoch {epoch}/{epochs}', unit='img') as pbar:
-                
-                for batch in train_loader:
-                    images, weaklabel = batch['image'], batch["weaklabel"]
-                    assert images.shape[1] == model.n_channels, \
-                        f'Network has been defined with {model.n_channels} input channels, ' \
-                        f'but loaded images have {images.shape[1]} channels. Please check that ' \
-                        'the images are loaded correctly.'
+            print(f'Epoch {epoch}/{epochs}:\n')
+            for batch in train_loader:
+                images, weaklabel = batch['image'], batch["weaklabel"]
+                assert images.shape[1] == model.n_channels, \
+                    f'Network has been defined with {model.n_channels} input channels, ' \
+                    f'but loaded images have {images.shape[1]} channels. Please check that ' \
+                    'the images are loaded correctly.'
 
-                    images = images.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
-                    with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
-                        masks_pred = model(images)
-                        #after a while, mask_pred becomes all NAN !! problem!!
-                        # if epoch > 30:
-                        #     signal = 1
-                        # if epoch > 50:  #testing purposes
-                        #     signal = 2
+                images = images.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
+                with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
+                    masks_pred = model(images)
+                    #after a while, mask_pred becomes all NAN !! problem!!
+                    # if epoch > 30:
+                    #     signal = 1
+                    # if epoch > 50:  #testing purposes
+                    #     signal = 2
+                    if epoch == epochs:
+                        loss = calculateLogicLoss(masks_pred,weaklabel,configuration_instance,True)
+                    else:
                         loss = calculateLogicLoss(masks_pred,weaklabel,configuration_instance)
-                        if loss.item() > 0 and loss.item() < np.inf:
-                            optimizer.zero_grad(set_to_none=True)
-                            grad_scaler.scale(loss).backward()
-                            grad_scaler.unscale_(optimizer)
-                            torch.nn.utils.clip_grad_norm_(model.parameters(), gradient_clipping)
-                            grad_scaler.step(optimizer)
-                            grad_scaler.update()
-                        else:
-                            print(loss,"\n",masks_pred)
-                            report = 0
-                            assert(report == 1)
-                    
-                    
-                    if showPbar:
-                        pbar.update(images.shape[0])
-                        pbar.set_postfix(**{'loss (batch)': loss.item()})
-                    global_step += 1
-                    
-                    epoch_loss += loss.detach() 
-                    del images, weaklabel, masks_pred, loss  # Free memory
-                    torch.cuda.empty_cache()  # Clear GPU memory
-                    # experiment.log({
-                    #     'train loss': loss.item(),
-                    #     'step': global_step,
-                    #     'epoch': epoch
-                    # })
-                    
+                    if loss.item() > 0 and loss.item() < np.inf:
+                        optimizer.zero_grad(set_to_none=True)
+                        grad_scaler.scale(loss).backward()
+                        grad_scaler.unscale_(optimizer)
+                        torch.nn.utils.clip_grad_norm_(model.parameters(), gradient_clipping)
+                        grad_scaler.step(optimizer)
+                        grad_scaler.update()
+                    else:
+                        print(loss,"\n",masks_pred)
+                        report = 0
+                        assert(report == 1)
+                
+                
+                if showPbar:
+                    pbar.update(images.shape[0])
+                    pbar.set_postfix(**{'loss (batch)': loss.item()})
+                global_step += 1
+                
+                epoch_loss += loss.detach() 
+                del images, weaklabel, masks_pred, loss  # Free memory
+                torch.cuda.empty_cache()  # Clear GPU memory
+                # experiment.log({
+                #     'train loss': loss.item(),
+                #     'step': global_step,
+                #     'epoch': epoch
+                # })
+                
 
-                    # Evaluation round
-                    division_step = (n_train // (5 * batch_size))
-                    if division_step > 0:
-                        if global_step % division_step == 0:
-                            # histograms = {}
-                            # for tag, value in model.named_parameters():
-                            #     tag = tag.replace('/', '.')
-                            #     if not (torch.isinf(value) | torch.isnan(value)).any():
-                            #         histograms['Weights/' + tag] = wandb.Histogram(value.data.cpu())
-                            #     if not (torch.isinf(value.grad) | torch.isnan(value.grad)).any():
-                            #         histograms['Gradients/' + tag] = wandb.Histogram(value.grad.data.cpu())
+                # Evaluation round
+                division_step = (n_train // (3 * batch_size))
+                if division_step > 0:
+                    if global_step % division_step == 0:
+                        # histograms = {}
+                        # for tag, value in model.named_parameters():
+                        #     tag = tag.replace('/', '.')
+                        #     if not (torch.isinf(value) | torch.isnan(value)).any():
+                        #         histograms['Weights/' + tag] = wandb.Histogram(value.data.cpu())
+                        #     if not (torch.isinf(value.grad) | torch.isnan(value.grad)).any():
+                        #         histograms['Gradients/' + tag] = wandb.Histogram(value.grad.data.cpu())
 
-                            #val_score = evaluateWeaklySupervised2(model, val_loader, device, amp)
-                          
-                            test_score = evaluateFullySupervisedCLEVR(model, test_loader, device, amp)
-                            if epoch%5 == 0:
-                                print("TRAIN EVAL:",evaluateFullySupervisedCLEVR(model,test_trainset_loader,device,amp))
-                                print(evaluateFullySupervisedCLEVRwPrecisionRecall(model,test_trainset_loader,device,amp))
-                                
-                            logging.info('Validation overlap score: {}'.format(test_score))
-                            print( " new lr: ", optimizer.param_groups[0]['lr'])
-                            scheduler.step(test_score)
+                        #val_score = evaluateWeaklySupervised2(model, val_loader, device, amp)
+                        print("Validation:")
+                        test_score = evaluateFullySupervisedCLEVRwPrecisionRecall(model, test_loader, device, amp)
+                        new_learning_rate = optimizer.param_groups[0]['lr']
+                        if new_learning_rate != old_learning_rate:
+                            print( "new learning rate !!: ", optimizer.param_groups[0]['lr'])
+                            old_learning_rate = new_learning_rate
+                        print("")
+                        scheduler.step(test_score)
 
-                            # try:
-                            #     experiment.log({
-                            #         'learning rate': optimizer.param_groups[0]['lr'],
-                            #         'validation Dice': val_score,
-                            #         'images': wandb.Image(images[0].cpu()),
-                            #         'masks': {
-                            #             'true': wandb.Image(true_masks[0].float().cpu()),
-                            #             'pred': wandb.Image(masks_pred.argmax(dim=1)[0].float().cpu()),
-                            #         },
-                            #         'step': global_step,
-                            #         'epoch': epoch,
-                            #         **histograms
-                            #     })
-                            # except:
-                            #     pass
-            print("average loss during this epoch = ",epoch_loss/478) #pas dit nog aan eventueel
+                        
+                        
+
+                        # try:
+                        #     experiment.log({
+                        #         'learning rate': optimizer.param_groups[0]['lr'],
+                        #         'validation Dice': val_score,
+                        #         'images': wandb.Image(images[0].cpu()),
+                        #         'masks': {
+                        #             'true': wandb.Image(true_masks[0].float().cpu()),
+                        #             'pred': wandb.Image(masks_pred.argmax(dim=1)[0].float().cpu()),
+                        #         },
+                        #         'step': global_step,
+                        #         'epoch': epoch,
+                        #         **histograms
+                        #     })
+                        # except:
+                        #     pass
+            if epoch%3 == 0:
+                print("Training set evaluation:")
+                evaluateFullySupervisedCLEVRwPrecisionRecall(model,test_trainset_loader,device,amp)
+                print("")
+
+            print("Average loss this epoch = ",epoch_loss.item()/n_train) #pas dit nog aan eventueel
             if save_checkpoint:
                 Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
                 state_dict = model.state_dict()
                 state_dict['mask_values'] = dataset_test_trainset.mask_values
                 torch.save(state_dict, str(dir_checkpoint / 'checkpoint_epoch{}.pth'.format(epoch)))
                 logging.info(f'Checkpoint {epoch} saved!')
+                print("/////////////////////////")
 
 
 def get_args():
