@@ -46,6 +46,7 @@ else:
     dir_checkpoint = Path('./checkpoints/')
 
 
+
 def train_model(
         model,
         device,
@@ -61,6 +62,27 @@ def train_model(
         gradient_clipping: float = 1.0,
         configuration: int = 0,
 ):
+    configuration_dict = {}
+    if configuration == 0:
+        configuration_dict = {
+            "ImageLevel": [False, 1],
+            #                   outsideBbox  BboxAtmost
+            "BBox": [[True, 1],   [True, 1],   [True, 1]],
+            "BBoxFull": [True, 1],
+            "Scribbles": [True, 1],
+            "Area": [True, 1],
+            "Point": [True, 10],
+            "Adjacency": [True, 1],
+            "Relations": [True, 1],
+            "SoftRelations": [True, 1],
+            #global constraints:
+            "OneHot": [True, 10],
+            "MinSizeBackground": [False, 1],
+            "MaxSizeBackground": [False, 1],
+            "MinSizeShapes": [False, 1],
+            "MaxSizeShapes": [False, 1],
+            "Smoothness": [False, 100],
+        }
     # 1. Create dataset
     # try:
     #     dataset = CarvanaDataset(dir_img, dir_mask, img_scale)
@@ -111,11 +133,6 @@ def train_model(
 
     global_step = 0
 
-    #             ImageLevelLoss, Adjacencies, BBoxObject, OutsideBBoxNotObject, BBoxBackground, Smoothness, Scribbles, Relations
-    configuration1 = [[True,5],   [False,1] ,    [True,0.1],     [True,1] ,        [True,10],     [False,100], [False,1],  [False,1]]
-    
-    configurations = [configuration1]
-    configuration_instance = configurations[configuration]
     if debug:
         epochs = 1
         signal = 0
@@ -137,9 +154,9 @@ def train_model(
                             masks_pred = model(images)
                             #after a while, mask_pred becomes all NAN !! problem!!
                             if i == debugIts-1:
-                                loss = calculateLogicLoss(masks_pred,weaklabel,configuration_instance,True)
+                                loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,True)
                             else:
-                                loss = calculateLogicLoss(masks_pred,weaklabel,configuration_instance,printLosses)
+                                loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,printLosses)
                             if loss.item() > 0 and loss.item() < np.inf:
                                 pass
                             else:
@@ -207,9 +224,9 @@ def train_model(
                     # if epoch > 50:  #testing purposes
                     #     signal = 2
                     if epoch == epochs:
-                        loss = calculateLogicLoss(masks_pred,weaklabel,configuration_instance,True)
+                        loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,True)
                     else:
-                        loss = calculateLogicLoss(masks_pred,weaklabel,configuration_instance)
+                        loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict)
                     if loss.item() > 0 and loss.item() < np.inf:
                         optimizer.zero_grad(set_to_none=True)
                         grad_scaler.scale(loss).backward()
@@ -251,7 +268,7 @@ def train_model(
                         #         histograms['Gradients/' + tag] = wandb.Histogram(value.grad.data.cpu())
 
                         #val_score = evaluateWeaklySupervised2(model, val_loader, device, amp)
-                        print("Validation:")
+                        print("Test Set Eval:")
                         test_score = evaluateFullySupervisedCLEVRwPrecisionRecall(model, test_loader, device, amp)
                         new_learning_rate = optimizer.param_groups[0]['lr']
                         if new_learning_rate != old_learning_rate:
@@ -279,7 +296,7 @@ def train_model(
                         # except:
                         #     pass
             if epoch%3 == 0:
-                print("Training set evaluation:")
+                print("Training Set Eval:")
                 evaluateFullySupervisedCLEVRwPrecisionRecall(model,test_trainset_loader,device,amp)
                 print("")
 
@@ -296,7 +313,7 @@ def train_model(
 def get_args():
     #note: Batch size can be upped, but the images must be resized (scaled or padded) to have the same format!!
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')
-    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=180, help='Number of epochs')
+    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=80, help='Number of epochs')
     parser.add_argument('--batch-size', '-b', dest='batch_size', metavar='B', type=int, default=1, help='Batch size')
     parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-7,
                         help='Learning rate', dest='lr')

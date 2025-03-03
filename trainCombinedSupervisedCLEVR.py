@@ -13,23 +13,54 @@ from torch import optim
 from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
 from LogicLossVOC.WeakLabelLogicLossCLEVR import calculateLogicLoss
-from evaluate import evaluate, evaluateWeaklySupervised, evaluateWeaklySupervisedCLEVR,evaluateWeaklySupervisedCLEVROLD
+from evaluate import evaluate, evaluateWeaklySupervised,evaluateFullySupervisedCLEVRwPrecisionRecall, evaluateWeaklySupervisedCLEVR,evaluateWeaklySupervisedCLEVROLD,evaluateFullySupervisedCLEVR
 from unet import UNet
-from utils.data_loading import WeakLabelDataset,BasicDataset,WeakLabelDatasetCLEVR
+from utils.data_loading import WeakLabelDataset,BasicDataset,WeakLabelDatasetCLEVR,BasicDatasetCLEVR,CombinedDatasetCLEVR
 import numpy as np 
+
+seed = 42
+torch.manual_seed(seed)
+random.seed(seed)
+np.random.seed(seed)
+
+torch.cuda.manual_seed(seed)
+torch.cuda.manual_seed_all(seed)
 
 debug = False
 if debug:
     dir_img = Path('../../DebugDatasetCLEVR/imagesWeakDataset/')
-    dir_weaklabel = Path('../../DebugDatasetCLEVR/annotationsTrain/')
+    dir_mask = Path('../../DebugDatasetCLEVR/annotationsTrain/')
     dir_checkpoint = Path('./DebugCheckpoints/')
 else:   
     # dir_img = Path('../../datasetCLEVR/imagesWeakDataset/')
     # dir_weaklabel = Path('../../datasetCLEVR/annotationsTrain/')
     # dir_checkpoint = Path('./checkpoints/')
-    dir_img = Path('../../datasetCLEVRaug/augmented/')
-    dir_weaklabel = Path('../../datasetCLEVRaug/scaledAnnotationsTrain4/')
+    dir_img = Path('../../datasetCLEVRaug/ImagesTraining/')
+    dir_mask = Path('../../datasetCLEVRaug/MasksTraining')
+    dir_weaklabel = Path('../../datasetCLEVRaug/WeakLabelsTraining/')
+    dir_img_test = Path('../../datasetCLEVRaug/ImagesValidation/')
+    dir_mask_test = Path('../../datasetCLEVRaug/MasksValidation')
     dir_checkpoint = Path('./checkpoints/')
+
+
+
+#                     0.ImageLevel         1.BBox: outside, atmost      2.OneHot   3.Atleast70%BackgroundGlobal    4.Smoothess  5.minimumSizeGlobal
+configuration_instance = [ [False,1],      [[False,1],[True,1],[True,1]],   [True,1],         [False,1],             [True,10],    [False,1]]
+
+"""
+lr = 1e-7
+With smoothness and one-hot
+Gets 0.886 test accuracy epoch 27
+Gets 0.9 test accuracy epoch 42
+"""
+"""
+lr = 1e-7
+Zonder weaklabels:
+test set mIoU: 0.885 epoch 30
+test set mIoU: 0.898 epoch 52
+--> maar uiteindelijk helpt het miss toch een beetje? (het kan allesiends geen kwaad)
+--> voor deftig experiment doe lr = 1e-8 zwz
+"""
 
 class_values = {
     "background": 0,
@@ -56,8 +87,8 @@ def train_model(
     # try:
     #     dataset = CarvanaDataset(dir_img, dir_mask, img_scale)
     # except (AssertionError, RuntimeError, IndexError):
-    dataset = WeakLabelDatasetCLEVR(dir_img, dir_weaklabel, img_scale)
-
+    dataset = CombinedDatasetCLEVR(dir_img, dir_weaklabel,dir_mask,img_scale)
+    dataset_test = BasicDatasetCLEVR(dir_img_test, dir_mask_test, img_scale)
     # 2. Split into train / validation partitions
     n_val = int(len(dataset) * val_percent)
     n_train = len(dataset) - n_val
@@ -69,6 +100,7 @@ def train_model(
     loader_args = dict(batch_size=batch_size, num_workers=os.cpu_count(), pin_memory=True)
     train_loader = DataLoader(train_set, shuffle=True, **loader_args)
     val_loader = DataLoader(val_set, shuffle=False, drop_last=True, **loader_args)
+    test_loader = DataLoader(dataset_test,shuffle=True,**loader_args)
   
     # # (Initialize logging)
     # experiment = wandb.init(project='U-Net', resume='allow', anonymous='must')
@@ -149,7 +181,7 @@ def train_model(
                         # Evaluation round
                         
                         if i%10 == 5:
-                            print("TRAIN EVAL:",evaluateWeaklySupervisedCLEVR(model,train_loader,device,amp))
+                            print("TRAIN EVAL:",evaluateFullySupervisedCLEVR(model,train_loader,device,amp))
                                 
 
                     if save_checkpoint:
@@ -163,61 +195,64 @@ def train_model(
     else:
         showPbar = False
         signal = 0
+        old_learning_rate = optimizer.param_groups[0]['lr']
         # 5. Begin training
         for epoch in range(1, epochs + 1):
             model.train()
             epoch_loss = 0
-            with tqdm(total=n_train, desc=f'Epoch {epoch}/{epochs}', unit='img') as pbar:
+            print(f'Epoch {epoch}/{epochs}:\n')
+            for batch in train_loader:
+                images, mask, weaklabel = batch['image'], batch["mask"], batch['weaklabel']
+                assert images.shape[1] == model.n_channels, \
+                    f'Network has been defined with {model.n_channels} input channels, ' \
+                    f'but loaded images have {images.shape[1]} channels. Please check that ' \
+                    'the images are loaded correctly.'
+
+                images = images.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
+
+                with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
+                    masks_pred = model(images)
+                    #after a while, mask_pred becomes all NAN !! problem!!
+                    # if epoch > 30:
+                    #     signal = 1
+                    # if epoch > 50:  #testing purposes
+                    #     signal = 2
+                    #loss = calculateLogicLoss(masks_pred,weaklabel,signal)
+                    _, _, H, W = images.shape  # Get image dimensions
+                    loss = cross_entropy(masks_pred,mask,H,W,device)
+                    loss += diceLoss(masks_pred,mask,H,W,device)
+                    #loss += calculateLogicLoss(masks_pred,weaklabel,configuration_instance)
+                    if loss.item() > 0 and loss.item() < np.inf:
+                        optimizer.zero_grad(set_to_none=True)
+                        grad_scaler.scale(loss).backward()
+                        grad_scaler.unscale_(optimizer)
+                        torch.nn.utils.clip_grad_norm_(model.parameters(), gradient_clipping)
+                        grad_scaler.step(optimizer)
+                        grad_scaler.update()
+                    else:
+                        print(loss,"\n",masks_pred)
+                        report = 0
+                        #assert(report == 1)
                 
-                for batch in train_loader:
-                    images, weaklabel = batch['image'], batch["weaklabel"]
-                    assert images.shape[1] == model.n_channels, \
-                        f'Network has been defined with {model.n_channels} input channels, ' \
-                        f'but loaded images have {images.shape[1]} channels. Please check that ' \
-                        'the images are loaded correctly.'
+                
+                if showPbar:
+                    pbar.update(images.shape[0])
+                    pbar.set_postfix(**{'loss (batch)': loss.item()})
+                global_step += 1
+                
+                epoch_loss += loss.detach() 
+                del images, mask, weaklabel, masks_pred, loss  # Free memory
+                torch.cuda.empty_cache()  # Clear GPU memory
+                # experiment.log({
+                #     'train loss': loss.item(),
+                #     'step': global_step,
+                #     'epoch': epoch
+                # })
+                
 
-                    images = images.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
-
-                    with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
-                        masks_pred = model(images)
-                        #after a while, mask_pred becomes all NAN !! problem!!
-                        # if epoch > 30:
-                        #     signal = 1
-                        # if epoch > 50:  #testing purposes
-                        #     signal = 2
-                        #loss = calculateLogicLoss(masks_pred,weaklabel,signal)
-                        _, _, H, W = images.shape  # Get image dimensions
-                        loss = diceLoss(masks_pred,weaklabel,H,W,device)
-                        if loss.item() > 0 and loss.item() < np.inf:
-                            optimizer.zero_grad(set_to_none=True)
-                            grad_scaler.scale(loss).backward()
-                            grad_scaler.unscale_(optimizer)
-                            torch.nn.utils.clip_grad_norm_(model.parameters(), gradient_clipping)
-                            grad_scaler.step(optimizer)
-                            grad_scaler.update()
-                        else:
-                            print(loss,"\n",masks_pred)
-                            report = 0
-                            #assert(report == 1)
-                    
-                    
-                    if showPbar:
-                        pbar.update(images.shape[0])
-                        pbar.set_postfix(**{'loss (batch)': loss.item()})
-                    global_step += 1
-                    
-                    epoch_loss += loss.detach() 
-                    del images, weaklabel, masks_pred, loss  # Free memory
-                    torch.cuda.empty_cache()  # Clear GPU memory
-                    # experiment.log({
-                    #     'train loss': loss.item(),
-                    #     'step': global_step,
-                    #     'epoch': epoch
-                    # })
-                    
-
-                    # Evaluation round
-                    division_step = (n_train // (5 * batch_size))
+                # Evaluation round
+                if n_val > 0:
+                    division_step = (n_train // (3 * batch_size))
                     if division_step > 0:
                         if global_step % division_step == 0:
                             # histograms = {}
@@ -229,15 +264,16 @@ def train_model(
                             #         histograms['Gradients/' + tag] = wandb.Histogram(value.grad.data.cpu())
 
                             #val_score = evaluateWeaklySupervised2(model, val_loader, device, amp)
-                          
-                            val_score = evaluateWeaklySupervisedCLEVR(model, val_loader, device, amp)
-                            #val_score = evaluateWeaklySupervisedCLEVROLD(model, val_loader, device, amp)
-                            if epoch%10 == 5:
                             
-                                print("TRAIN EVAL:",evaluateWeaklySupervisedCLEVR(model,train_loader,device,amp))
+                            #val_score = evaluateFullySupervisedCLEVR(model, val_loader, device, amp)
                                 
-                            logging.info('Validation overlap score: {}'.format(val_score))
-                            print( " new lr: ", optimizer.param_groups[0]['lr'])
+                            print("Validation:")
+                            val_score = evaluateFullySupervisedCLEVRwPrecisionRecall(model, val_loader, device, amp)
+                            new_learning_rate = optimizer.param_groups[0]['lr']
+                            if new_learning_rate != old_learning_rate:
+                                print( "new learning rate !!: ", optimizer.param_groups[0]['lr'])
+                                old_learning_rate = new_learning_rate
+                            print("")
                             scheduler.step(val_score)
 
                             # try:
@@ -255,67 +291,83 @@ def train_model(
                             #     })
                             # except:
                             #     pass
-            print("average loss during this epoch = ",epoch_loss/431) #pas dit nog aan eventueel
+            if epoch%1 == 0:
+                print("Training set evaluation:")
+                evaluateFullySupervisedCLEVRwPrecisionRecall(model,train_loader,device,amp)
+                print("")
+                print("Test set evaluation:")
+                evaluateFullySupervisedCLEVRwPrecisionRecall(model,test_loader,device,amp)
+                print("")
+            print("Average loss this epoch = ",epoch_loss.item()/n_train) #pas dit nog aan eventueel
             if save_checkpoint:
                 Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
                 state_dict = model.state_dict()
-                #state_dict['mask_values'] = dataset.mask_values
+                state_dict['mask_values'] = dataset.mask_values
                 torch.save(state_dict, str(dir_checkpoint / 'checkpoint_epoch{}.pth'.format(epoch)))
                 logging.info(f'Checkpoint {epoch} saved!')
+                print("/////////////////////////")
 
 
-def diceLoss(mask_pred, weaklabel, H, W, device, smooth=1.0):
+def diceLoss(mask_pred, true_mask, H, W, device, smooth=1.0):
     """
-    Compute Dice Loss with bounding box supervision.
-    Uses softmax probabilities directly for class predictions.
+    Computes the Dice Loss for multi-class segmentation.
+    
+    Parameters:
+    mask_pred (torch.Tensor): Predicted logits (before softmax) of shape [1, C, H, W]
+    true_mask (torch.Tensor): Ground truth mask of shape [1, H, W] with class indices
+    H (int): Height of the image
+    W (int): Width of the image
+    device (torch.device): Device to perform computations on
+    smooth (float): Smoothing factor to prevent division by zero
+    
+    Returns:
+    torch.Tensor: Dice loss value
     """
+    # Apply softmax to obtain class probabilities
+    mask_pred = F.softmax(mask_pred, dim=1)  # Shape: [1, C, H, W]
+    
+    # Convert true_mask to one-hot encoding
+    C = mask_pred.shape[1]  # Number of classes
+    true_mask_one_hot = F.one_hot(true_mask.long(), num_classes=C).permute(0, 3, 1, 2)  # Shape: [1, C, H, W]
+    true_mask_one_hot = true_mask_one_hot.to(device, dtype=torch.float32)
+    
+    # Compute Dice coefficient per class
+    intersection = torch.sum(mask_pred * true_mask_one_hot, dim=(2, 3))  # Sum over spatial dimensions
+    union = torch.sum(mask_pred, dim=(2, 3)) + torch.sum(true_mask_one_hot, dim=(2, 3))
+    dice_score = (2. * intersection + smooth) / (union + smooth)
+    
+    # Compute mean Dice loss across all classes
+    dice_loss = 1 - dice_score.mean()
+    
+    return dice_loss
 
+
+def cross_entropy(mask_pred, mask, H, W, device, smooth=1.0):
     # Convert logits to probabilities
     mask_pred = F.softmax(mask_pred, dim=1)  # (1, C, H, W)
 
-    total_dice_loss = 0.0  # Initialize variable to accumulate loss
+    # Reshape weak label to match (H, W)
+    mask = mask.view(H, W).long().to(device)  # Ensure it's the right shape and on the correct device
 
-    # Process weak labels (bounding boxes)
-    bboxlist = weaklabel[0][4]
-    indd = 0
-    for i in bboxlist:
-        indd += 1
-        if indd % 2 == 1:
-            i = i[0].split(',')
-            objecIndex = class_values[i[0]]  # Convert class label to index
-            x1, x2, y1, y2 = map(int, i[1:5])
+    # Flatten the predictions and labels
+    mask_pred = mask_pred.permute(0, 2, 3, 1).contiguous().view(-1, mask_pred.shape[1])  # (H*W, C)
+    mask = mask.view(-1)  # (H*W)
 
-            # Initialize the ground truth for this bounding box (class-specific)
-            mask_gt = torch.zeros((H, W), dtype=torch.float32, device=device)
-            mask_gt[y1:y2+1, x1:x2+1] = 1
+    # Calculate Cross Entropy Loss
+    loss = F.cross_entropy(mask_pred, mask, reduction='mean')
 
-            # Get the softmax probability for the specific class
-            pred_mask = mask_pred[:, objecIndex, :, :]  # Softmax probabilities for class objecIndex
-
-            # Compute intersection and union for Dice calculation
-            intersection = torch.sum(mask_gt * pred_mask)  # Intersection (AND)
-            union = torch.sum(mask_gt) + torch.sum(pred_mask)  # Union (OR)
-
-            # Dice coefficient calculation
-            dice_score = (2.0 * intersection + smooth) / (union + smooth)
-            
-            # Accumulate the loss without in-place operation
-            total_dice_loss += (1 - dice_score)  # Minimize (1 - Dice)
-
-    # Return the average Dice loss over all bounding boxes
-    return total_dice_loss / (len(bboxlist)/2)  # Average Dice loss over all bounding boxes
-
+    return loss
 
 def get_args():
     #note: Batch size can be upped, but the images must be resized (scaled or padded) to have the same format!!
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')
-    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=180, help='Number of epochs')
+    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=40, help='Number of epochs')
     parser.add_argument('--batch-size', '-b', dest='batch_size', metavar='B', type=int, default=1, help='Batch size')
     parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-7,
                         help='Learning rate', dest='lr')
     parser.add_argument('--load', '-f', type=str, default=False, help='Load model from a .pth file')
     parser.add_argument('--scale', '-s', type=float, default=1, help='Downscaling factor of the images')
-    parser.add_argument('--validation', '-v', dest='val', type=float, default=10.0,
+    parser.add_argument('--validation', '-v', dest='val', type=float, default=0,
                         help='Percent of the data that is used as validation (0-100)')
     parser.add_argument('--amp', action='store_true', default=True, help='Use mixed precision')
     parser.add_argument('--bilinear', action='store_true', default=True, help='Use bilinear upsampling')

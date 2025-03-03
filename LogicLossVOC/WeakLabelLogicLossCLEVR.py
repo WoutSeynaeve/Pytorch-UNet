@@ -1,5 +1,5 @@
 import os
-from LogicLossVOC.LogicConstraints import onehot,adjacency,alteast_p_percent_is_class, ifXthenXadjecent,atmost_p_percent_is_class_in_bounding_box, ifXthenYatRelation, scribble, image_level_label, about_p_percent_is_class, about_p_percent_is_class_in_bounding_box
+from LogicLossVOC.LogicConstraints import onehot,adjacency,atmost_p_percent_is_class,alteast_p_percent_is_class, ifXthenXadjecent,atmost_p_percent_is_class_in_bounding_box, ifXthenYatRelation, scribble, image_level_label, about_p_percent_is_class, about_p_percent_is_class_in_bounding_box
 import torch.nn.functional as F
 import torch
 import random
@@ -115,9 +115,6 @@ def parse_dataCLEVR(data):
 
 def calculateLogicLoss(output_tensor,weaklabels,configuration,printLosses = False):
 
-    #               0.ImageLevel         1.BBox: outside, atmost      2.OneHot   3.Atleast70%BackgroundGlobal    4.Smoothess  5.minimumSizeGlobal
-    configuration = [ [False,1],       [[True,1],[True,1],[True,1]],   [True,10],         [False,1],               [False,100],    [False,1]]
-
     output_tensor = output_tensor[0, :, :, :]  # Remove batch dimension
     
     output_tensor = F.softmax(output_tensor, dim=0)  # Apply softmax over class dimension
@@ -200,6 +197,32 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,printLosses = Fals
             if printLosses:
                 print("loss for minimum size constraint for:",names_from_classes[classes],addloss*configuration[5][1])
             loss += addloss*configuration[4][1]
+
+    #FUll 100% bounding boxes
+    if configuration[6][0]:
+        for bbox in full_bounding_box:
+            shape,x1,x2,y1,y2,percentage = bbox
+            shape,x1,x2,y1,y2 = shape[0],x1[0],x2[0],y1[0],y2[0]
+            addloss = about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],1,int(x1),int(x2),int(y1),int(y2))
+            if printLosses:
+                print("loss for",shape," bounding box to be FULLY filled","= ",addloss*configuration[6][1])
+            loss += addloss*configuration[6][1]
+
+    #maximum size global constraint for background: not more than 100-3*0.35 = 99.95 percent should be filled by background
+    #true max value for train set is actually 97.98, so we can also use 98 maybe
+    if configuration[7][0]:
+        addloss = atmost_p_percent_is_class(output_tensor,[0],0.98)
+        if printLosses:
+            print("loss for atmost 98.95 to be background",addloss*configuration[7][1])
+        loss += addloss*configuration[7][1] 
+
+    #maximum size global constraint for shapes: each shape should not take in more than: 9.18 percent
+    if configuration[8][0]:
+        for classes in range(1,4):
+            addloss = atmost_p_percent_is_class(output_tensor,[classes],9.18/100)
+            if printLosses:
+                print("loss for maximize size constraint for:",names_from_classes[classes],addloss*configuration[8][1])
+            loss += addloss*configuration[8][1]
 
     return loss
 

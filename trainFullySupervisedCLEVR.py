@@ -44,12 +44,22 @@ else:
 
 
 """
-MODEL SHOULD GET AROUND 81% meanIoU, with bilinear, amp, lr = 1e-8
+MODEL SHOULD GET AROUND 84% meanIoU, with bilinear, amp, lr = 1e-7
 e.g.
-Validation IoU per class: tensor([0.9978, 0.7378, 0.7432, 0.7668], device='cuda:0')
-INFO: Validation overlap score: 0.8113822937011719
+Epoch 37/180:
+Validation:
+IoU per class: [0.998, 0.808, 0.768, 0.79] mIoU: 0.841 mIoU_shapes: 0.789
 
 I think it helps switching to learning rate 1e-9 after a while for more steady last convergence
+
+or 
+epoch 38, lr = 1e-8, no validation set
+
+Training set evaluation:
+IoU per class: [0.999, 0.915, 0.933, 0.848] mIoU: 0.924 mIoU_shapes: 0.899
+
+Test set evaluation:
+IoU per class: [0.998, 0.714, 0.897, 0.751] mIoU: 0.84 mIoU_shapes: 0.787
 """
 
 class_values = {
@@ -209,7 +219,8 @@ def train_model(
                     #     signal = 2
                     #loss = calculateLogicLoss(masks_pred,weaklabel,signal)
                     _, _, H, W = images.shape  # Get image dimensions
-                    loss = diceLoss(masks_pred,weaklabel,H,W,device)
+                    loss = cross_entropy(masks_pred,weaklabel,H,W,device)
+                    loss += diceLoss(masks_pred,weaklabel,H,W,device)
                     if loss.item() > 0 and loss.item() < np.inf:
                         optimizer.zero_grad(set_to_none=True)
                         grad_scaler.scale(loss).backward()
@@ -239,46 +250,47 @@ def train_model(
                 
 
                 # Evaluation round
-                division_step = (n_train // (3 * batch_size))
-                if division_step > 0:
-                    if global_step % division_step == 0:
-                        # histograms = {}
-                        # for tag, value in model.named_parameters():
-                        #     tag = tag.replace('/', '.')
-                        #     if not (torch.isinf(value) | torch.isnan(value)).any():
-                        #         histograms['Weights/' + tag] = wandb.Histogram(value.data.cpu())
-                        #     if not (torch.isinf(value.grad) | torch.isnan(value.grad)).any():
-                        #         histograms['Gradients/' + tag] = wandb.Histogram(value.grad.data.cpu())
+                if n_val > 0:
+                    division_step = (n_train // (3 * batch_size))
+                    if division_step > 0:
+                        if global_step % division_step == 0:
+                            # histograms = {}
+                            # for tag, value in model.named_parameters():
+                            #     tag = tag.replace('/', '.')
+                            #     if not (torch.isinf(value) | torch.isnan(value)).any():
+                            #         histograms['Weights/' + tag] = wandb.Histogram(value.data.cpu())
+                            #     if not (torch.isinf(value.grad) | torch.isnan(value.grad)).any():
+                            #         histograms['Gradients/' + tag] = wandb.Histogram(value.grad.data.cpu())
 
-                        #val_score = evaluateWeaklySupervised2(model, val_loader, device, amp)
-                        
-                        #val_score = evaluateFullySupervisedCLEVR(model, val_loader, device, amp)
+                            #val_score = evaluateWeaklySupervised2(model, val_loader, device, amp)
                             
-                        print("Validation:")
-                        val_score = evaluateFullySupervisedCLEVRwPrecisionRecall(model, val_loader, device, amp)
-                        new_learning_rate = optimizer.param_groups[0]['lr']
-                        if new_learning_rate != old_learning_rate:
-                            print( "new learning rate !!: ", optimizer.param_groups[0]['lr'])
-                            old_learning_rate = new_learning_rate
-                        print("")
-                        scheduler.step(val_score)
+                            #val_score = evaluateFullySupervisedCLEVR(model, val_loader, device, amp)
+                                
+                            print("Validation:")
+                            val_score = evaluateFullySupervisedCLEVRwPrecisionRecall(model, val_loader, device, amp)
+                            new_learning_rate = optimizer.param_groups[0]['lr']
+                            if new_learning_rate != old_learning_rate:
+                                print( "new learning rate !!: ", optimizer.param_groups[0]['lr'])
+                                old_learning_rate = new_learning_rate
+                            print("")
+                            scheduler.step(val_score)
 
-                        # try:
-                        #     experiment.log({
-                        #         'learning rate': optimizer.param_groups[0]['lr'],
-                        #         'validation Dice': val_score,
-                        #         'images': wandb.Image(images[0].cpu()),
-                        #         'masks': {
-                        #             'true': wandb.Image(true_masks[0].float().cpu()),
-                        #             'pred': wandb.Image(masks_pred.argmax(dim=1)[0].float().cpu()),
-                        #         },
-                        #         'step': global_step,
-                        #         'epoch': epoch,
-                        #         **histograms
-                        #     })
-                        # except:
-                        #     pass
-            if epoch%3 == 0:
+                            # try:
+                            #     experiment.log({
+                            #         'learning rate': optimizer.param_groups[0]['lr'],
+                            #         'validation Dice': val_score,
+                            #         'images': wandb.Image(images[0].cpu()),
+                            #         'masks': {
+                            #             'true': wandb.Image(true_masks[0].float().cpu()),
+                            #             'pred': wandb.Image(masks_pred.argmax(dim=1)[0].float().cpu()),
+                            #         },
+                            #         'step': global_step,
+                            #         'epoch': epoch,
+                            #         **histograms
+                            #     })
+                            # except:
+                            #     pass
+            if epoch%1 == 0:
                 print("Training set evaluation:")
                 evaluateFullySupervisedCLEVRwPrecisionRecall(model,train_loader,device,amp)
                 print("")
@@ -329,16 +341,32 @@ def diceLoss(mask_pred, true_mask, H, W, device, smooth=1.0):
     return dice_loss
 
 
+def cross_entropy(mask_pred, weaklabel, H, W, device, smooth=1.0):
+    # Convert logits to probabilities
+    mask_pred = F.softmax(mask_pred, dim=1)  # (1, C, H, W)
+
+    # Reshape weak label to match (H, W)
+    weaklabel = weaklabel.view(H, W).long().to(device)  # Ensure it's the right shape and on the correct device
+
+    # Flatten the predictions and labels
+    mask_pred = mask_pred.permute(0, 2, 3, 1).contiguous().view(-1, mask_pred.shape[1])  # (H*W, C)
+    weaklabel = weaklabel.view(-1)  # (H*W)
+
+    # Calculate Cross Entropy Loss
+    loss = F.cross_entropy(mask_pred, weaklabel, reduction='mean')
+
+    return loss
+
 def get_args():
     #note: Batch size can be upped, but the images must be resized (scaled or padded) to have the same format!!
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')
-    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=180, help='Number of epochs')
+    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=40, help='Number of epochs')
     parser.add_argument('--batch-size', '-b', dest='batch_size', metavar='B', type=int, default=1, help='Batch size')
     parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-7,
                         help='Learning rate', dest='lr')
     parser.add_argument('--load', '-f', type=str, default=False, help='Load model from a .pth file')
     parser.add_argument('--scale', '-s', type=float, default=1, help='Downscaling factor of the images')
-    parser.add_argument('--validation', '-v', dest='val', type=float, default=10.0,
+    parser.add_argument('--validation', '-v', dest='val', type=float, default=0,
                         help='Percent of the data that is used as validation (0-100)')
     parser.add_argument('--amp', action='store_true', default=True, help='Use mixed precision')
     parser.add_argument('--bilinear', action='store_true', default=True, help='Use bilinear upsampling')
