@@ -1,5 +1,5 @@
 import os
-from LogicLossVOC.LogicConstraints import onehot,adjacency,atmost_p_percent_is_class,alteast_p_percent_is_class, ifXthenXadjecent,atmost_p_percent_is_class_in_bounding_box, ifXthenYatRelation, scribble, image_level_label, about_p_percent_is_class, about_p_percent_is_class_in_bounding_box
+from LogicLossVOC.LogicConstraints import onehot,bounding_box_loss,onehot2,adjacency,atmost_p_percent_is_class,alteast_p_percent_is_class, ifXthenXadjecent,atmost_p_percent_is_class_in_bounding_box, ifXthenYatRelation, scribble_loss, image_level_label, about_p_percent_is_class, about_p_percent_is_class_in_bounding_box
 import torch.nn.functional as F
 import torch
 import random
@@ -11,68 +11,6 @@ class_values = {
     "cube": 3
 }
 names_from_classes = {0: 'background', 1: 'cylinder', 2: 'sphere', 3: 'cube'}
-
-def outsideBoundingBoxes(output_tensor,bounding_boxes,configuration,printLosses):
-    C,H,W = output_tensor.shape
-    # for b in bounding_boxes:
-    #     print(b)
-    # Parse bounding box data
-    partloss = 0
-    class_masks = {}
-    for bbox in bounding_boxes:
-        # Parse class and bounding box coordinates
-        class_name, x1, x2, y1, y2, _ = bbox[0].split(',')
-        x1, x2, y1, y2 = map(int, [x1, x2, y1, y2])
-
-        # Initialize mask for the class if not already present
-        if class_name not in class_masks:
-            class_masks[class_name] = torch.zeros((H, W), dtype=torch.bool)
-
-        # Mark bounding box region as True for the class
-        class_masks[class_name][y1:y2, x1:x2] = True  # Combine regions for the same class
-
-    combined_bbox_mask = torch.zeros((H, W), dtype=torch.bool)
-
-    # Combine all class-specific masks into a single mask
-    for mask in class_masks.values():
-        combined_bbox_mask |= mask  # Union of all bounding box regions
-
-    # Get regions outside all bounding boxes (background region)
-    background_mask = ~combined_bbox_mask  # Regions not covered by bounding boxes
-    background_region = output_tensor[:, background_mask]
-
-    # Check the intersection of background and non-background masks
-    intersection_mask = combined_bbox_mask & background_mask  # Logical AND to find overlaps
-    intersection_non_empty = intersection_mask.any()  # True if there are overlapping pixels
-
-    if intersection_non_empty:
-        print("Warning: Non-background and background regions intersect!")
-    
-
-    # Proceed with loss calculations
-    # background_region1 = output_tensor[:, combined_bbox_mask]
-
-    # partloss += about_p_percent_is_class(background_region1, [class_values['background']], 0, "single")
-
-    # Non-bounding-box loss for each class
-    non_bbox_regions = {}
-    for class_name, mask in class_masks.items():
-        # Invert the mask to get regions outside bounding boxes for the specific class
-        inverted_mask = ~mask
-        non_bbox_regions[class_name] = output_tensor[:, inverted_mask]
-    if configuration[4][0]:
-        addloss = about_p_percent_is_class(background_region, [class_values['background']], 1, "single")/configuration[4][1]
-        partloss += addloss
-        if printLosses:
-            print("Loss for parts outside of bboxes to be background: ",addloss)
-    
-    if configuration[3][0]:
-        for vv in non_bbox_regions.keys():
-            addloss = about_p_percent_is_class(non_bbox_regions[vv],[class_values[vv]],0,"single")/configuration[3][1]
-            partloss += addloss
-            if printLosses:
-                print("Loss for parts outside of bbox to be NOT for",vv," : ",addloss)
-    return partloss
 
 def read_dataset(file_path):
     with open(file_path, 'r') as file:
@@ -101,7 +39,7 @@ def parse_dataCLEVR(data):
         elif line.startswith("SoftRelation"):
             soft_relation.append(line.strip().split(",")[1:])
         elif line.startswith("Scribble"):
-            scribble.append(line.strip().split(",")[1:])
+            scribble.append(line.strip().split(";"))
         elif line.startswith("Area"):
             area.append(line.strip().split(",")[1:])
         elif line.startswith("FullBoundingBox"):
@@ -116,260 +54,173 @@ def parse_dataCLEVR(data):
 def calculateLogicLoss(output_tensor,weaklabels,configuration,printLosses = False):
 
     output_tensor = output_tensor[0, :, :, :]  # Remove batch dimension
-    
     output_tensor = F.softmax(output_tensor, dim=0)  # Apply softmax over class dimension
-  
+
     C,H,W = output_tensor.shape
     image_level_label, bounding_box, point, relation, soft_relation, scribble, area, full_bounding_box, adjacency = weaklabels[0]
+    
     loss = 0
 
     #Image-level
-    if configuration[0][0]:
+    imglvl = configuration.get("ImageLevel")
+    if imglvl[0]:
         for label in image_level_label:
             shape,percentage = label[0][0],label[1][0]
             addloss = about_p_percent_is_class(output_tensor,[class_values[shape]],float(percentage[:-1])/100)
             if printLosses:
-                print("")
-                print("Loss for imageLevel label for shape",shape," to be percentage", percentage, " = ",addloss*configuration[0][1])
-            loss += addloss*configuration[0][1]
+                print("Loss for imageLevel label for shape",shape," to be percentage", percentage, " = ",addloss*imglvl[1])
+            loss += addloss*imglvl[1]
 
     #Bounding Boxes
-    if configuration[1][0][0]:
+    bboxes = configuration.get("BBox")
+    if bboxes[0][0]:
         for bbox in bounding_box:
             shape,x1,x2,y1,y2,percentage = bbox
             shape,x1,x2,y1,y2,percentage = shape[0],x1[0],x2[0],y1[0],y2[0],percentage[0]
             addloss = about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],float(percentage[:-1])/100,int(x1),int(x2),int(y1),int(y2))
             
             if printLosses:
-                print("loss for",shape," bounding box to be filled",percentage,"= ",addloss*configuration[1][0][1])
-            loss += addloss*configuration[1][0][1]
+                print("loss for",shape," bounding box to be filled",percentage,"= ",addloss*bboxes[0][1])
+            loss += addloss*bboxes[0][1]
             #implied constraint: "outside bounding box dont predict object"
-            if configuration[1][1][0]:
+            if bboxes[1][0]:
                 addloss = 0
-                if int(x1) > 1:
-                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],0,0,int(x1)-1,0,H)
-                if int(y1) > 1:
-                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],0,int(x1),int(x2),0,int(y1)-1)
-                if int(y2) < H:
-                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],0,int(x1),int(x2),int(y2)+1,H)
-                if int(x2) < W:
-                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],0,int(x2)+1,W,0,H)
+                if bboxes[3] == "linear":
+                    if int(x1) > 1:
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],0,0,int(x1)-1,0,H)
+                    if int(y1) > 1:
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],0,int(x1),int(x2),0,int(y1)-1)
+                    if int(y2) < H:
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],0,int(x1),int(x2),int(y2)+1,H)
+                    if int(x2) < W:
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],0,int(x2)+1,W,0,H)
+                elif bboxes[3] == "prob":
+                    if int(x1) > 1:
+                        addloss += bounding_box_loss(output_tensor,0,int(x1)-1,0,H,class_values[shape],"not")
+                    if int(y1) > 1:
+                        addloss += bounding_box_loss(output_tensor,int(x1),int(x2),0,int(y1)-1,class_values[shape],"not")
+                    if int(y2) < H:
+                        addloss += bounding_box_loss(output_tensor,int(x1),int(x2),int(y2)+1,H,class_values[shape],"not")
+                    if int(x2) < W:
+                        addloss += bounding_box_loss(output_tensor,int(x2)+1,W,0,H,class_values[shape],"not")
+                else:
+                    print("should not be here")
                 if printLosses:
-                    print("loss for not predicting",shape, " outside its bounding box",addloss*configuration[1][1][1])
-                loss += addloss*configuration[1][1][1]
+                    print("loss for not predicting",shape, " outside its bounding box",addloss*bboxes[1][1])
+                loss += addloss*bboxes[1][1]
 
             #Implied constraint: for each other class, it cannot take up more than 1-p percent of bbox
-            if configuration[1][2][0]:
+            if bboxes[2][0]:
                 addloss = 0
                 for i in range(4): 
                     if i != class_values[shape]:
                         addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor,[i],1-float(percentage[:-1])/100,int(x1),int(x2),int(y1),int(y2))
                 if printLosses:
-                    print("loss for other classes to not take in too much of Bbox: ",addloss*configuration[1][2][1])
-                loss += addloss*configuration[1][2][1]
+                    print("loss for other classes to not take in too much of Bbox: ",addloss*bboxes[2][1])
+                loss += addloss*bboxes[2][1]
 
     #one-hot global constraint
-    if configuration[2][0]:
-        addloss = onehot(output_tensor)
+    onehot = configuration.get("OneHot")
+    if onehot[0]:
+        addloss = onehot2(output_tensor)
         if printLosses:
-            print("oneHot loss = ",addloss*configuration[2][1])
-        loss += addloss*configuration[2][1]
+            print("oneHot loss = ",addloss*onehot[1])
+        loss += addloss*onehot[1]
     
     #minimum size constraint for background class: atleast 70% is background
-    if configuration[3][0]:
+    minSizeGlobalBackground = configuration.get("MinSizeBackground")
+    if minSizeGlobalBackground[0]:
         addloss = alteast_p_percent_is_class(output_tensor,[0],0.7)
         if printLosses:
-            print("loss for atleast 70% to be background",addloss*configuration[3][1])
-        loss += addloss*configuration[3][1]
+            print("loss for atleast 70% to be background",addloss*minSizeGlobalBackground[1])
+        loss += addloss*minSizeGlobalBackground[1]
 
     #smoothness global constraint
-    if configuration[4][0]:
+    smthns = configuration.get("Smoothness")
+    if smthns[0]:
         for classes in range(4):
             addloss = ifXthenXadjecent(output_tensor,classes)
             if printLosses:
-                print("loss for smoothness for class",names_from_classes[classes],addloss*configuration[4][1])
-            loss += addloss*configuration[4][1]
+                print("loss for smoothness for class",names_from_classes[classes],addloss*smthns[1])
+            loss += addloss*smthns[1]
 
     #minimum size global constraint: atleast 0.35% of the image is filled by each shape
-    if configuration[5][0]:
+    minSizeShapes = configuration.get("MinSizeShapes")
+    if minSizeShapes[0]:
         for classes in range(1,4):
             addloss = alteast_p_percent_is_class(output_tensor,[classes],0.35/100)
             if printLosses:
-                print("loss for minimum size constraint for:",names_from_classes[classes],addloss*configuration[5][1])
-            loss += addloss*configuration[4][1]
+                print("loss for minimum size constraint for:",names_from_classes[classes],addloss*minSizeShapes[1])
+            loss += addloss*minSizeShapes[1]
 
     #FUll 100% bounding boxes
-    if configuration[6][0]:
+    bboxFull = configuration.get("BBoxFull")
+    if bboxFull[0]:
         for bbox in full_bounding_box:
-            shape,x1,x2,y1,y2,percentage = bbox
+            shape,x1,x2,y1,y2 = bbox
             shape,x1,x2,y1,y2 = shape[0],x1[0],x2[0],y1[0],y2[0]
-            addloss = about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],1,int(x1),int(x2),int(y1),int(y2))
+            if bboxFull[2] == "linear":
+                addloss = about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],1,int(x1),int(x2),int(y1),int(y2))
+            elif bboxFull[2] == "prob":
+                addloss = bounding_box_loss(output_tensor,int(x1),int(x2),int(y1),int(y2),class_values[shape],"all")
+            else:
+                print("should not be here")
             if printLosses:
-                print("loss for",shape," bounding box to be FULLY filled","= ",addloss*configuration[6][1])
-            loss += addloss*configuration[6][1]
+                print("loss for",shape," bounding box to be FULLY filled","= ",addloss*bboxFull[1])
+            loss += addloss*bboxFull[1]
 
     #maximum size global constraint for background: not more than 100-3*0.35 = 99.95 percent should be filled by background
     #true max value for train set is actually 97.98, so we can also use 98 maybe
-    if configuration[7][0]:
+    maxSizeBackground = configuration.get("MaxSizeBackground")
+    if maxSizeBackground[0]:
         addloss = atmost_p_percent_is_class(output_tensor,[0],0.98)
         if printLosses:
-            print("loss for atmost 98.95 to be background",addloss*configuration[7][1])
-        loss += addloss*configuration[7][1] 
+            print("loss for atmost 98.95 to be background",addloss*maxSizeBackground[1])
+        loss += addloss*maxSizeBackground[1] 
 
     #maximum size global constraint for shapes: each shape should not take in more than: 9.18 percent
-    if configuration[8][0]:
+    maxSizeShapes = configuration.get("MaxSizeShapes")
+    if maxSizeShapes[0]:
         for classes in range(1,4):
             addloss = atmost_p_percent_is_class(output_tensor,[classes],9.18/100)
             if printLosses:
-                print("loss for maximize size constraint for:",names_from_classes[classes],addloss*configuration[8][1])
-            loss += addloss*configuration[8][1]
+                print("loss for maximize size constraint for:",names_from_classes[classes],addloss*maxSizeShapes[1])
+            loss += addloss*maxSizeShapes[1]
 
-    return loss
+    #scribble
+    scribbles = configuration.get('Scribbles')
+    if scribbles[0]:
+        for scribb in scribble:          
+            first_entry = scribb[0][0].split(",")  # Split the first string
+            shape = first_entry[1]  # Extract the shape name
+            coords = [[int(first_entry[2]), int(first_entry[3])]]  # First coordinate
 
-
-
-
-
-
-    """
-    adjacencies, relations, scribbles, image_level, bboxes = weaklabels[0]
-    loss = 0
-    #print(adjacencies, relations, scribbles, image_level,bboxes)
-    # s = 0
-    # for i in image_level:
-    #     i = i[0]
-    #     objects = i.split(',')
-    #     s += int(objects[1][0])
-    # loss += about_p_percent_is_class(output_tensor,[0],1-(s+1)/100)
-    if configuration[1][0]:
-        for i in adjacencies:
-            i = i[0]
-            objects = i.split(',')
-            addloss = adjacency(output_tensor, class_values[objects[0]], class_values[objects[1]])/configuration[1][1]
-            if addloss > 0.1:
-                loss += addloss
-                if printLosses:
-                    print("loss for adjacency between",objects,": ",addloss)
-
-    if configuration[7][0]:
-        counter = 0
-        for i in relations:
-            counter += 1
-            if True: #counter % 2 != 0:
-                i = i[0]
-                objects = i.split(',')
-                X = objects[2]
-                Y = objects[0]
-                relation = objects[1]
-                addloss = ifXthenYatRelation(output_tensor, class_values[X], class_values[Y],relation)/configuration[7][1]
-                if printLosses:
-                    print("loss for realtion:",i," : ",addloss)
-                loss += addloss
-    
-    if configuration[6][0]:
-        for i in scribbles:
-            i = i[0]
-            label = i.split(',')
-            objectString = label[0]
-            scribbleCoords = [(int(pair[0][1:]), int(pair[1][:-1])) for pair in zip(label[1:][::2], label[1:][1::2])]
-
-            if objectString == "background":
-                i = image_level[0][0]
-                info = i.split(',')
-                for objects in info[0::2]:
-                    if objects != "background":
-                        if ScribbleTypes[2][0]:
-                            if len(scribbleCoords) != 0:
-                                addloss = scribble(output_tensor,np.array(scribbleCoords),class_values[objects],"not")/ScribbleTypes[2][1]
-                                if printLosses:
-                                    print("loss for background scribble not being class",objects,": ",addloss.item())
-                                loss += addloss
-                    else:
-                        if ScribbleTypes[1][0]:
-                            if len(scribbleCoords) != 0:
-                                assert(objects == "background")
-                                addloss = scribble(output_tensor,np.array(scribbleCoords),class_values[objects])/ScribbleTypes[1][1]
-                                if printLosses:
-                                    print("loss for 'background scribble shoud be class (lowered loss)",objects,": ",addloss.item())
-                                loss += addloss
-            else:
-                if len(scribbleCoords) != 0:
-                    if ScribbleTypes[0][0]:
-                        addloss = scribble(output_tensor,np.array(scribbleCoords),class_values[objectString])/ScribbleTypes[0][1]
-                        if printLosses:
-                            print("loss for scribbles for class",objectString,": ",addloss.item())
-                        loss += addloss
-                    if ScribbleTypes[3][0]:
-                        addloss = scribble(output_tensor,np.array(scribbleCoords),class_values["background"],"not")/ScribbleTypes[3][1]
-                        if printLosses:
-                            print("loss for scribble of class",objectString,"should not be background",addloss.item())
-                        loss += addloss
-    if configuration[0][0]:
-        for i in image_level:
-            i = i[0]
-            info = i.split(',')
-            objects = info[0::2]
-            percentages = info[1::2]
-            for notObject in class_values.keys(): #IMAGELEVELLABEL NOT !
-                    if not notObject in objects:
-                        #loss += image_level_label(output_tensor,[class_values[notObject]],"not")
-                        #alternative:
-                        addloss= about_p_percent_is_class(output_tensor,[class_values[notObject]],0)/configuration[0][1]
-                        if printLosses:
-                            print("loss to not predict other classes in the image",addloss.item())
-                        loss += addloss
-
-            # for i in range(len(objects)):
-            #     if objects[i] != "background":
-            #         print([class_values[objects[i]]],int(percentages[i].replace('%',''))/100)
-            #         loss += about_p_percent_is_class(output_tensor,[class_values[objects[i]]],int(percentages[i].replace('%',''))/100)
-    
-            # #I DONT THINK YOU WOULD EVEN WANT THIS:
-            # for i in range(len(objects)):
-            #     if objects[i] == "background":
-            #         if random.random() <= 1:
-            #             addloss = about_p_percent_is_class(output_tensor,[class_values[objects[i]]],int(percentages[i].replace('%',''))/100)
-            #             if printLosses:
-            #                 print("loss to predict x percentage background in the image",addloss.item())
-            #             loss += addloss
-        
-    addloss = outsideBoundingBoxes(output_tensor,bboxes,configuration,printLosses)
-    
-    loss += addloss
-    
-    if configuration[2][0]:
-        for i in bboxes:
-            i = i[0]
-            info = i.split(',')
-            objectt = info[0]
-            x1,x2,y1,y2 = info[1:-1]
-            percentage = int(info[-1].replace('%',''))/100
-            addloss = about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[objectt]],percentage,int(x1),int(x2),int(y1),int(y2))/configuration[2][1]
+            # Convert the remaining coordinates to integers
+            coords += [list(map(int, item[0].split(','))) for item in scribb[1:]]
+            addloss = scribble_loss(output_tensor,coords,class_values[shape],"all")
             if printLosses:
-                print("loss for boundingboxes for",objectt," : ",addloss.item())
-            loss += addloss
-            if configuration[8][0]:
-                addloss = atmost_p_percent_is_class_in_bounding_box(output_tensor,[class_values['background']],1-percentage,int(x1),int(x2),int(y1),int(y2))/configuration[8][1]
-                if addloss != 0:
-                    if printLosses:
-                        print("loss for background to not take in boundingbox",objectt," : ",addloss.item())
-                    loss += addloss
-            
-    #loss += alteast_p_percent_is_class(output_tensor,[0],0.9)
-    #GLOBAL SMOOTHNESS CONSTRAINT
-    if configuration[5][0]:
-        for i in image_level:
-            i = i[0]
-            info = i.split(',')
-            objects = info[0::2]
-            for i in objects: #background is included
-                addloss = ifXthenXadjecent(output_tensor, class_values[i])/configuration[5][1]
-                if addloss > 0.1 and addloss < 1000:
-                    if printLosses:
-                        print("loss for smoothenss object",i," : ",addloss)
-                    loss += addloss 
+                print("Loss for scribble for shape",shape," = ",addloss*scribbles[1])
+            loss += addloss*scribbles[1]
 
-    # if loss.item() < 22:
-    #     print(weaklabels[0][3],loss)
+
+
+    #area
+    area = configuration.get('Area')
+
+    #relation
+    relations = configuration.get('Relations')
+
+    #softRelation
+    softrelations = configuration.get('SoftRelations')
+
+    #point
+    points = configuration.get('Point')
+
+    #adjacency
+    adjacencies = configuration.get("Adjacency")
+
     return loss
-    """
+
+
+
+

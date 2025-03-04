@@ -27,8 +27,8 @@ torch.cuda.manual_seed(seed)
 torch.cuda.manual_seed_all(seed)
 
 debug = False
-printLosses = True
-debugIts = 400
+printLosses = False
+debugIts = 200
 if debug:
     dir_img = Path('../../DebugDatasetCLEVR/imagesWeakDataset/')
     dir_weaklabel = Path('../../DebugDatasetCLEVR/annotationsTrain/')
@@ -66,21 +66,21 @@ def train_model(
     if configuration == 0:
         configuration_dict = {
             "ImageLevel": [False, 1],
-            #                   outsideBbox  BboxAtmost
-            "BBox": [[True, 1],   [True, 1],   [True, 1]],
-            "BBoxFull": [True, 1],
+            #                      outsideBbox  BboxAtmost
+            "BBox": [[False, 1],   [True, 1],   [True, 1],"linear"], #linear or prob
+            "BBoxFull": [False, 1,"linear"], #linear or prob
             "Scribbles": [True, 1],
-            "Area": [True, 1],
-            "Point": [True, 10],
-            "Adjacency": [True, 1],
-            "Relations": [True, 1],
-            "SoftRelations": [True, 1],
+            "Area": [False, 1],
+            "Point": [False, 10],
+            "Adjacency": [False, 1],
+            "Relations": [False, 1],
+            "SoftRelations": [False, 1],
             #global constraints:
-            "OneHot": [True, 10],
-            "MinSizeBackground": [False, 1],
+            "OneHot": [False, 10],
+            "MinSizeBackground": [True, 1],
             "MaxSizeBackground": [False, 1],
-            "MinSizeShapes": [False, 1],
-            "MaxSizeShapes": [False, 1],
+            "MinSizeShapes": [True, 1],
+            "MaxSizeShapes": [True, 1],
             "Smoothness": [False, 100],
         }
     # 1. Create dataset
@@ -163,7 +163,7 @@ def train_model(
                                 print(loss,"\n",masks_pred)
                                 report = 0
                                 assert(report == 1)
-                        if loss.item() < 0.5:
+                        if loss.item() < 0.0005:
                             break
                         optimizer.zero_grad(set_to_none=True)
                         grad_scaler.scale(loss).backward()
@@ -183,7 +183,7 @@ def train_model(
                         pbar.set_postfix(**{'loss (batch)': loss.item()})
 
                         # Evaluation round
-                        if i%10 == 0:
+                        if i%30 == 0:
                             print("TRAIN EVAL:",evaluateFullySupervisedCLEVR(model,test_trainset_loader,device,amp))
                             print(evaluateFullySupervisedCLEVRwPrecisionRecall(model,test_trainset_loader,device,amp))
                             
@@ -227,7 +227,7 @@ def train_model(
                         loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,True)
                     else:
                         loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict)
-                    if loss.item() > 0 and loss.item() < np.inf:
+                    if loss.item() >= 0 and loss.item() < np.inf:
                         optimizer.zero_grad(set_to_none=True)
                         grad_scaler.scale(loss).backward()
                         grad_scaler.unscale_(optimizer)

@@ -1,7 +1,6 @@
 import torch
 import torch.nn.functional as F
-
-
+import numpy as np
 
 def image_level_label(normalized_tensor, I, NOT = None):
 
@@ -20,7 +19,7 @@ def image_level_label(normalized_tensor, I, NOT = None):
     return logicLoss
 
 
-def bounding_box(normalized_tensor,x1,x2,y1,y2,I, Option = None):
+def bounding_box_loss(normalized_tensor,x1,x2,y1,y2,I, Option = None):
     class_probs = normalized_tensor[I, :, :]
     class_probs = torch.clamp(class_probs, 0, 1 - 1e-7)
     bbox_class_probs = class_probs[y1:y2+1, x1:x2+1]
@@ -42,14 +41,15 @@ def bounding_box(normalized_tensor,x1,x2,y1,y2,I, Option = None):
 
     return logicLoss
 
-def scribble(normalized_tensor, scribble_coords, target_class, Option = None):
+def scribble_loss(normalized_tensor, scribble_coords, target_class, Option = None):
+    scribble_coords = np.array(scribble_coords)
     class_probs = normalized_tensor[target_class, :, :]
     class_probs = torch.clamp(class_probs, 1e-7, 1 - 1e-7)
-    scribble_probs = class_probs[scribble_coords[:, 0], scribble_coords[:, 1]] 
+    scribble_probs = class_probs[scribble_coords[:, 1], scribble_coords[:, 0]] 
     
-    if Option:
+    if Option == "none":
         log_probs = torch.log1p(-scribble_probs)
-    else:
+    elif Option == "all":
         log_probs = torch.log(scribble_probs)  #optional: add epsilon for stability
 
     log_probability = log_probs.sum()  
@@ -311,3 +311,18 @@ def onehot(normalized_tensor):
     ll = -torch.log1p(-torch.exp(summed_results))
  
     return ll.sum()/(H*W)
+
+def onehot2(normalized_tensor):
+    C, H, W = normalized_tensor.shape  # Get tensor dimensions
+    normalized_tensor = torch.clamp(normalized_tensor, min=1e-6, max=1-1e-6)
+    result = 0
+    for c1 in range(C):
+        for c2 in range(C):
+            if c1 != c2:
+                result += torch.log1p(-torch.exp(torch.log(normalized_tensor[c1])+torch.log(normalized_tensor[c2])))
+    #redundant part because model guarantees prob distr:
+    """
+    sum_to_one_penalty = torch.log1p(-torch.exp(torch.log(1-normalized_tensor).sum()))
+    result += sum_to_one_penalty
+    """ 
+    return -result.sum()
