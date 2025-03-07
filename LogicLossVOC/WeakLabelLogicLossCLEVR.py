@@ -1,5 +1,5 @@
 import os
-from LogicLossVOC.LogicConstraints import onehot,bounding_box_loss,onehot2,adjacency,atmost_p_percent_is_class,alteast_p_percent_is_class, ifXthenXadjecent,atmost_p_percent_is_class_in_bounding_box, ifXthenYatRelation, scribble_loss, image_level_label, about_p_percent_is_class, about_p_percent_is_class_in_bounding_box
+from LogicLossVOC.LogicConstraints import atleast_p_percent_is_class_in_bounding_box,onehot,bounding_box_loss,onehot2,adjacency_loss,atmost_p_percent_is_class,atleast_p_percent_is_class, ifXthenXadjecent,atmost_p_percent_is_class_in_bounding_box, ifXthenYatRelation, scribble_loss, image_level_label, about_p_percent_is_class, about_p_percent_is_class_in_bounding_box
 import torch.nn.functional as F
 import torch
 import random
@@ -51,7 +51,7 @@ def parse_dataCLEVR(data):
     return image_level_label, bounding_box, point, relation, soft_relation, scribble, area, full_bounding_box, adjacency
 
 
-def calculateLogicLoss(output_tensor,weaklabels,configuration,printLosses = False):
+def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosses = True):
 
     output_tensor = output_tensor[0, :, :, :]  # Remove batch dimension
     output_tensor = F.softmax(output_tensor, dim=0)  # Apply softmax over class dimension
@@ -63,13 +63,18 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,printLosses = Fals
 
     #Image-level
     imglvl = configuration.get("ImageLevel")
+    imlvlpercdict = {'cylinder': image_level_label[1][1][0][:-1],'sphere': image_level_label[2][1][0][:-1],'cube': image_level_label[3][1][0][:-1]}
     if imglvl[0]:
         for label in image_level_label:
             shape,percentage = label[0][0],label[1][0]
-            addloss = about_p_percent_is_class(output_tensor,[class_values[shape]],float(percentage[:-1])/100)
+            if imglvl[1]:
+                addloss = about_p_percent_is_class(output_tensor,[class_values[shape]],float(percentage[:-1])/100)
+            else:
+                #if you are not give exact percentages, assume minim 0.35 percent of image is filled
+                addloss = atleast_p_percent_is_class(output_tensor,[class_values[shape]],0.35/100)
             if printLosses:
-                print("Loss for imageLevel label for shape",shape," to be percentage", percentage, " = ",addloss*imglvl[1])
-            loss += addloss*imglvl[1]
+                print("Loss for imageLevel label for shape",shape," to be percentage", percentage, " = ",addloss*imglvl[2])
+            loss += addloss*imglvl[2]
 
     #Bounding Boxes
     bboxes = configuration.get("BBox")
@@ -77,11 +82,14 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,printLosses = Fals
         for bbox in bounding_box:
             shape,x1,x2,y1,y2,percentage = bbox
             shape,x1,x2,y1,y2,percentage = shape[0],x1[0],x2[0],y1[0],y2[0],percentage[0]
-            addloss = about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],float(percentage[:-1])/100,int(x1),int(x2),int(y1),int(y2))
-            
+            if bboxes[0][1]:
+                addloss = about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],float(percentage[:-1])/100,int(x1),int(x2),int(y1),int(y2))
+            else:
+                #if you are not using exact percentages, assume that atleast 60 percent is filled
+                addloss = atleast_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],0.6,int(x1),int(x2),int(y1),int(y2))
             if printLosses:
-                print("loss for",shape," bounding box to be filled",percentage,"= ",addloss*bboxes[0][1])
-            loss += addloss*bboxes[0][1]
+                print("loss for",shape," bounding box to be filled",percentage,"= ",addloss*bboxes[0][2])
+            loss += addloss*bboxes[0][2]
             #implied constraint: "outside bounding box dont predict object"
             if bboxes[1][0]:
                 addloss = 0
@@ -130,7 +138,7 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,printLosses = Fals
     #minimum size constraint for background class: atleast 70% is background
     minSizeGlobalBackground = configuration.get("MinSizeBackground")
     if minSizeGlobalBackground[0]:
-        addloss = alteast_p_percent_is_class(output_tensor,[0],0.7)
+        addloss = atleast_p_percent_is_class(output_tensor,[0],0.7)
         if printLosses:
             print("loss for atleast 70% to be background",addloss*minSizeGlobalBackground[1])
         loss += addloss*minSizeGlobalBackground[1]
@@ -148,7 +156,7 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,printLosses = Fals
     minSizeShapes = configuration.get("MinSizeShapes")
     if minSizeShapes[0]:
         for classes in range(1,4):
-            addloss = alteast_p_percent_is_class(output_tensor,[classes],0.35/100)
+            addloss = atleast_p_percent_is_class(output_tensor,[classes],0.35/100)
             if printLosses:
                 print("loss for minimum size constraint for:",names_from_classes[classes],addloss*minSizeShapes[1])
             loss += addloss*minSizeShapes[1]
@@ -179,10 +187,12 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,printLosses = Fals
         loss += addloss*maxSizeBackground[1] 
 
     #maximum size global constraint for shapes: each shape should not take in more than: 9.18 percent
+    #you want to put the upper bound higher, because you want "around 9.18 to be okay", because now this loss is more easily satisfied when predicting a lot less than 9.18 percent
+    #so lets take 15%
     maxSizeShapes = configuration.get("MaxSizeShapes")
     if maxSizeShapes[0]:
         for classes in range(1,4):
-            addloss = atmost_p_percent_is_class(output_tensor,[classes],9.18/100)
+            addloss = atmost_p_percent_is_class(output_tensor,[classes],15/100)
             if printLosses:
                 print("loss for maximize size constraint for:",names_from_classes[classes],addloss*maxSizeShapes[1])
             loss += addloss*maxSizeShapes[1]
@@ -205,8 +215,79 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,printLosses = Fals
 
 
     #area
-    area = configuration.get('Area')
+    areainfo = configuration.get('Area')
+    if areainfo[0]:
+        for arealbl in area:
+            print(arealbl, imlvlpercdict.get(shape))
+            ar1,ar2 = arealbl[1][0].split(";")
+            shape = arealbl[0][0]
+            addloss = 0
+            if areainfo[1]:
+                minpercentage = float(imlvlpercdict.get(shape))
+            else:
+                minpercentage = 0.35
 
+            if ar1 == 'left_half':
+                if ar2 == 'top_half':
+                    #top-left
+                    minpercentage = 4*minpercentage
+                    addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage / 100, 0, W // 2 - 1, 0, H // 2 - 1) * areainfo[3]
+                    addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100 - minpercentage) / 100, 0, W // 2 - 1, 0, H // 2 - 1)
+                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, W // 2, W, 0, H)
+                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W, H // 2, H)
+                elif ar2 == 'bottom_half':
+                    #bottom-left
+                    minpercentage = 4*minpercentage
+                    addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage / 100, 0, W // 2 - 1, H // 2, H) * areainfo[3]
+                    addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100 - minpercentage) / 100, 0, W // 2 - 1, H // 2, H)
+                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, W // 2, W, 0, H)
+                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0 , W, 0, H//2  - 1)
+                else:
+                    #left-half
+                    minpercentage = 2*minpercentage
+                    addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage/100, 0, W // 2 - 1, 0, H)*areainfo[3]
+                    addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100-minpercentage)/100, 0, W // 2 - 1, 0, H)
+                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, W // 2, W, 0, H)
+            elif ar1 == 'right_half':
+                if ar2 == 'top_half':
+                    #top-right
+                    minpercentage = 4*minpercentage
+                    addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage / 100, W // 2, W, 0, H // 2 - 1) * areainfo[3]
+                    addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100 - minpercentage) / 100, W // 2, W, 0, H // 2 - 1)
+                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W // 2 - 1, 0, H)
+                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W, H // 2, H)
+                elif ar2 == 'bottom_half':
+                    #bottom-right
+                    minpercentage = 4*minpercentage
+                    addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage / 100, W // 2, W, H // 2, H) * areainfo[3]
+                    addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100 - minpercentage) / 100, W // 2, W, H // 2, H)
+                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W // 2 - 1, 0, H)
+                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0 , W, 0, H//2 - 1)
+
+                else:
+                    #right-half
+                    minpercentage = 2*minpercentage
+                    addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage/100, W // 2, W, 0, H)*areainfo[3]
+                    addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100-minpercentage)/100, W // 2, W, 0, H)
+                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W // 2 - 1, 0, H)
+            else:
+                if ar2 == 'top_half':
+                    #top-half
+                    minpercentage = 2*minpercentage
+                    addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage/100, 0, W, 0, H // 2 - 1)*areainfo[3]
+                    addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100-minpercentage)/100, 0, W, 0, H // 2 - 1)
+                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W, H // 2, H)
+                elif ar2 == 'bottom_half':
+                    #bottom-half
+                    minpercentage = 2*minpercentage
+                    addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage/100, 0, W, H // 2, H)*areainfo[3]
+                    addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100-minpercentage)/100, 0, W, H // 2, H)
+                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W, 0, H // 2 - 1)
+
+            if printLosses:
+                print("Loss for shape",shape,"for",ar1,ar2," = ",addloss*areainfo[2])
+            loss += addloss*areainfo[2]
+            
     #relation
     relations = configuration.get('Relations')
 
@@ -215,10 +296,38 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,printLosses = Fals
 
     #point
     points = configuration.get('Point')
+    if points[0]:
+        for p in point:
+            shape,x,y = p[0][0],int(p[1][0]),int(p[2][0])
+            coord = [[x,y]]  
+            addloss = scribble_loss(output_tensor,coord,class_values[shape],"all")
+            if printLosses:
+                print("Loss for 1 point for shape",shape,' = ',addloss*points[1])
+            loss += addloss*points[1]
 
     #adjacency
     adjacencies = configuration.get("Adjacency")
+    if adjacencies[0]:
+        presentAdjacencies = set()
+        if len(adjacency) > 0:
+            for adj in adjacency:
+                shape1, shape2 = adj[0][0],adj[1][0]
+                presentAdjacencies.add(tuple(sorted([class_values[shape1], class_values[shape2]])))
+                addloss = adjacency_loss(output_tensor, class_values[shape1], class_values[shape2])
+                if printLosses:
+                    print("loss for adjacency between",shape1, shape2," = ",addloss*adjacencies[2])
+                loss += addloss*adjacencies[2]
 
+        #Not adjacent --> implied constraint
+        if adjacencies[1]:
+            for c1 in range(1,3):
+                for c2 in range(c1+1,4):
+                    if (c1,c2) not in presentAdjacencies:
+                        addloss = adjacency_loss(output_tensor,c1,c2,'not')
+                        if printLosses:
+                            print('Loss for NO adjacency between',names_from_classes[c1],names_from_classes[c2],"=",addloss*adjacencies[3])
+                        loss += addloss*adjacencies[3]
+    
     return loss
 
 

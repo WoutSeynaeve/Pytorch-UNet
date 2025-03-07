@@ -58,13 +58,13 @@ def scribble_loss(normalized_tensor, scribble_coords, target_class, Option = Non
 
     return logicLoss
 
-def adjacency(normalized_tensor, class_I, class_J,NOT = None):
+def adjacency_loss(normalized_tensor, class_I, class_J,option = 'yes'):
     
     # Extract probabilities for class I and class J
     probs_I = normalized_tensor[class_I, :, :]  # Shape: (H, W)
     probs_J = normalized_tensor[class_J, :, :]  # Shape: (H, W)
-    probs_I = torch.clamp(probs_I, 0, 1 - 1e-7)
-    probs_J = torch.clamp(probs_J, 0, 1 - 1e-7)
+    probs_I = torch.clamp(probs_I, min=1e-5, max=1-1e-5)
+    probs_J = torch.clamp(probs_J, min=1e-5, max=1-1e-5)
 
 
     # Define adjacency kernel (3x3 neighborhood excluding center)
@@ -90,10 +90,12 @@ def adjacency(normalized_tensor, class_I, class_J,NOT = None):
     # Sum over all pixels to compute log(global_no_adjacency)
     log_global_no_adjacency = torch.sum(log_pixelwise_no_adjacency)
 
-    if NOT:
+    if option == 'not':
         log_probability = log_global_no_adjacency
-    else:
+    elif option == 'yes':
         log_probability = torch.log1p(-torch.exp(log_global_no_adjacency))
+    else:
+        print("invalid option for adjacency")
 
     logicLoss = -log_probability
 
@@ -162,39 +164,7 @@ def ifXthenYatRelation(normalized_tensor, X, Y, relation,NOT = None):
     
     return logicLoss
 
-def area_label(normalized_tensor, class_index, area, option=None):
-    _, H, W = normalized_tensor.shape  # Get height and width
-    x1, y1, x2, y2 = 0, 0, W, H  # Default bounding box to cover the entire image
-
-    # Set bounding box based on the area
-    if area == "left":
-        x1, x2 = 0, W // 2 - 1
-        y1, y2 = 0, H  # Full height
-    elif area == "right":
-        x1, x2 = W // 2, W
-        y1, y2 = 0, H  # Full height
-    elif area == "top":
-        x1, x2 = 0, W  # Full width
-        y1, y2 = 0, H // 2 - 1
-    elif area == "bottom":
-        x1, x2 = 0, W  # Full width
-        y1, y2 = H // 2, H
-    elif area == "top-left":
-        x1, x2 = 0, W // 2 - 1
-        y1, y2 = 0, H // 2 - 1
-    elif area == "top-right":
-        x1, x2 = W // 2, W
-        y1, y2 = 0, H // 2 - 1
-    elif area == "bottom-left":
-        x1, x2 = 0, W // 2 - 1
-        y1, y2 = H // 2, H
-    elif area == "bottom-right":
-        x1, x2 = W // 2, W
-        y1, y2 = H // 2, H
-    else:
-        raise ValueError(f"Unknown area: {area}")
     
-    return bounding_box(normalized_tensor, x1, x2, y1, y2, class_index, option)
 
 def ifXthenXadjecent(normalized_tensor, class_I):
     # Extract probabilities for class I and class J
@@ -232,7 +202,7 @@ def about_p_percent_is_class_in_bounding_box(normalized_tensor,classesList,p,x1,
 
 def atleast_p_percent_is_class_in_bounding_box(normalized_tensor,classesList,p,x1,x2,y1,y2):
     bounding_box_tensor = normalized_tensor[:,y1:y2+1, x1:x2+1]
-    return alteast_p_percent_is_class(bounding_box_tensor,classesList,p)
+    return atleast_p_percent_is_class(bounding_box_tensor,classesList,p)
 
 def about_p_percent_is_class(normalized_tensor,classesList,p,single=None):
     assert(p <= 1)
@@ -252,7 +222,7 @@ def about_p_percent_is_class(normalized_tensor,classesList,p,single=None):
     loss = maxloss*torch.abs(ExpectedPixels-NumberOfPixels)/totalPixels #REMOVED SQUARE!!!!!
     return loss
 
-def alteast_p_percent_is_class(normalized_tensor,classesList,p):
+def atleast_p_percent_is_class(normalized_tensor,classesList,p):
     assert(p <= 1)
     ExpectedPixels = 0
     for classs in classesList:
@@ -325,4 +295,4 @@ def onehot2(normalized_tensor):
     sum_to_one_penalty = torch.log1p(-torch.exp(torch.log(1-normalized_tensor).sum()))
     result += sum_to_one_penalty
     """ 
-    return -result.sum()
+    return -result.sum()/(H*W)

@@ -27,8 +27,8 @@ torch.cuda.manual_seed(seed)
 torch.cuda.manual_seed_all(seed)
 
 debug = False
-printLosses = False
-debugIts = 200
+printLosses = True
+debugIts = 600
 if debug:
     dir_img = Path('../../DebugDatasetCLEVR/imagesWeakDataset/')
     dir_weaklabel = Path('../../DebugDatasetCLEVR/annotationsTrain/')
@@ -65,22 +65,27 @@ def train_model(
     configuration_dict = {}
     if configuration == 0:
         configuration_dict = {
-            "ImageLevel": [False, 1],
-            #                      outsideBbox  BboxAtmost
-            "BBox": [[False, 1],   [True, 1],   [True, 1],"linear"], #linear or prob
+            #                   useTruePercentages
+            "ImageLevel": [True,       True        , 1],
+
+            #               useTruePercentages      outsideBbox  BboxAtmost
+            "BBox": [[False,      True       , 1],   [True, 1],   [True, 1],"linear"], #linear or prob
             "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [True, 1],
-            "Area": [False, 1],
+            "Scribbles": [False, 1],
+
+            #              useTruePercentages, generalfactor
+            "Area": [False,       True         ,     1,     10], #boost factor for atleast minsize in area
             "Point": [False, 10],
-            "Adjacency": [False, 1],
+            #                 implied-NOT   implied-multiplier
+            "Adjacency": [True,  True,    1,       0.01],
             "Relations": [False, 1],
             "SoftRelations": [False, 1],
             #global constraints:
-            "OneHot": [False, 10],
+            "OneHot": [True, 10],
             "MinSizeBackground": [True, 1],
-            "MaxSizeBackground": [False, 1],
-            "MinSizeShapes": [True, 1],
-            "MaxSizeShapes": [True, 1],
+            "MaxSizeBackground": [True, 20],
+            "MinSizeShapes": [True, 30],
+            "MaxSizeShapes": [False, 1],
             "Smoothness": [False, 100],
         }
     # 1. Create dataset
@@ -154,16 +159,16 @@ def train_model(
                             masks_pred = model(images)
                             #after a while, mask_pred becomes all NAN !! problem!!
                             if i == debugIts-1:
-                                loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,True)
+                                loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,-1,True)
                             else:
-                                loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,printLosses)
-                            if loss.item() > 0 and loss.item() < np.inf:
+                                loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,-1,printLosses)
+                            if loss >=0 and loss < np.inf:
                                 pass
                             else:
                                 print(loss,"\n",masks_pred)
                                 report = 0
                                 assert(report == 1)
-                        if loss.item() < 0.0005:
+                        if loss < 0.0005:
                             break
                         optimizer.zero_grad(set_to_none=True)
                         grad_scaler.scale(loss).backward()
@@ -208,7 +213,9 @@ def train_model(
             model.train()
             epoch_loss = 0
             print(f'Epoch {epoch}/{epochs}:\n')
+            batch_n = 0
             for batch in train_loader:
+                batch_n += 1
                 images, weaklabel = batch['image'], batch["weaklabel"]
                 assert images.shape[1] == model.n_channels, \
                     f'Network has been defined with {model.n_channels} input channels, ' \
@@ -224,9 +231,9 @@ def train_model(
                     # if epoch > 50:  #testing purposes
                     #     signal = 2
                     if epoch == epochs:
-                        loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,True)
+                        loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n,True)
                     else:
-                        loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict)
+                        loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n)
                     if loss.item() >= 0 and loss.item() < np.inf:
                         optimizer.zero_grad(set_to_none=True)
                         grad_scaler.scale(loss).backward()
