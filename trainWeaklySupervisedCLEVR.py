@@ -27,12 +27,12 @@ torch.cuda.manual_seed(seed)
 torch.cuda.manual_seed_all(seed)
 
 debug = False
-printLosses = True
-debugIts = 600
+printLosses = False
+debugIts = 200
 if debug:
-    dir_img = Path('../../DebugDatasetCLEVR/imagesWeakDataset/')
-    dir_weaklabel = Path('../../DebugDatasetCLEVR/annotationsTrain/')
-    dir_mask = Path('../../DebugDatasetCLEVR/maskstrain')
+    dir_img = Path('../../DebugDatasetCLEVR2/imagesWeakDataset/')
+    dir_weaklabel = Path('../../DebugDatasetCLEVR2/annotationsTrain/')
+    dir_mask = Path('../../DebugDatasetCLEVR2/maskstrain')
     dir_checkpoint = Path('./DebugCheckpoints/')
 else:
     # dir_img = Path('../../datasetCLEVR/imagesWeakDataset/')
@@ -65,28 +65,53 @@ def train_model(
     configuration_dict = {}
     if configuration == 0:
         configuration_dict = {
-            #                   useTruePercentages
-            "ImageLevel": [True,       True        , 1],
+            #                   useTruePercentages,  useAtleast
+            "ImageLevel": [True,       True     ,       True   , 5],
 
-            #               useTruePercentages      outsideBbox  BboxAtmost
-            "BBox": [[False,      True       , 1],   [True, 1],   [True, 1],"linear"], #linear or prob
+            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
+            "BBox": [[False,      True       , 1],   [True, 0.2],   [True, 0.2],      "linear"], 
             "BBoxFull": [False, 1,"linear"], #linear or prob
             "Scribbles": [False, 1],
 
-            #              useTruePercentages, generalfactor
-            "Area": [False,       True         ,     1,     10], #boost factor for atleast minsize in area
+            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
+            "Area": [False,       True         ,     1,                   10], 
             "Point": [False, 10],
-            #                 implied-NOT   implied-multiplier
-            "Adjacency": [True,  True,    1,       0.01],
-            "Relations": [False, 1],
+            #                 implied-NOT norm-multiplier  implied-multiplier
+            "Adjacency": [True,  True,         100,            0.001],
+            #                 norm-mult   impl   impl-mult   
+            "Relations": [False,   2,      False,    0.1],
             "SoftRelations": [False, 1],
             #global constraints:
             "OneHot": [True, 10],
             "MinSizeBackground": [True, 1],
             "MaxSizeBackground": [True, 20],
             "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [False, 1],
+            "MaxSizeShapes": [True, 1],
             "Smoothness": [False, 100],
+        }
+    configuration_dict_all_true = {
+            #                   useTruePercentages
+            "ImageLevel": [True,       True        , 1],
+
+            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
+            "BBox": [[True,      True       , 1],   [True, 1],   [True, 1],      "linear"], 
+            "BBoxFull": [True, 1,"linear"], #linear or prob
+            "Scribbles": [True, 1],
+
+            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
+            "Area": [True,       True         ,     1,                   10], 
+            "Point": [True, 10],
+            #                 implied-NOT norm-multiplier  implied-multiplier
+            "Adjacency": [True,  True,         100,            0.001],
+            "Relations": [True, 1],
+            "SoftRelations": [True, 1],
+            #global constraints:
+            "OneHot": [True, 100],
+            "MinSizeBackground": [True, 1],
+            "MaxSizeBackground": [True, 20],
+            "MinSizeShapes": [True, 30],
+            "MaxSizeShapes": [True, 1],
+            "Smoothness": [True, 100],
         }
     # 1. Create dataset
     # try:
@@ -133,14 +158,19 @@ def train_model(
     # 4. Set up the optimizer, the loss, the learning rate scheduler and the loss scaling for AMP
     optimizer = optim.RMSprop(model.parameters(),
                               lr=learning_rate, weight_decay=weight_decay, momentum=momentum, foreach=True)
+    #optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
+
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'max', patience=5)  # goal: maximize overlap
     grad_scaler = torch.cuda.amp.GradScaler(enabled=amp)
 
     global_step = 0
-
+    gradientVisualisations = True
     if debug:
         epochs = 1
         signal = 0
+        if gradientVisualisations:
+            gradient_output_dir = "gradient_visualizations"
+            os.makedirs(gradient_output_dir, exist_ok=True)
             # 5. Begin training
         for epoch in range(1, epochs + 1):
             model.train()
@@ -179,7 +209,19 @@ def train_model(
                         
                         pbar.update(images.shape[0])
                         global_step += 1
-                        
+                        if gradientVisualisations:
+                            if i == debugIts-1:
+                                gradients = images.grad.abs().sum(dim=1).squeeze().cpu().numpy()  # Sum across channels
+
+                                # Normalize gradients
+                                gradients = (gradients - gradients.min()) / (gradients.max() - gradients.min())
+
+                                # Save gradient as image
+                                for i in range(images.shape[0]):  # Process each image in the batch
+                                    gradient_image = gradients[i]
+                                    plt.imsave(os.path.join(gradient_output_dir, f"gradient_batch{batch_n}_img{i}.png"), 
+                                            gradient_image, cmap="jet")
+                            
                         # experiment.log({
                         #     'train loss': loss.item(),
                         #     'step': global_step,
@@ -234,6 +276,7 @@ def train_model(
                         loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n,True)
                     else:
                         loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n)
+
                     if loss.item() >= 0 and loss.item() < np.inf:
                         optimizer.zero_grad(set_to_none=True)
                         grad_scaler.scale(loss).backward()

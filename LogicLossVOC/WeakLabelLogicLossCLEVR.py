@@ -51,8 +51,8 @@ def parse_dataCLEVR(data):
     return image_level_label, bounding_box, point, relation, soft_relation, scribble, area, full_bounding_box, adjacency
 
 
-def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosses = True):
-
+def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosses = False):
+    
     output_tensor = output_tensor[0, :, :, :]  # Remove batch dimension
     output_tensor = F.softmax(output_tensor, dim=0)  # Apply softmax over class dimension
 
@@ -68,13 +68,16 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
         for label in image_level_label:
             shape,percentage = label[0][0],label[1][0]
             if imglvl[1]:
-                addloss = about_p_percent_is_class(output_tensor,[class_values[shape]],float(percentage[:-1])/100)
+                if imglvl[2]:
+                    addloss = atleast_p_percent_is_class(output_tensor,[class_values[shape]],float(percentage[:-1])/100)
+                else:
+                    addloss = about_p_percent_is_class(output_tensor,[class_values[shape]],float(percentage[:-1])/100)
             else:
                 #if you are not give exact percentages, assume minim 0.35 percent of image is filled
                 addloss = atleast_p_percent_is_class(output_tensor,[class_values[shape]],0.35/100)
             if printLosses:
-                print("Loss for imageLevel label for shape",shape," to be percentage", percentage, " = ",addloss*imglvl[2])
-            loss += addloss*imglvl[2]
+                print("loss for imageLevel label for shape",shape," to be percentage", percentage, " = ",addloss*imglvl[3])
+            loss += addloss*imglvl[3]
 
     #Bounding Boxes
     bboxes = configuration.get("BBox")
@@ -132,7 +135,7 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
     if onehot[0]:
         addloss = onehot2(output_tensor)
         if printLosses:
-            print("oneHot loss = ",addloss*onehot[1])
+            print("loss onehot = ",addloss*onehot[1])
         loss += addloss*onehot[1]
     
     #minimum size constraint for background class: atleast 70% is background
@@ -290,9 +293,28 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
             
     #relation
     relations = configuration.get('Relations')
+    if relations[0]:
+        for rel in relation:
+            shape1,relat,shape2 = rel[0][0],rel[1][0],rel[2][0]
+            addloss = ifXthenYatRelation(output_tensor, class_values[shape2], class_values[shape1], relat)*relations[1]
+            if relations[2]: 
+                rlLos = ifXthenYatRelation(output_tensor, class_values[shape1], class_values[shape2], relat,'not')
+                addloss += rlLos*relations[3]
+
+            if printLosses:
+                print("loss for hard relation:",shape1,relat,shape2," = ",addloss)
+            loss += addloss
+            
 
     #softRelation
     softrelations = configuration.get('SoftRelations')
+    if softrelations[0]:
+        for softrel in soft_relation:
+            shape1,relat,shape2 = softrel[0][0],softrel[1][0],softrel[2][0]
+            addloss = ifXthenYatRelation(output_tensor, class_values[shape2], class_values[shape1], relat[5:])
+            if printLosses:
+                print("loss for soft relation",shape1,relat,shape2,"=",addloss*softrelations[1])
+            loss += addloss*softrelations[1]
 
     #point
     points = configuration.get('Point')
@@ -302,7 +324,7 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
             coord = [[x,y]]  
             addloss = scribble_loss(output_tensor,coord,class_values[shape],"all")
             if printLosses:
-                print("Loss for 1 point for shape",shape,' = ',addloss*points[1])
+                print("loss for 1 point for shape",shape,' = ',addloss*points[1])
             loss += addloss*points[1]
 
     #adjacency
@@ -325,7 +347,7 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
                     if (c1,c2) not in presentAdjacencies:
                         addloss = adjacency_loss(output_tensor,c1,c2,'not')
                         if printLosses:
-                            print('Loss for NO adjacency between',names_from_classes[c1],names_from_classes[c2],"=",addloss*adjacencies[3])
+                            print('loss for NO adjacency between',names_from_classes[c1],names_from_classes[c2],"=",addloss*adjacencies[3])
                         loss += addloss*adjacencies[3]
     
     return loss

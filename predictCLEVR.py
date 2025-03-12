@@ -42,7 +42,7 @@ def predict_img(net,
             mask = output.argmax(dim=1)  # Assign pixels to the class with the highest probability
             # Create a condition where the max probability must be above 0.5
             max_probs, _ = output.max(dim=1)  # Get the maximum probability for each pixel
-            mask[max_probs <= 0.2] = 0  # Set mask to 0 for pixels where no class has prob > th
+            #mask[max_probs <= 0.2] = 0  # Set mask to 0 for pixels where no class has prob > th
         else:
             mask = torch.sigmoid(output) > out_threshold
 
@@ -63,7 +63,7 @@ def get_args():
     parser.add_argument('--scale', '-s', type=float, default=1, #changed from 0.5
                         help='Scale factor for the input images')
     parser.add_argument('--bilinear', action='store_true', default=True, help='Use bilinear upsampling')
-    parser.add_argument('--classes', '-c', type=int, default=2, help='Number of classes')
+    parser.add_argument('--classes', '-c', type=int, default=4, help='Number of classes')
     
     return parser.parse_args()
 

@@ -105,11 +105,13 @@ def ifXthenYatRelation(normalized_tensor, X, Y, relation,NOT = None):
     device = normalized_tensor.device
     probs_I = normalized_tensor[X, :, :]  # Shape: (H, W)
     probs_J = normalized_tensor[Y, :, :]  # Shape: (H, W)
-    probs_I = torch.clamp(probs_I, 0, 1 - 1e-7)
-    probs_J = torch.clamp(probs_J, 0, 1 - 1e-7)
-    scalingFactor = 1
-    probs_I = probs_I[::scalingFactor, ::scalingFactor] #downscale
-    probs_J = probs_J[::scalingFactor, ::scalingFactor]
+    probs_I = torch.clamp(probs_I, min=0, max=1-1e-6)
+    probs_J = torch.clamp(probs_J, min=0, max=1-1e-6)
+    scalingFactor = 10
+    if scalingFactor > 1:
+        start = np.random.randint(0, scalingFactor)  # Randomly choose 0, 1, or 2
+        probs_I = probs_I[start::scalingFactor, start::scalingFactor]  # Apply offset
+        probs_J = probs_J[start::scalingFactor, start::scalingFactor]
 
     # Preprocess based on the specified relation
     if relation == "left":
@@ -157,6 +159,7 @@ def ifXthenYatRelation(normalized_tensor, X, Y, relation,NOT = None):
         #print(f"probability of there being no J in the first {i+1} and atleast one I in the {i+2} collum", prob_J_and_I[i].item())
 
     if NOT:
+        prob_J_and_I = torch.clamp(prob_J_and_I, max=1 - 1e-6) 
         logprobability_constraint = torch.sum(torch.log1p(-prob_J_and_I))
     else:
         logprobability_constraint = torch.sum(torch.log1p(-prob_J_and_I))+torch.sum(torch.log1p((-new_probs_I[:, 0])))

@@ -346,7 +346,7 @@ def cross_entropy(mask_pred, weaklabel, H, W, device, smooth=1.0):
     mask_pred = F.softmax(mask_pred, dim=1)  # (1, C, H, W)
 
     # Reshape weak label to match (H, W)
-    weaklabel = weaklabel.view(H, W).long().to(device)  # Ensure it's the right shape and on the correct device
+    weaklabel = weaklabel.to(device)  # Ensure it's the right shape and on the correct device
 
     # Flatten the predictions and labels
     mask_pred = mask_pred.permute(0, 2, 3, 1).contiguous().view(-1, mask_pred.shape[1])  # (H*W, C)
