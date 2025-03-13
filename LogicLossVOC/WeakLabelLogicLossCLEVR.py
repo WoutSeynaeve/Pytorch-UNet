@@ -67,17 +67,18 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
     if imglvl[0]:
         for label in image_level_label:
             shape,percentage = label[0][0],label[1][0]
-            if imglvl[1]:
-                if imglvl[2]:
-                    addloss = atleast_p_percent_is_class(output_tensor,[class_values[shape]],float(percentage[:-1])/100)
+            if shape != 'background':
+                if imglvl[1]:
+                    if imglvl[2]:
+                        addloss = atleast_p_percent_is_class(output_tensor,[class_values[shape]],float(percentage[:-1])/100)
+                    else:
+                        addloss = about_p_percent_is_class(output_tensor,[class_values[shape]],float(percentage[:-1])/100)
                 else:
-                    addloss = about_p_percent_is_class(output_tensor,[class_values[shape]],float(percentage[:-1])/100)
-            else:
-                #if you are not give exact percentages, assume minim 0.35 percent of image is filled
-                addloss = atleast_p_percent_is_class(output_tensor,[class_values[shape]],0.35/100)
-            if printLosses:
-                print("loss for imageLevel label for shape",shape," to be percentage", percentage, " = ",addloss*imglvl[3])
-            loss += addloss*imglvl[3]
+                    #if you are not give exact percentages, assume minim 0.35 percent of image is filled
+                    addloss = atleast_p_percent_is_class(output_tensor,[class_values[shape]],0.35/100)
+                if printLosses:
+                    print("loss for imageLevel label for shape",shape," to be percentage", percentage, " = ",addloss*imglvl[3])
+                loss += addloss*imglvl[3]
 
     #Bounding Boxes
     bboxes = configuration.get("BBox")
@@ -221,11 +222,10 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
     areainfo = configuration.get('Area')
     if areainfo[0]:
         for arealbl in area:
-            print(arealbl, imlvlpercdict.get(shape))
             ar1,ar2 = arealbl[1][0].split(";")
             shape = arealbl[0][0]
             addloss = 0
-            if areainfo[1]:
+            if areainfo[1]: #use true percentages (assume they are given)
                 minpercentage = float(imlvlpercdict.get(shape))
             else:
                 minpercentage = 0.35
@@ -296,14 +296,15 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
     if relations[0]:
         for rel in relation:
             shape1,relat,shape2 = rel[0][0],rel[1][0],rel[2][0]
-            addloss = ifXthenYatRelation(output_tensor, class_values[shape2], class_values[shape1], relat)*relations[1]
+            l1 = ifXthenYatRelation(output_tensor, class_values[shape2], class_values[shape1], relat)*relations[1]
             if relations[2]: 
                 rlLos = ifXthenYatRelation(output_tensor, class_values[shape1], class_values[shape2], relat,'not')
-                addloss += rlLos*relations[3]
+                l2 = rlLos*relations[3]
 
             if printLosses:
-                print("loss for hard relation:",shape1,relat,shape2," = ",addloss)
-            loss += addloss
+                print("loss for hard relation:",shape1,relat,shape2," = ",l1,'(soft)',l2,'(not)')
+            tot_loss = l1 + l2
+            loss += tot_loss
             
 
     #softRelation
