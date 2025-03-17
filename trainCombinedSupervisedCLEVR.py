@@ -44,8 +44,6 @@ else:
 
 
 
-#                     0.ImageLevel         1.BBox: outside, atmost      2.OneHot   3.Atleast70%BackgroundGlobal    4.Smoothess  5.minimumSizeGlobal
-configuration_instance = [ [False,1],      [[False,1],[True,1],[True,1]],   [True,1],         [False,1],             [True,10],    [False,1]]
 
 """
 lr = 1e-7
@@ -83,6 +81,43 @@ def train_model(
         gradient_clipping: float = 1.0,
         configuration: int = 0,
 ):
+    configuration_dict = {}
+    if configuration == 0:
+        configuration_dict = {
+            #to balance against fully supervised loss
+            "loss_multiplier": 0.02,
+            #                   useTruePercentages,  useAtleast
+            "ImageLevel": [False,       True     ,       True   , 2], #note background percentage is ignored
+
+            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
+            "BBox": [[False,      True       , 1],   [True, 0.2],   [True, 0.2],      "linear"], 
+            "BBoxFull": [False, 1,"linear"], #linear or prob
+            "Scribbles": [False, 1],
+
+            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
+            "Area": [False,       True         ,     1,                   10], 
+            "Point": [False, 10],
+            #                 implied-NOT  norm-multiplier  implied-multiplier
+            "Adjacency": [False,  True,         50,            0.0005],
+            #                 norm-mult   impl   impl-mult   
+            "Relations": [False,   2,      False,    0.1],
+            "SoftRelations": [False, 1],
+            #global constraints:
+            "OneHot": [True, 10],
+            "MinSizeBackground": [False, 1],
+            "MaxSizeBackground": [False, 20],
+            "MinSizeShapes": [False, 30],
+            "MaxSizeShapes": [False, 1],
+            "Smoothness": [False, 100],
+        }
+    for k in configuration_dict.keys():
+        if k != 'loss_multiplier':
+            if k == 'BBox':
+                if configuration_dict[k][0][0] == True:
+                    print("Active:  BBox loss")
+            else:
+                if configuration_dict[k][0] == True:
+                    print("Active: ",k,"loss")
     # 1. Create dataset
     # try:
     #     dataset = CarvanaDataset(dir_img, dir_mask, img_scale)
@@ -201,7 +236,9 @@ def train_model(
             model.train()
             epoch_loss = 0
             print(f'Epoch {epoch}/{epochs}:\n')
+            batch_n = 0
             for batch in train_loader:
+                batch_n += 1
                 images, mask, weaklabel = batch['image'], batch["mask"], batch['weaklabel']
                 assert images.shape[1] == model.n_channels, \
                     f'Network has been defined with {model.n_channels} input channels, ' \
@@ -221,7 +258,7 @@ def train_model(
                     _, _, H, W = images.shape  # Get image dimensions
                     loss = cross_entropy(masks_pred,mask,H,W,device)
                     loss += diceLoss(masks_pred,mask,H,W,device)
-                    #loss += calculateLogicLoss(masks_pred,weaklabel,configuration_instance)
+                    loss += calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n)*configuration_dict['loss_multiplier']
                     if loss.item() > 0 and loss.item() < np.inf:
                         optimizer.zero_grad(set_to_none=True)
                         grad_scaler.scale(loss).backward()

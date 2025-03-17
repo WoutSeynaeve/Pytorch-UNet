@@ -28,7 +28,7 @@ torch.cuda.manual_seed_all(seed)
 
 debug = False
 printLosses = False
-debugIts = 20
+debugIts = 400
 if debug:
     dir_img = Path('../../DebugDatasetCLEVR2/imagesWeakDataset/')
     dir_weaklabel = Path('../../DebugDatasetCLEVR2/annotationsTrain/')
@@ -66,23 +66,23 @@ def train_model(
     if configuration == 0:
         configuration_dict = {
             #                   useTruePercentages,  useAtleast
-            "ImageLevel": [False,       True     ,       True   , 2], #note background percentage is ignored
+            "ImageLevel": [True,       True     ,       True   , 2], #note background percentage is ignored
 
             #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
             "BBox": [[False,      True       , 1],   [True, 0.2],   [True, 0.2],      "linear"], 
             "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [True, 1],
+            "Scribbles": [False, 1],
 
             #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
             "Area": [False,       True         ,     1,                   10], 
             "Point": [False, 10],
             #                 implied-NOT  norm-multiplier  implied-multiplier
-            "Adjacency": [False,  True,         50,            0.0005],
+            "Adjacency": [True,  True,         30,            0.0001],
             #                 norm-mult   impl   impl-mult   
-            "Relations": [False,   2,      False,    0.1],
+            "Relations": [False,   2,      True,    0.1],
             "SoftRelations": [False, 1],
             #global constraints:
-            "OneHot": [False, 10],
+            "OneHot": [True, 20],
             "MinSizeBackground": [True, 1],
             "MaxSizeBackground": [False, 20],
             "MinSizeShapes": [False, 30],
@@ -239,10 +239,10 @@ def train_model(
                     #     signal = 1
                     # if epoch > 50:  #testing purposes
                     #     signal = 2
-                    if epoch == epochs:
-                        loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n,True)
-                    else:
-                        loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n)
+                    # if epoch == epochs:
+                    #     loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n,True)
+                    # else:
+                    loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n)
 
                     if loss.item() >= 0 and loss.item() < np.inf:
                         optimizer.zero_grad(set_to_none=True)
@@ -330,7 +330,7 @@ def train_model(
 def get_args():
     #note: Batch size can be upped, but the images must be resized (scaled or padded) to have the same format!!
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')
-    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=80, help='Number of epochs')
+    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=200, help='Number of epochs')
     parser.add_argument('--batch-size', '-b', dest='batch_size', metavar='B', type=int, default=1, help='Batch size')
     parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-7,
                         help='Learning rate', dest='lr')

@@ -32,14 +32,23 @@ if debug:
     dir_mask = Path('../../DebugDatasetCLEVR/annotationsTrain/')
     dir_checkpoint = Path('./DebugCheckpoints/')
 else:   
-    # dir_img = Path('../../datasetCLEVR/imagesWeakDataset/')
-    # dir_weaklabel = Path('../../datasetCLEVR/annotationsTrain/')
-    # dir_checkpoint = Path('./checkpoints/')
-    dir_img = Path('../../datasetCLEVRaug/ImagesTraining/')
-    dir_mask = Path('../../datasetCLEVRaug/MasksTraining')
-    dir_img_test = Path('../../datasetCLEVRaug/ImagesValidation/')
-    dir_mask_test = Path('../../datasetCLEVRaug/MasksValidation')
-    dir_checkpoint = Path('./checkpoints/')
+    Augmented = False
+    if Augmented:
+        # dir_img = Path('../../datasetCLEVR/imagesWeakDataset/')
+        # dir_weaklabel = Path('../../datasetCLEVR/annotationsTrain/')
+        # dir_checkpoint = Path('./checkpoints/')
+        dir_img = Path('../../datasetCLEVRaug/ImagesTraining/')
+        dir_mask = Path('../../datasetCLEVRaug/MasksTraining')
+        dir_img_test = Path('../../datasetCLEVRaug/ImagesValidation/')
+        dir_mask_test = Path('../../datasetCLEVRaug/MasksValidation')
+        dir_checkpoint = Path('./checkpoints/')
+    else:
+        dir_img = Path('../../datasetCLEVR/ImagesTraining/')
+        dir_mask = Path('../../datasetCLEV/MasksTraining')
+        dir_img_test = Path('../../datasetCLEVR/ImagesValidation/')
+        dir_mask_test = Path('../../datasetCLEVR/MasksValidation')
+        dir_checkpoint = Path('./checkpoints/')
+
 
 
 

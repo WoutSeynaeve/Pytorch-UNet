@@ -297,13 +297,15 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
         for rel in relation:
             shape1,relat,shape2 = rel[0][0],rel[1][0],rel[2][0]
             l1 = ifXthenYatRelation(output_tensor, class_values[shape2], class_values[shape1], relat)*relations[1]
+            tot_loss = l1
             if relations[2]: 
                 rlLos = ifXthenYatRelation(output_tensor, class_values[shape1], class_values[shape2], relat,'not')
                 l2 = rlLos*relations[3]
+                tot_loss = l1 + l2
 
             if printLosses:
                 print("loss for hard relation:",shape1,relat,shape2," = ",l1,'(soft)',l2,'(not)')
-            tot_loss = l1 + l2
+            
             loss += tot_loss
             
 

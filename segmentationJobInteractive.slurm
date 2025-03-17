@@ -20,4 +20,4 @@ echo The node architecture is $VSC_ARCH_LOCAL
 echo Current path is $(pwd)
 
 
-python trainWeaklySupervised.py -l 1e-8
+python trainWeaklySupervisedCLEVR.py
