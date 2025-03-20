@@ -77,9 +77,9 @@ def train_model(
             "Area": [False,       True         ,     1,                   10], 
             "Point": [False, 10],
             #                 implied-NOT  norm-multiplier  implied-multiplier
-            "Adjacency": [True,  True,         30,            0.0001],
+            "Adjacency": [True,  True,         10,            0.0001],
             #                 norm-mult   impl   impl-mult   
-            "Relations": [False,   2,      True,    0.1],
+            "Relations": [True,   2,      True,    0.1],
             "SoftRelations": [False, 1],
             #global constraints:
             "OneHot": [True, 20],
@@ -89,13 +89,30 @@ def train_model(
             "MaxSizeShapes": [False, 1],
             "Smoothness": [False, 100],
         }
+   
+    
+    experimentFileName = f"./experimentResultsCLEVR/experiment_{configuration}.txt"
+    writeInfo = ""
     for k in configuration_dict.keys():
         if k == 'BBox':
             if configuration_dict[k][0][0] == True:
-                print("Active:  BBox loss")
+                print("Active:  BBox loss ",end='')
+                writeInfo += "Active:  BBox loss "
+                for info in configuration_dict[k]:
+                    print(info,' ',end='')
+                    writeInfo += info + " "
+                print("")
+                writeInfo += "\n"
         else:
             if configuration_dict[k][0] == True:
-                print("Active: ",k,"loss")
+                print("Active: ",k,"loss ",end='')
+                writeInfo += "Active: "+k+"loss "
+                for info in configuration_dict[k]:
+                    print(info,' ',end='')
+                    writeInfo += str(info) + " "
+                print("")
+                writeInfo += "\n"
+        
 
     # 1. Create dataset
     # try:
@@ -217,6 +234,11 @@ def train_model(
         showPbar = False
         signal = 0
         old_learning_rate = optimizer.param_groups[0]['lr']
+        max_test_score = 0
+        max_test_score_epoch = 0
+        test_scores = []
+        test_scores_shapes = []
+        train_losses = []
         # 5. Begin training
         for epoch in range(1, epochs + 1):
             model.train()
@@ -286,7 +308,12 @@ def train_model(
 
                         #val_score = evaluateWeaklySupervised2(model, val_loader, device, amp)
                         print("Test Set Eval:")
-                        test_score = evaluateFullySupervisedCLEVRwPrecisionRecall(model, test_loader, device, amp)
+                        test_score,test_score_shape = evaluateFullySupervisedCLEVRwPrecisionRecall(model, test_loader, device, amp)
+                        test_scores.append(round(test_score.item(),3))
+                        test_scores_shapes.append(round(test_score_shape.item(),3))
+                        if test_score > max_test_score:
+                            max_test_score_epoch = epoch
+                            max_test_score = test_score
                         new_learning_rate = optimizer.param_groups[0]['lr']
                         if new_learning_rate != old_learning_rate:
                             print( "new learning rate !!: ", optimizer.param_groups[0]['lr'])
@@ -318,6 +345,7 @@ def train_model(
                 print("")
 
             print("Average loss this epoch = ",epoch_loss.item()/n_train) #pas dit nog aan eventueel
+            train_losses.append(round(epoch_loss.item()/n_train,3))
             if save_checkpoint:
                 Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
                 state_dict = model.state_dict()
@@ -326,11 +354,21 @@ def train_model(
                 logging.info(f'Checkpoint {epoch} saved!')
                 print("/////////////////////////")
 
+        print("Max test score:",max_test_score.item(),"found at epoch:",max_test_score_epoch)
+
+        with open(experimentFileName, "w") as f:
+            f.write(writeInfo + "\n")
+            f.write("Test Scores: " + str(test_scores) + "\n")
+            f.write("Test Scores w/o background: " + str(test_scores_shapes) + "\n")
+            f.write("Train Loss: " + str(train_losses) + "\n")
+            f.write(f"Max test score: {max_test_score.item()} found at epoch: {max_test_score_epoch}\n")
+        
+
 
 def get_args():
     #note: Batch size can be upped, but the images must be resized (scaled or padded) to have the same format!!
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')
-    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=200, help='Number of epochs')
+    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=1, help='Number of epochs')
     parser.add_argument('--batch-size', '-b', dest='batch_size', metavar='B', type=int, default=1, help='Batch size')
     parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-7,
                         help='Learning rate', dest='lr')

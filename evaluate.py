@@ -313,7 +313,7 @@ def evaluateFullySupervisedCLEVRwPrecisionRecall(net, dataloader, device, amp):
         # print("Validation Recall per class:", recall_per_class)
 
         net.train()
-        return iou_per_class.mean()
+        return iou_per_class.mean(),iou_per_class[1:].mean()
             
 @torch.inference_mode()
 def evaluateFullySupervisedCLEVR(net, dataloader, device, amp):
