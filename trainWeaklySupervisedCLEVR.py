@@ -28,6 +28,8 @@ torch.cuda.manual_seed_all(seed)
 
 debug = False
 printLosses = False
+calc_test_loss = True
+
 debugIts = 400
 if debug:
     dir_img = Path('../../DebugDatasetCLEVR2/imagesWeakDataset/')
@@ -66,10 +68,10 @@ def train_model(
     if configuration == 0:
         configuration_dict = {
             #                   useTruePercentages,  useAtleast
-            "ImageLevel": [True,       True     ,       True   , 2], #note background percentage is ignored
+            "ImageLevel": [False,       True     ,       True   , 2], #note background percentage is ignored
 
             #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
-            "BBox": [[False,      True       , 1],   [True, 0.2],   [True, 0.2],      "linear"], 
+            "BBox": [[True,      True       , 1],   [True, 0.2],   [True, 0.2],      "linear"], 
             "BBoxFull": [False, 1,"linear"], #linear or prob
             "Scribbles": [False, 1],
 
@@ -77,13 +79,13 @@ def train_model(
             "Area": [False,       True         ,     1,                   10], 
             "Point": [False, 10],
             #                 implied-NOT  norm-multiplier  implied-multiplier
-            "Adjacency": [True,  True,         10,            0.0001],
+            "Adjacency": [False,  True,         10,            0.0001],
             #                 norm-mult   impl   impl-mult   
-            "Relations": [True,   2,      True,    0.1],
+            "Relations": [False,   2,      True,    0.1],
             "SoftRelations": [False, 1],
             #global constraints:
             "OneHot": [True, 20],
-            "MinSizeBackground": [True, 1],
+            "MinSizeBackground": [False, 1],
             "MaxSizeBackground": [False, 20],
             "MinSizeShapes": [False, 30],
             "MaxSizeShapes": [False, 1],
@@ -100,7 +102,7 @@ def train_model(
                 writeInfo += "Active:  BBox loss "
                 for info in configuration_dict[k]:
                     print(info,' ',end='')
-                    writeInfo += info + " "
+                    writeInfo += str(info) + " "
                 print("")
                 writeInfo += "\n"
         else:
@@ -236,8 +238,12 @@ def train_model(
         old_learning_rate = optimizer.param_groups[0]['lr']
         max_test_score = 0
         max_test_score_epoch = 0
+        max_test_score_shape = 0
+        max_test_score_epoch_shape = 0
         test_scores = []
         test_scores_shapes = []
+        train_scores = []
+        train_scores_shapes = []
         train_losses = []
         # 5. Begin training
         for epoch in range(1, epochs + 1):
@@ -295,7 +301,8 @@ def train_model(
                 
 
                 # Evaluation round
-                division_step = (n_train // (3 * batch_size))
+                n_of_rounds = 1
+                division_step = (n_train // (n_of_rounds * batch_size))
                 if division_step > 0:
                     if global_step % division_step == 0:
                         # histograms = {}
@@ -314,11 +321,27 @@ def train_model(
                         if test_score > max_test_score:
                             max_test_score_epoch = epoch
                             max_test_score = test_score
+                        if test_score_shape > max_test_score_shape:
+                            max_test_score_shape_epoch = epoch
+                            max_test_score_shape = test_score_shape
+
                         new_learning_rate = optimizer.param_groups[0]['lr']
                         if new_learning_rate != old_learning_rate:
                             print( "new learning rate !!: ", optimizer.param_groups[0]['lr'])
                             old_learning_rate = new_learning_rate
                         print("")
+
+                        if calc_test_loss:
+                            pass
+                            #TO DO !!
+                            """
+                            tot_test_loss = 0
+                            for batch in test_weaklabel_loader:
+                            tot_test_loss += calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n)
+                            test_losses = tot_test_loss/n_val
+                            """
+                    
+
                         scheduler.step(test_score)
 
                         
@@ -339,9 +362,11 @@ def train_model(
                         #     })
                         # except:
                         #     pass
-            if epoch%3 == 0:
+            if True: #epoch%3 == 0:
                 print("Training Set Eval:")
-                evaluateFullySupervisedCLEVRwPrecisionRecall(model,test_trainset_loader,device,amp)
+                train_score,train_score_shape = evaluateFullySupervisedCLEVRwPrecisionRecall(model,test_trainset_loader,device,amp)
+                train_scores.append(round(train_score.item(),3))
+                train_scores_shapes.append(round(train_score_shape.item(),3))
                 print("")
 
             print("Average loss this epoch = ",epoch_loss.item()/n_train) #pas dit nog aan eventueel
@@ -355,20 +380,24 @@ def train_model(
                 print("/////////////////////////")
 
         print("Max test score:",max_test_score.item(),"found at epoch:",max_test_score_epoch)
+        print("Max test score only shapes:",max_test_score_shape.item(),"found at epoch:",max_test_score_shape_epoch)
 
         with open(experimentFileName, "w") as f:
             f.write(writeInfo + "\n")
             f.write("Test Scores: " + str(test_scores) + "\n")
             f.write("Test Scores w/o background: " + str(test_scores_shapes) + "\n")
+            f.write("Train Scores: " + str(train_scores) + "\n")
+            f.write("Train Scores w/o background: " + str(train_scores_shapes) + "\n")
             f.write("Train Loss: " + str(train_losses) + "\n")
             f.write(f"Max test score: {max_test_score.item()} found at epoch: {max_test_score_epoch}\n")
+            f.write(f"Max test score shapes: {max_test_score_shape.item()} found at epoch: {max_test_score_shape_epoch}\n")
         
 
 
 def get_args():
     #note: Batch size can be upped, but the images must be resized (scaled or padded) to have the same format!!
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')
-    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=1, help='Number of epochs')
+    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=20, help='Number of epochs')
     parser.add_argument('--batch-size', '-b', dest='batch_size', metavar='B', type=int, default=1, help='Batch size')
     parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-7,
                         help='Learning rate', dest='lr')
