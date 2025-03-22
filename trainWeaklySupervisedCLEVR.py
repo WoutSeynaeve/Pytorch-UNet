@@ -42,6 +42,7 @@ else:
     # dir_checkpoint = Path('./checkpoints/')
     dir_img = Path('../../datasetCLEVRaug/ImagesTraining/')
     dir_weaklabel = Path('../../datasetCLEVRaug/WeakLabelsTraining/')
+    dir_weaklabel_test = Path('../../datasetCLEVRaug/WeakLabelsTest/')
     dir_mask = Path('../../datasetCLEVRaug/MasksTraining')
     dir_img_test = Path('../../datasetCLEVRaug/ImagesValidation/')
     dir_mask_test = Path('../../datasetCLEVRaug/MasksValidation')
@@ -123,6 +124,7 @@ def train_model(
     dataset = WeakLabelDatasetCLEVR(dir_img, dir_weaklabel, img_scale)
     if not debug:
         dataset_test = BasicDatasetCLEVR(dir_img_test, dir_mask_test, img_scale)
+        n_test = len(dataset_test)
     dataset_test_trainset = BasicDatasetCLEVR(dir_img, dir_mask, img_scale)
 
     # 2. Split into train / validation partitions
@@ -133,7 +135,12 @@ def train_model(
     val_set = torch.utils.data.Subset(dataset, range(n_train, len(dataset)))
     print(train_set.indices, val_set.indices)
     # 3. Create data loaders
+    
     loader_args = dict(batch_size=batch_size, num_workers=os.cpu_count(), pin_memory=True)
+    if calc_test_loss:
+        test_loss_set = WeakLabelDatasetCLEVR(dir_img_test, dir_weaklabel_test, img_scale)
+        test_weaklabel_loader = DataLoader(test_loss_set, shuffle=True, **loader_args)
+
     train_loader = DataLoader(train_set, shuffle=True, **loader_args)
     val_loader = DataLoader(val_set, shuffle=False, drop_last=True, **loader_args)
     if not debug:
@@ -245,6 +252,7 @@ def train_model(
         train_scores = []
         train_scores_shapes = []
         train_losses = []
+        test_losses = []
         # 5. Begin training
         for epoch in range(1, epochs + 1):
             model.train()
@@ -331,15 +339,7 @@ def train_model(
                             old_learning_rate = new_learning_rate
                         print("")
 
-                        if calc_test_loss:
-                            pass
-                            #TO DO !!
-                            """
-                            tot_test_loss = 0
-                            for batch in test_weaklabel_loader:
-                            tot_test_loss += calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n)
-                            test_losses = tot_test_loss/n_val
-                            """
+                        
                     
 
                         scheduler.step(test_score)
@@ -371,6 +371,23 @@ def train_model(
 
             print("Average loss this epoch = ",epoch_loss.item()/n_train) #pas dit nog aan eventueel
             train_losses.append(round(epoch_loss.item()/n_train,3))
+            
+            if calc_test_loss:   
+                model.eval()
+                tot_test_loss = 0
+                for batch in test_weaklabel_loader:
+                    images, weaklabel = batch['image'], batch["weaklabel"]
+                    images = images.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
+                    with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
+                        masks_pred = model(images)
+                        newloss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n)
+                    tot_test_loss += newloss.item()
+                    del images, weaklabel, masks_pred, newloss  # Free memory
+                    torch.cuda.empty_cache()
+                test_loss = tot_test_loss/n_test
+                test_losses.append(round(test_loss,3))
+                model.train()
+
             if save_checkpoint:
                 Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
                 state_dict = model.state_dict()
@@ -389,6 +406,8 @@ def train_model(
             f.write("Train Scores: " + str(train_scores) + "\n")
             f.write("Train Scores w/o background: " + str(train_scores_shapes) + "\n")
             f.write("Train Loss: " + str(train_losses) + "\n")
+            if calc_test_loss:
+                f.write("Test Loss: " + str(test_losses) + "\n")
             f.write(f"Max test score: {max_test_score.item()} found at epoch: {max_test_score_epoch}\n")
             f.write(f"Max test score shapes: {max_test_score_shape.item()} found at epoch: {max_test_score_shape_epoch}\n")
         
