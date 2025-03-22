@@ -10,6 +10,7 @@ import torchvision.transforms as transforms
 import torchvision.transforms.functional as TF
 from pathlib import Path
 from torch import optim
+import itertools
 from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
 from LogicLossVOC.WeakLabelLogicLossCLEVR import calculateLogicLoss
@@ -73,6 +74,110 @@ def train_model(
 
             #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
             "BBox": [[True,      True       , 1],   [True, 0.2],   [True, 0.2],      "linear"], 
+            "BBoxFull": [False, 1,"linear"], #linear or prob
+            "Scribbles": [False, 1],
+
+            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
+            "Area": [False,       True         ,     1,                   10], 
+            "Point": [False, 10],
+            #                 implied-NOT  norm-multiplier  implied-multiplier
+            "Adjacency": [False,  True,         10,            0.0001],
+            #                 norm-mult   impl   impl-mult   
+            "Relations": [False,   2,      True,    0.1],
+            "SoftRelations": [False, 1],
+            #global constraints:
+            "OneHot": [True, 20],
+            "MinSizeBackground": [False, 1],
+            "MaxSizeBackground": [False, 20],
+            "MinSizeShapes": [False, 30],
+            "MaxSizeShapes": [False, 1],
+            "Smoothness": [False, 100],
+        }
+    if configuration == 1:
+        configuration_dict = {
+            #                   useTruePercentages,  useAtleast
+            "ImageLevel": [False,       True     ,       True   , 2], #note background percentage is ignored
+
+            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
+            "BBox": [[True,      True       , 1],   [False, 0.2],  [True, 0.2],    "linear"], 
+            "BBoxFull": [False, 1,"linear"], #linear or prob
+            "Scribbles": [False, 1],
+
+            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
+            "Area": [False,       True         ,     1,                   10], 
+            "Point": [False, 10],
+            #                 implied-NOT  norm-multiplier  implied-multiplier
+            "Adjacency": [False,  True,         10,            0.0001],
+            #                 norm-mult   impl   impl-mult   
+            "Relations": [False,   2,      True,    0.1],
+            "SoftRelations": [False, 1],
+            #global constraints:
+            "OneHot": [True, 20],
+            "MinSizeBackground": [True, 1],
+            "MaxSizeBackground": [False, 20],
+            "MinSizeShapes": [False, 30],
+            "MaxSizeShapes": [False, 1],
+            "Smoothness": [False, 100],
+        }
+    if configuration == 2:
+        configuration_dict = {
+            #                   useTruePercentages,  useAtleast
+            "ImageLevel": [False,       True     ,       True   , 2], #note background percentage is ignored
+
+            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
+            "BBox": [[True,      True       , 1],   [True, 0.2],   [True, 0.2],      "linear"], 
+            "BBoxFull": [False, 1,"linear"], #linear or prob
+            "Scribbles": [False, 1],
+
+            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
+            "Area": [False,       True         ,     1,                   10], 
+            "Point": [False, 10],
+            #                 implied-NOT  norm-multiplier  implied-multiplier
+            "Adjacency": [False,  True,         10,            0.0001],
+            #                 norm-mult   impl   impl-mult   
+            "Relations": [False,   2,      True,    0.1],
+            "SoftRelations": [False, 1],
+            #global constraints:
+            "OneHot": [False, 20],
+            "MinSizeBackground": [False, 1],
+            "MaxSizeBackground": [False, 20],
+            "MinSizeShapes": [False, 30],
+            "MaxSizeShapes": [False, 1],
+            "Smoothness": [False, 100],
+        }
+    if configuration == 3:
+        configuration_dict = {
+            #                   useTruePercentages,  useAtleast
+            "ImageLevel": [False,       True     ,       True   , 2], #note background percentage is ignored
+
+            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
+            "BBox": [[True,      True       , 1],   [False, 0.2],   [True, 0.2],      "linear"], 
+            "BBoxFull": [False, 1,"linear"], #linear or prob
+            "Scribbles": [False, 1],
+
+            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
+            "Area": [False,       True         ,     1,                   10], 
+            "Point": [False, 10],
+            #                 implied-NOT  norm-multiplier  implied-multiplier
+            "Adjacency": [False,  True,         10,            0.0001],
+            #                 norm-mult   impl   impl-mult   
+            "Relations": [False,   2,      True,    0.1],
+            "SoftRelations": [False, 1],
+            #global constraints:
+            "OneHot": [True, 20],
+            "MinSizeBackground": [False, 1],
+            "MaxSizeBackground": [False, 20],
+            "MinSizeShapes": [False, 30],
+            "MaxSizeShapes": [False, 1],
+            "Smoothness": [False, 100],
+        }
+    if configuration == 4:
+        configuration_dict = {
+            #                   useTruePercentages,  useAtleast
+            "ImageLevel": [False,       True     ,       True   , 2], #note background percentage is ignored
+
+            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
+            "BBox": [[True,      False       , 1],   [True, 0.2],   [False, 0.2],      "linear"], 
             "BBoxFull": [False, 1,"linear"], #linear or prob
             "Scribbles": [False, 1],
 
@@ -259,6 +364,9 @@ def train_model(
             epoch_loss = 0
             print(f'Epoch {epoch}/{epochs}:\n')
             batch_n = 0
+            testbatch_index = 0
+            tot_test_loss = 0
+            test_iter_loader = iter(test_weaklabel_loader)
             for batch in train_loader:
                 batch_n += 1
                 images, weaklabel = batch['image'], batch["weaklabel"]
@@ -362,6 +470,26 @@ def train_model(
                         #     })
                         # except:
                         #     pass
+
+                #test loss: 90 test in-mages for 478 train, so every 5 iterations, we do a test one:
+                if calc_test_loss:
+                    if batch_n%5 == 0:
+                        if testbatch_index <= 89:           
+                            batchTest = next(test_iter_loader)
+                            imagestest, weaklabeltest = batchTest['image'], batchTest["weaklabel"]
+                            imagestest = imagestest.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
+                            with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
+                                masks_pred_test = model(imagestest)
+                                newloss_test = calculateLogicLoss(masks_pred_test,weaklabeltest,configuration_dict,testbatch_index)
+                            if not newloss_test.isnan():
+                                tot_test_loss += newloss_test.item()
+                            del imagestest, weaklabeltest, masks_pred_test, newloss_test  # Free memory
+                            torch.cuda.empty_cache()
+                        testbatch_index += 1
+            if calc_test_loss:
+                test_loss = tot_test_loss/n_test
+                test_losses.append(round(test_loss,3))
+
             if True: #epoch%3 == 0:
                 print("Training Set Eval:")
                 train_score,train_score_shape = evaluateFullySupervisedCLEVRwPrecisionRecall(model,test_trainset_loader,device,amp)
@@ -371,22 +499,6 @@ def train_model(
 
             print("Average loss this epoch = ",epoch_loss.item()/n_train) #pas dit nog aan eventueel
             train_losses.append(round(epoch_loss.item()/n_train,3))
-            
-            if calc_test_loss:   
-                model.eval()
-                tot_test_loss = 0
-                for batch in test_weaklabel_loader:
-                    images, weaklabel = batch['image'], batch["weaklabel"]
-                    images = images.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
-                    with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
-                        masks_pred = model(images)
-                        newloss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n)
-                    tot_test_loss += newloss.item()
-                    del images, weaklabel, masks_pred, newloss  # Free memory
-                    torch.cuda.empty_cache()
-                test_loss = tot_test_loss/n_test
-                test_losses.append(round(test_loss,3))
-                model.train()
 
             if save_checkpoint:
                 Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
@@ -396,8 +508,8 @@ def train_model(
                 logging.info(f'Checkpoint {epoch} saved!')
                 print("/////////////////////////")
 
-        print("Max test score:",max_test_score.item(),"found at epoch:",max_test_score_epoch)
-        print("Max test score only shapes:",max_test_score_shape.item(),"found at epoch:",max_test_score_shape_epoch)
+        print("Max test score:",round(max_test_score.item(),3),"found at epoch:",max_test_score_epoch)
+        print("Max test score only shapes:",round(max_test_score_shape.item(),3),"found at epoch:",max_test_score_shape_epoch)
 
         with open(experimentFileName, "w") as f:
             f.write(writeInfo + "\n")
@@ -408,17 +520,17 @@ def train_model(
             f.write("Train Loss: " + str(train_losses) + "\n")
             if calc_test_loss:
                 f.write("Test Loss: " + str(test_losses) + "\n")
-            f.write(f"Max test score: {max_test_score.item()} found at epoch: {max_test_score_epoch}\n")
-            f.write(f"Max test score shapes: {max_test_score_shape.item()} found at epoch: {max_test_score_shape_epoch}\n")
+            f.write(f"Max test score: {round(max_test_score.item(),3)} found at epoch: {max_test_score_epoch}\n")
+            f.write(f"Max test score shapes: {round(max_test_score_shape.item(),3)} found at epoch: {max_test_score_shape_epoch}\n")
         
 
 
 def get_args():
     #note: Batch size can be upped, but the images must be resized (scaled or padded) to have the same format!!
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')
-    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=20, help='Number of epochs')
+    parser.add_argument('--epochs', '-e', metavar='E', type=int, default=80, help='Number of epochs')
     parser.add_argument('--batch-size', '-b', dest='batch_size', metavar='B', type=int, default=1, help='Batch size')
-    parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-7,
+    parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-8,
                         help='Learning rate', dest='lr')
     parser.add_argument('--load', '-f', type=str, default=False, help='Load model from a .pth file')
     parser.add_argument('--scale', '-s', type=float, default=1, help='Downscaling factor of the images')

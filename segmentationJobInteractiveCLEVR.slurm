@@ -25,6 +25,5 @@ python trainWeaklySupervisedCLEVR.py --configuration 1
 python trainWeaklySupervisedCLEVR.py --configuration 2
 python trainWeaklySupervisedCLEVR.py --configuration 3
 python trainWeaklySupervisedCLEVR.py --configuration 4
-python trainWeaklySupervisedCLEVR.py --configuration 5
 
 
