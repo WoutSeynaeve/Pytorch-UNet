@@ -59,7 +59,8 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
     C,H,W = output_tensor.shape
     image_level_label, bounding_box, point, relation, soft_relation, scribble, area, full_bounding_box, adjacency = weaklabels[0]
     
-    loss = 0
+    
+    loss = torch.zeros(1, device="cuda") 
 
     #Image-level
     imglvl = configuration.get("ImageLevel")
@@ -89,8 +90,8 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
             if bboxes[0][1]:
                 addloss = about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],float(percentage[:-1])/100,int(x1),int(x2),int(y1),int(y2))
             else:
-                #if you are not using exact percentages, assume that atleast 60 percent is filled
-                addloss = atleast_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],0.6,int(x1),int(x2),int(y1),int(y2))
+                #if you are not using exact percentages, assume that atleast 70 percent is filled (atmost implied constraint uses 0.3)
+                addloss = atleast_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],0.7,int(x1),int(x2),int(y1),int(y2))
             if printLosses:
                 print("loss for",shape," bounding box to be filled",percentage,"= ",addloss*bboxes[0][2])
             loss += addloss*bboxes[0][2]
@@ -126,7 +127,11 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
                 addloss = 0
                 for i in range(4): 
                     if i != class_values[shape]:
-                        addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor,[i],1-float(percentage[:-1])/100,int(x1),int(x2),int(y1),int(y2))
+                        if bboxes[0][1]:
+                            addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor,[i],1-float(percentage[:-1])/100,int(x1),int(x2),int(y1),int(y2))
+                        else:
+                            addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor,[i],0.3,int(x1),int(x2),int(y1),int(y2))
+
                 if printLosses:
                     print("loss for other classes to not take in too much of Bbox: ",addloss*bboxes[2][1])
                 loss += addloss*bboxes[2][1]

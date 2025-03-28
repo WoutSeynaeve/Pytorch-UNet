@@ -82,10 +82,11 @@ def train_model(
         configuration: int = 0,
 ):
     configuration_dict = {}
+    experimentFileName = f"./experimentResultsCLEVRCombined/experiment_{configuration}.txt"
     if configuration == 0:
         configuration_dict = {
             #to balance against fully supervised loss
-            "loss_multiplier": 0.02,
+            "loss_multiplier": 0,
             #                   useTruePercentages,  useAtleast
             "ImageLevel": [False,       True     ,       True   , 2], #note background percentage is ignored
 
@@ -231,6 +232,8 @@ def train_model(
         showPbar = False
         signal = 0
         old_learning_rate = optimizer.param_groups[0]['lr']
+        test_scores = []
+        train_scores = []
         # 5. Begin training
         for epoch in range(1, epochs + 1):
             model.train()
@@ -258,7 +261,8 @@ def train_model(
                     _, _, H, W = images.shape  # Get image dimensions
                     loss = cross_entropy(masks_pred,mask,H,W,device)
                     loss += diceLoss(masks_pred,mask,H,W,device)
-                    loss += calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n)*configuration_dict['loss_multiplier']
+                    if configuration_dict['loss_multiplier'] > 0:
+                        loss += calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n)*configuration_dict['loss_multiplier']
                     if loss.item() > 0 and loss.item() < np.inf:
                         optimizer.zero_grad(set_to_none=True)
                         grad_scaler.scale(loss).backward()
@@ -330,10 +334,12 @@ def train_model(
                             #     pass
             if epoch%1 == 0:
                 print("Training set evaluation:")
-                evaluateFullySupervisedCLEVRwPrecisionRecall(model,train_loader,device,amp)
+                train_score,train_score_shape = evaluateFullySupervisedCLEVRwPrecisionRecall(model,train_loader,device,amp)
+                train_scores.append(round(train_score_shape.item(),3))
                 print("")
                 print("Test set evaluation:")
-                evaluateFullySupervisedCLEVRwPrecisionRecall(model,test_loader,device,amp)
+                train_score,train_score_shape = evaluateFullySupervisedCLEVRwPrecisionRecall(model,test_loader,device,amp)
+                test_scores.append(round(train_score_shape.item(),3))
                 print("")
             print("Average loss this epoch = ",epoch_loss.item()/n_train) #pas dit nog aan eventueel
             if save_checkpoint:
@@ -343,6 +349,9 @@ def train_model(
                 torch.save(state_dict, str(dir_checkpoint / 'checkpoint_epoch{}.pth'.format(epoch)))
                 logging.info(f'Checkpoint {epoch} saved!')
                 print("/////////////////////////")
+        with open(experimentFileName, "w") as f:
+            f.write("Train Scores: " + str(train_scores) + "\n")
+            f.write("Test Scores: " + str(test_scores) + "\n")
 
 
 def diceLoss(mask_pred, true_mask, H, W, device, smooth=1.0):
