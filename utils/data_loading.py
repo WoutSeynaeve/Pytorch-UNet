@@ -110,6 +110,7 @@ class BasicDataset(Dataset):
         return {
             'image': torch.as_tensor(img.copy()).float().contiguous(),
             'mask': torch.as_tensor(mask.copy()).long().contiguous()
+            
         }
 
 
@@ -279,7 +280,8 @@ class WeakLabelDatasetCLEVR(Dataset):
 
         return {
             'image': torch.as_tensor(img.copy()).float().contiguous(),
-            'weaklabel': weaklabel
+            'weaklabel': weaklabel,
+            'id': idx
         }
 class BasicDatasetCLEVR(Dataset):
     def __init__(self, images_dir: str, mask_dir: str, scale: float = 1.0, mask_suffix: str = ''):

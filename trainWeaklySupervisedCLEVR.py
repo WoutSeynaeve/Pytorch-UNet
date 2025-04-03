@@ -65,155 +65,80 @@ def train_model(
         momentum: float = 0.999,
         gradient_clipping: float = 1.0,
         configuration: int = 0,
+        earlyStoppingAmount: int = 100,
 ):
     configuration_dict = {}
-    if configuration == 0:
+    
+
+    if configuration == 0: 
         configuration_dict = {
             #                   useTruePercentages,  useAtleast
-            "ImageLevel": [False,       True     ,       True   , 2], #note background percentage is ignored
+            "ImageLevel": [True,       True     ,       False   , 2], #note background percentage is ignored
 
             #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
-            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 0.2],      "linear"], 
+            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 1],      "linear"], 
             "BBoxFull": [False, 1,"linear"], #linear or prob
             "Scribbles": [False, 1],
 
             #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10], 
+            "Area": [False,       False         ,     1,                   10,                               False], 
             "Point": [False, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier
-            "Adjacency": [True,  False,         10,            0.0001],
+            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape
+            "Adjacency": [False,  True,         30,              0.0001,                 True],
             #                 norm-mult   impl   impl-mult   
-            "Relations": [False,   2,      False,    0.1],
-            "SoftRelations": [False, 1],
-            #global constraints:
-            "OneHot": [False, 20],
-            "MinSizeBackground": [True, 1],
-            "MaxSizeBackground": [False, 20],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [False, 1],
-            "Smoothness": [False, 100],
-        }
-    if configuration == 1:
-        configuration_dict = {
-            #                   useTruePercentages,  useAtleast
-            "ImageLevel": [False,       True     ,       True   , 2], #note background percentage is ignored
-
-            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
-            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 0.2],      "linear"], 
-            "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [False, 1],
-
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10], 
-            "Point": [False, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier
-            "Adjacency": [True,  False,         10,            0.0001],
-            #                 norm-mult   impl   impl-mult   
-            "Relations": [False,   2,      False,    0.1],
+            "Relations": [True,   2,      False,    0.1],
             "SoftRelations": [False, 1],
             #global constraints:
             "OneHot": [True, 20],
             "MinSizeBackground": [True, 1],
             "MaxSizeBackground": [False, 20],
-            "MinSizeShapes": [True, 30],
+            "MinSizeShapes": [False, 30],
             "MaxSizeShapes": [False, 1],
             "Smoothness": [False, 100],
-        }
-    if configuration == 2:
+        } 
+    if configuration == 1: 
         configuration_dict = {
             #                   useTruePercentages,  useAtleast
-            "ImageLevel": [False,       True     ,       True   , 2], #note background percentage is ignored
+            "ImageLevel": [True,       True     ,       False   , 2], #note background percentage is ignored
 
             #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
-            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 0.2],      "linear"], 
+            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 1],      "linear"], 
             "BBoxFull": [False, 1,"linear"], #linear or prob
             "Scribbles": [False, 1],
 
             #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10], 
+            "Area": [False,       False         ,     1,                   10,                               False], 
             "Point": [False, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier
-            "Adjacency": [True,  True,         10,            0.0001],
+            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape
+            "Adjacency": [False,  True,         30,              0.0001,                 True],
             #                 norm-mult   impl   impl-mult   
-            "Relations": [False,   2,      False,    0.1],
+            "Relations": [True,   2,      False,    0.1],
             "SoftRelations": [False, 1],
             #global constraints:
-            "OneHot": [False, 20],
+            "OneHot": [True, 10],
             "MinSizeBackground": [True, 1],
             "MaxSizeBackground": [False, 20],
-            "MinSizeShapes": [True, 30],
+            "MinSizeShapes": [False, 30],
             "MaxSizeShapes": [False, 1],
             "Smoothness": [False, 100],
-        }
-    if configuration == 3:
+        } 
+    if configuration == 2: 
         configuration_dict = {
             #                   useTruePercentages,  useAtleast
-            "ImageLevel": [False,       True     ,       True   , 2], #note background percentage is ignored
+            "ImageLevel": [False,       True     ,       False   , 2], #note background percentage is ignored
 
             #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
-            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 0.2],      "linear"], 
+            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 1],      "linear"], 
             "BBoxFull": [False, 1,"linear"], #linear or prob
             "Scribbles": [False, 1],
 
             #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10], 
+            "Area": [False,       False         ,     1,                   10,                               False], 
             "Point": [False, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier
-            "Adjacency": [True,  True,         10,            0.0001],
+            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape
+            "Adjacency": [False,  True,         30,              0.0001,                 True],
             #                 norm-mult   impl   impl-mult   
-            "Relations": [False,   2,      False,    0.1],
-            "SoftRelations": [False, 1],
-            #global constraints:
-            "OneHot": [True, 20],
-            "MinSizeBackground": [True, 1],
-            "MaxSizeBackground": [False, 20],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [False, 1],
-            "Smoothness": [False, 100],
-        }
-    if configuration == 4:
-        configuration_dict = {
-            #                   useTruePercentages,  useAtleast
-            "ImageLevel": [False,       True     ,       True   , 2], #note background percentage is ignored
-
-            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
-            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 0.2],      "linear"], 
-            "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [False, 1],
-
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10], 
-            "Point": [False, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier
-            "Adjacency": [True,  True,         10,            0.0001],
-            #                 norm-mult   impl   impl-mult   
-            "Relations": [False,   2,      False,    0.1],
-            "SoftRelations": [False, 1],
-            #global constraints:
-            "OneHot": [True, 20],
-            "MinSizeBackground": [True, 1],
-            "MaxSizeBackground": [False, 20],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [False, 1],
-            "Smoothness": [True, 100],
-        }
-    if configuration == 5:
-        configuration_dict = {
-            #                   useTruePercentages,  useAtleast
-            "ImageLevel": [False,       True     ,       True   , 2], #note background percentage is ignored
-
-            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
-            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 0.2],      "linear"], 
-            "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [False, 1],
-
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10], 
-            "Point": [False, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier
-            "Adjacency": [True,  True,         10,            0.0001],
-            #                 norm-mult   impl   impl-mult   
-            "Relations": [False,   2,      False,    0.1],
+            "Relations": [True,   2,      False,    0.1],
             "SoftRelations": [False, 1],
             #global constraints:
             "OneHot": [True, 10],
@@ -222,60 +147,33 @@ def train_model(
             "MinSizeShapes": [True, 30],
             "MaxSizeShapes": [False, 1],
             "Smoothness": [False, 100],
-        }
-    if configuration == 6:
-        configuration_dict = {
-            #                   useTruePercentages,  useAtleast
-            "ImageLevel": [True,       True     ,       True   , 2], #note background percentage is ignored
-
-            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
-            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 0.2],      "linear"], 
-            "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [False, 1],
-
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10], 
-            "Point": [False, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier
-            "Adjacency": [True,  True,         10,            0.0001],
-            #                 norm-mult   impl   impl-mult   
-            "Relations": [False,   2,      False,    0.1],
-            "SoftRelations": [False, 1],
-            #global constraints:
-            "OneHot": [True, 20],
-            "MinSizeBackground": [True, 1],
-            "MaxSizeBackground": [False, 20],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [False, 1],
-            "Smoothness": [False, 100],
-        }
-    if configuration == 7:
+        } 
+    if configuration == 3: 
         configuration_dict = {
             #                   useTruePercentages,  useAtleast
             "ImageLevel": [True,       True     ,       False   , 2], #note background percentage is ignored
 
             #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
-            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 0.2],      "linear"], 
+            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 1],      "linear"], 
             "BBoxFull": [False, 1,"linear"], #linear or prob
             "Scribbles": [False, 1],
 
             #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10], 
+            "Area": [False,       False         ,     1,                   10,                               False], 
             "Point": [False, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier
-            "Adjacency": [True,  True,         10,            0.0001],
+            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape
+            "Adjacency": [True,  True,         30,              0.0001,                 True],
             #                 norm-mult   impl   impl-mult   
-            "Relations": [False,   2,      False,    0.1],
+            "Relations": [True,   2,      False,    0.1],
             "SoftRelations": [False, 1],
             #global constraints:
             "OneHot": [True, 20],
             "MinSizeBackground": [True, 1],
             "MaxSizeBackground": [False, 20],
-            "MinSizeShapes": [True, 30],
+            "MinSizeShapes": [False, 30],
             "MaxSizeShapes": [False, 1],
             "Smoothness": [False, 100],
-        }
-    
+        } 
     
     
     
@@ -358,6 +256,7 @@ def train_model(
     #optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'max', patience=5)  # goal: maximize overlap
+    #scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=50)
     grad_scaler = torch.cuda.amp.GradScaler(enabled=amp)
 
     global_step = 0
@@ -373,7 +272,7 @@ def train_model(
             with tqdm(total=n_train, desc=f'Epoch {epoch}/{epochs}', unit='img') as pbar:
                 for batch in train_loader:
                     for i in range(debugIts):
-                        images, weaklabel = batch['image'], batch["weaklabel"]
+                        images, weaklabel,idx = batch['image'], batch["weaklabel"]
                         assert images.shape[1] == model.n_channels, \
                             f'Network has been defined with {model.n_channels} input channels, ' \
                             f'but loaded images have {images.shape[1]} channels. Please check that ' \
@@ -444,9 +343,10 @@ def train_model(
         # 5. Begin training
         for epoch in range(1, epochs + 1):
             model.train()
-
+            # if epoch == 170:
+            #     optimizer = optim.RMSprop(model.parameters(),lr=1e-9, weight_decay=weight_decay, momentum=momentum, foreach=True)
             epochssinceimprovement += 1
-            if epochssinceimprovement > 30:
+            if epochssinceimprovement > earlyStoppingAmount:
                 break
             epoch_loss = 0
             print(f'Epoch {epoch}/{epochs}:\n')
@@ -456,7 +356,8 @@ def train_model(
             test_iter_loader = iter(test_weaklabel_loader)
             for batch in train_loader:
                 batch_n += 1
-                images, weaklabel = batch['image'], batch["weaklabel"]
+                images, weaklabel,batch_id = batch['image'], batch["weaklabel"], batch["id"]
+            
                 assert images.shape[1] == model.n_channels, \
                     f'Network has been defined with {model.n_channels} input channels, ' \
                     f'but loaded images have {images.shape[1]} channels. Please check that ' \
@@ -473,7 +374,7 @@ def train_model(
                     # if epoch == epochs:
                     #     loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n,True)
                     # else:
-                    loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n)
+                    loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_id)
 
                     if not loss.isnan():
                         if loss > 0:
@@ -540,7 +441,7 @@ def train_model(
                         
                     
 
-                        scheduler.step(test_score)
+                        #scheduler.step(test_score)
 
                         
                         
@@ -579,6 +480,7 @@ def train_model(
             if calc_test_loss:
                 test_loss = tot_test_loss/n_test
                 test_losses.append(round(test_loss,3))
+                scheduler.step(test_loss)
 
             if True: #epoch%3 == 0:
                 print("Training Set Eval:")
@@ -589,7 +491,7 @@ def train_model(
 
             print("Average loss this epoch = ",epoch_loss.item()/n_train) #pas dit nog aan eventueel
             train_losses.append(round(epoch_loss.item()/n_train,3))
-
+            
             if save_checkpoint:
                 Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
                 state_dict = model.state_dict()
@@ -630,6 +532,7 @@ def get_args():
     parser.add_argument('--bilinear', action='store_true', default=True, help='Use bilinear upsampling')
     parser.add_argument('--classes', '-c', type=int, default=4, help='Number of classes')
     parser.add_argument('--configuration', '-conf', dest='config', type=int, default=0, help='configuration id')
+    parser.add_argument('--earlyStoppingAmount', '-earlystoppingAm', dest='earlystoppingAm', type=int, default=300, help='how many epochs without improvement to stop early')
 
     return parser.parse_args()
 
@@ -669,7 +572,8 @@ if __name__ == '__main__':
             img_scale=args.scale,
             val_percent=args.val / 100,
             amp=args.amp,
-            configuration=args.config
+            configuration=args.config,
+            earlyStoppingAmount=args.earlystoppingAm
         )
     except torch.cuda.OutOfMemoryError:
         logging.error('Detected OutOfMemoryError! '
@@ -686,5 +590,6 @@ if __name__ == '__main__':
             img_scale=args.scale,
             val_percent=args.val / 100,
             amp=args.amp,
-            configuration=arg.config
+            configuration=args.config,
+            earlyStoppingAmount=args.earlystoppingAm
         )

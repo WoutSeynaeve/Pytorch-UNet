@@ -63,8 +63,8 @@ def adjacency_loss(normalized_tensor, class_I, class_J,option = 'yes'):
     # Extract probabilities for class I and class J
     probs_I = normalized_tensor[class_I, :, :]  # Shape: (H, W)
     probs_J = normalized_tensor[class_J, :, :]  # Shape: (H, W)
-    probs_I = torch.clamp(probs_I, min=1e-5, max=1-1e-5)
-    probs_J = torch.clamp(probs_J, min=1e-5, max=1-1e-5)
+    probs_I = torch.clamp(probs_I, min=1e-7, max=1-1e-7)
+    probs_J = torch.clamp(probs_J, min=1e-7, max=1-1e-7)
 
 
     # Define adjacency kernel (3x3 neighborhood excluding center)

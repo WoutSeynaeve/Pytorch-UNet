@@ -234,63 +234,121 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
                 minpercentage = float(imlvlpercdict.get(shape))
             else:
                 minpercentage = 0.35
+            if areainfo[1] and not areainfo[4]:
+                if ar1 == 'left_half':
+                    if ar2 == 'top_half':
+                        #top-left
+                        minpercentage = 4*minpercentage
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage / 100, 0, W // 2 - 1, 0, H // 2 - 1) * areainfo[3]
+                        addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100 - minpercentage) / 100, 0, W // 2 - 1, 0, H // 2 - 1)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, W // 2, W, 0, H)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W, H // 2, H)
+                    elif ar2 == 'bottom_half':
+                        #bottom-left
+                        minpercentage = 4*minpercentage
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage / 100, 0, W // 2 - 1, H // 2, H) * areainfo[3]
+                        addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100 - minpercentage) / 100, 0, W // 2 - 1, H // 2, H)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, W // 2, W, 0, H)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0 , W, 0, H//2  - 1)
+                    else:
+                        #left-half
+                        minpercentage = 2*minpercentage
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage/100, 0, W // 2 - 1, 0, H)*areainfo[3]
+                        addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100-minpercentage)/100, 0, W // 2 - 1, 0, H)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, W // 2, W, 0, H)
+                elif ar1 == 'right_half':
+                    if ar2 == 'top_half':
+                        #top-right
+                        minpercentage = 4*minpercentage
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage / 100, W // 2, W, 0, H // 2 - 1) * areainfo[3]
+                        addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100 - minpercentage) / 100, W // 2, W, 0, H // 2 - 1)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W // 2 - 1, 0, H)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W, H // 2, H)
+                    elif ar2 == 'bottom_half':
+                        #bottom-right
+                        minpercentage = 4*minpercentage
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage / 100, W // 2, W, H // 2, H) * areainfo[3]
+                        addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100 - minpercentage) / 100, W // 2, W, H // 2, H)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W // 2 - 1, 0, H)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0 , W, 0, H//2 - 1)
 
-            if ar1 == 'left_half':
-                if ar2 == 'top_half':
-                    #top-left
-                    minpercentage = 4*minpercentage
-                    addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage / 100, 0, W // 2 - 1, 0, H // 2 - 1) * areainfo[3]
-                    addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100 - minpercentage) / 100, 0, W // 2 - 1, 0, H // 2 - 1)
-                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, W // 2, W, 0, H)
-                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W, H // 2, H)
-                elif ar2 == 'bottom_half':
-                    #bottom-left
-                    minpercentage = 4*minpercentage
-                    addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage / 100, 0, W // 2 - 1, H // 2, H) * areainfo[3]
-                    addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100 - minpercentage) / 100, 0, W // 2 - 1, H // 2, H)
-                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, W // 2, W, 0, H)
-                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0 , W, 0, H//2  - 1)
+                    else:
+                        #right-half
+                        minpercentage = 2*minpercentage
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage/100, W // 2, W, 0, H)*areainfo[3]
+                        addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100-minpercentage)/100, W // 2, W, 0, H)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W // 2 - 1, 0, H)
                 else:
-                    #left-half
-                    minpercentage = 2*minpercentage
-                    addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage/100, 0, W // 2 - 1, 0, H)*areainfo[3]
-                    addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100-minpercentage)/100, 0, W // 2 - 1, 0, H)
-                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, W // 2, W, 0, H)
-            elif ar1 == 'right_half':
-                if ar2 == 'top_half':
-                    #top-right
-                    minpercentage = 4*minpercentage
-                    addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage / 100, W // 2, W, 0, H // 2 - 1) * areainfo[3]
-                    addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100 - minpercentage) / 100, W // 2, W, 0, H // 2 - 1)
-                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W // 2 - 1, 0, H)
-                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W, H // 2, H)
-                elif ar2 == 'bottom_half':
-                    #bottom-right
-                    minpercentage = 4*minpercentage
-                    addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage / 100, W // 2, W, H // 2, H) * areainfo[3]
-                    addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100 - minpercentage) / 100, W // 2, W, H // 2, H)
-                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W // 2 - 1, 0, H)
-                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0 , W, 0, H//2 - 1)
+                    if ar2 == 'top_half':
+                        #top-half
+                        minpercentage = 2*minpercentage
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage/100, 0, W, 0, H // 2 - 1)*areainfo[3]
+                        addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100-minpercentage)/100, 0, W, 0, H // 2 - 1)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W, H // 2, H)
+                    elif ar2 == 'bottom_half':
+                        #bottom-half
+                        minpercentage = 2*minpercentage
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage/100, 0, W, H // 2, H)*areainfo[3]
+                        addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100-minpercentage)/100, 0, W, H // 2, H)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W, 0, H // 2 - 1)
 
-                else:
-                    #right-half
-                    minpercentage = 2*minpercentage
-                    addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage/100, W // 2, W, 0, H)*areainfo[3]
-                    addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100-minpercentage)/100, W // 2, W, 0, H)
-                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W // 2 - 1, 0, H)
             else:
-                if ar2 == 'top_half':
-                    #top-half
-                    minpercentage = 2*minpercentage
-                    addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage/100, 0, W, 0, H // 2 - 1)*areainfo[3]
-                    addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100-minpercentage)/100, 0, W, 0, H // 2 - 1)
-                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W, H // 2, H)
-                elif ar2 == 'bottom_half':
-                    #bottom-half
-                    minpercentage = 2*minpercentage
-                    addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage/100, 0, W, H // 2, H)*areainfo[3]
-                    addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100-minpercentage)/100, 0, W, H // 2, H)
-                    addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W, 0, H // 2 - 1)
+                if ar1 == 'left_half':
+                    if ar2 == 'top_half':
+                        #top-left
+                        minpercentage = 4*minpercentage
+                        addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage / 100, 0, W // 2 - 1, 0, H // 2 - 1) * areainfo[3]
+                        addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100 - minpercentage) / 100, 0, W // 2 - 1, 0, H // 2 - 1)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, W // 2, W, 0, H)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W, H // 2, H)
+                    elif ar2 == 'bottom_half':
+                        #bottom-left
+                        minpercentage = 4*minpercentage
+                        addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage / 100, 0, W // 2 - 1, H // 2, H) * areainfo[3]
+                        addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100 - minpercentage) / 100, 0, W // 2 - 1, H // 2, H)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, W // 2, W, 0, H)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0 , W, 0, H//2  - 1)
+                    else:
+                        #left-half
+                        minpercentage = 2*minpercentage
+                        addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage/100, 0, W // 2 - 1, 0, H)*areainfo[3]
+                        addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100-minpercentage)/100, 0, W // 2 - 1, 0, H)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, W // 2, W, 0, H)
+                elif ar1 == 'right_half':
+                    if ar2 == 'top_half':
+                        #top-right
+                        minpercentage = 4*minpercentage
+                        addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage / 100, W // 2, W, 0, H // 2 - 1) * areainfo[3]
+                        addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100 - minpercentage) / 100, W // 2, W, 0, H // 2 - 1)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W // 2 - 1, 0, H)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W, H // 2, H)
+                    elif ar2 == 'bottom_half':
+                        #bottom-right
+                        minpercentage = 4*minpercentage
+                        addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage / 100, W // 2, W, H // 2, H) * areainfo[3]
+                        addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100 - minpercentage) / 100, W // 2, W, H // 2, H)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W // 2 - 1, 0, H)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0 , W, 0, H//2 - 1)
+
+                    else:
+                        #right-half
+                        minpercentage = 2*minpercentage
+                        addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage/100, W // 2, W, 0, H)*areainfo[3]
+                        addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100-minpercentage)/100, W // 2, W, 0, H)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W // 2 - 1, 0, H)
+                else:
+                    if ar2 == 'top_half':
+                        #top-half
+                        minpercentage = 2*minpercentage
+                        addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage/100, 0, W, 0, H // 2 - 1)*areainfo[3]
+                        addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100-minpercentage)/100, 0, W, 0, H // 2 - 1)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W, H // 2, H)
+                    elif ar2 == 'bottom_half':
+                        #bottom-half
+                        minpercentage = 2*minpercentage
+                        addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], minpercentage/100, 0, W, H // 2, H)*areainfo[3]
+                        addloss += atmost_p_percent_is_class_in_bounding_box(output_tensor, [0], (100-minpercentage)/100, 0, W, H // 2, H)
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor, [class_values[shape]], 0, 0, W, 0, H // 2 - 1)
 
             if printLosses:
                 print("Loss for shape",shape,"for",ar1,ar2," = ",addloss*areainfo[2])
@@ -298,20 +356,27 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
             
     #relation
     relations = configuration.get('Relations')
+    reverse_direction_map = {
+    "left": "right",
+    "under": "above",
+    "above": "under",
+    "right": "left",
+    }
     if relations[0]:
         for rel in relation:
+            addloss = 0
             shape1,relat,shape2 = rel[0][0],rel[1][0],rel[2][0]
-            l1 = ifXthenYatRelation(output_tensor, class_values[shape2], class_values[shape1], relat)*relations[1]
-            tot_loss = l1
+            addloss += ifXthenYatRelation(output_tensor, class_values[shape2], class_values[shape1], relat)*relations[1]
+            addloss += ifXthenYatRelation(output_tensor, class_values[shape1], class_values[shape2], reverse_direction_map[relat])*relations[1]
+           
             if relations[2]: 
-                rlLos = ifXthenYatRelation(output_tensor, class_values[shape1], class_values[shape2], relat,'not')
-                l2 = rlLos*relations[3]
-                tot_loss = l1 + l2
+                addloss +=  ifXthenYatRelation(output_tensor, class_values[shape1], class_values[shape2], relat,'not')*relations[3]
+                addloss +=  ifXthenYatRelation(output_tensor, class_values[shape2], class_values[shape1],reverse_direction_map[relat],'not')*relations[3]
 
             if printLosses:
-                print("loss for hard relation:",shape1,relat,shape2," = ",l1,'(soft)',l2,'(not)')
+                print("loss for hard relation:",shape1,relat,shape2," = ",addloss)
             
-            loss += tot_loss
+            loss += addloss
             
 
     #softRelation
@@ -357,6 +422,13 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
                         if printLosses:
                             print('loss for NO adjacency between',names_from_classes[c1],names_from_classes[c2],"=",addloss*adjacencies[3])
                         loss += addloss*adjacencies[3]
+        if adjacencies[4]:
+            #adjacency global constraint: Background is adjacent to each class in the image!
+            for obj in range(1,4):
+                addloss = adjacency_loss(output_tensor, 0, obj)
+                if printLosses:
+                    print("loss for adjacency between background, and ", names_from_classes[obj]," = ",addloss*adjacencies[2])
+                loss += addloss*adjacencies[2]
     
     return loss
 
