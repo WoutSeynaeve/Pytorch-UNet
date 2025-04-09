@@ -366,12 +366,16 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
         for rel in relation:
             addloss = 0
             shape1,relat,shape2 = rel[0][0],rel[1][0],rel[2][0]
-            addloss += ifXthenYatRelation(output_tensor, class_values[shape2], class_values[shape1], relat)*relations[1]
-            addloss += ifXthenYatRelation(output_tensor, class_values[shape1], class_values[shape2], reverse_direction_map[relat])*relations[1]
+            if relations[4]:
+                addloss += (ifXthenYatRelation(output_tensor, class_values[shape2], class_values[shape1], relat)+ ifXthenYatRelation(output_tensor, class_values[shape1], class_values[shape2], reverse_direction_map[relat]))*(relations[1]/2)
+            else:
+                addloss += ifXthenYatRelation(output_tensor, class_values[shape2], class_values[shape1], relat)*relations[1]
            
             if relations[2]: 
-                addloss +=  ifXthenYatRelation(output_tensor, class_values[shape1], class_values[shape2], relat,'not')*relations[3]
-                addloss +=  ifXthenYatRelation(output_tensor, class_values[shape2], class_values[shape1],reverse_direction_map[relat],'not')*relations[3]
+                if relations[4]:
+                    addloss +=  (ifXthenYatRelation(output_tensor, class_values[shape1], class_values[shape2], relat,'not')+ifXthenYatRelation(output_tensor, class_values[shape2], class_values[shape1],reverse_direction_map[relat],'not'))*(relations[3]/2)
+                else:
+                    addloss += ifXthenYatRelation(output_tensor, class_values[shape1], class_values[shape2], relat,'not')*relations[3] 
 
             if printLosses:
                 print("loss for hard relation:",shape1,relat,shape2," = ",addloss)
@@ -408,7 +412,10 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
             for adj in adjacency:
                 shape1, shape2 = adj[0][0],adj[1][0]
                 presentAdjacencies.add(tuple(sorted([class_values[shape1], class_values[shape2]])))
-                addloss = adjacency_loss(output_tensor, class_values[shape1], class_values[shape2])
+                if adjacencies[5]:
+                    addloss = (adjacency_loss(output_tensor, class_values[shape1], class_values[shape2])+adjacency_loss(output_tensor, class_values[shape2], class_values[shape1])) /2
+                else:
+                    addloss = adjacency_loss(output_tensor, class_values[shape1], class_values[shape2])
                 if printLosses:
                     print("loss for adjacency between",shape1, shape2," = ",addloss*adjacencies[2])
                 loss += addloss*adjacencies[2]
@@ -418,14 +425,20 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
             for c1 in range(1,3):
                 for c2 in range(c1+1,4):
                     if (c1,c2) not in presentAdjacencies:
-                        addloss = adjacency_loss(output_tensor,c1,c2,'not')
+                        if adjacencies[5]:
+                            addloss = (adjacency_loss(output_tensor,c1,c2,'not')+ adjacency_loss(output_tensor,c1,c2,'not'))/2
+                        else:
+                            addloss = adjacency_loss(output_tensor,c1,c2,'not')
                         if printLosses:
                             print('loss for NO adjacency between',names_from_classes[c1],names_from_classes[c2],"=",addloss*adjacencies[3])
                         loss += addloss*adjacencies[3]
         if adjacencies[4]:
             #adjacency global constraint: Background is adjacent to each class in the image!
             for obj in range(1,4):
-                addloss = adjacency_loss(output_tensor, 0, obj)
+                if adjacencies[5]:
+                    addloss = (adjacency_loss(output_tensor, 0, obj)+adjacency_loss(output_tensor, 0, obj))/2
+                else:
+                    addloss = adjacency_loss(output_tensor, 0, obj)
                 if printLosses:
                     print("loss for adjacency between background, and ", names_from_classes[obj]," = ",addloss*adjacencies[2])
                 loss += addloss*adjacencies[2]

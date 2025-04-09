@@ -290,7 +290,7 @@ class BasicDatasetCLEVR(Dataset):
         assert 0 < scale <= 1, 'Scale must be between 0 and 1'
         self.scale = scale
         self.mask_suffix = "_mask"
-
+        print(images_dir,mask_dir)
         self.ids = [splitext(file)[0] for file in listdir(images_dir) if isfile(join(images_dir, file)) and not file.startswith('.')]
         if not self.ids:
             raise RuntimeError(f'No input file found in {images_dir}, make sure you put your images there')
@@ -304,7 +304,8 @@ class BasicDatasetCLEVR(Dataset):
             ))
 
         self.mask_values = list(sorted(np.unique(np.concatenate(unique), axis=0).tolist()))
-        logging.info(f'Unique mask values: {self.mask_values}')
+        #logging.info(f'Unique mask values: {self.mask_values}')
+        print("amount of unique mask values:",len(self.mask_values))
         
 
     def __len__(self):
@@ -381,10 +382,17 @@ class CombinedDatasetCLEVR(Dataset):
                 p.imap(partial(unique_mask_values, mask_dir=self.mask_dir, mask_suffix=self.mask_suffix), self.ids),
                 total=len(self.ids)
             ))
-
+        self.heterogeneousIds = {}
+        heteroId = 1
+        for file in listdir(images_dir):
+            if file.endswith('n.png'):
+                self.heterogeneousIds[file[:-4]] = heteroId
+                heteroId += 1
+        for file in listdir(images_dir):
+            if file.endswith('m.png'):
+                self.heterogeneousIds[file[:-4]] = self.heterogeneousIds[(file[:-5]+'n')]*(-1)
         self.mask_values = list(sorted(np.unique(np.concatenate(unique), axis=0).tolist()))
         logging.info(f'Unique mask values: {self.mask_values}')
-        
 
     def __len__(self):
         return len(self.ids)
@@ -442,10 +450,10 @@ class CombinedDatasetCLEVR(Dataset):
         img = self.preprocess(self.mask_values, img, self.scale, is_mask=False)
         mask = self.preprocess(self.mask_values, mask, self.scale, is_mask=True)
         weaklabel = self.processWeaklabel(weaklabel_file)
-
         return {
             'image': torch.as_tensor(img.copy()).float().contiguous(),
             'mask': torch.as_tensor(mask.copy()).long().contiguous(),
-            'weaklabel': weaklabel
+            'weaklabel': weaklabel,
+            'id': self.heterogeneousIds[name]
         }
        

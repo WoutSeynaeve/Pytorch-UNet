@@ -19,8 +19,9 @@ echo Job is running on ${SLURM_CLUSTER_NAME} cluster
 echo The node architecture is $VSC_ARCH_LOCAL
 echo Current path is $(pwd)
 
-python trainWeaklySupervisedCLEVR.py --configuration 4 -e 190
-python trainWeaklySupervisedCLEVR.py --configuration 5 -e 190
-python trainWeaklySupervisedCLEVR.py --configuration 6 -e 190
-python trainWeaklySupervisedCLEVR.py --configuration 7 -e 190
-python trainWeaklySupervisedCLEVR.py --configuration 8 -e 190
+python trainWSclevrCombined.py --configuration 0 -e 120
+python trainWSclevrCombined.py --configuration 1 -e 120
+python trainWSclevrCombined.py --configuration 2 -e 120
+python trainWSclevrCombined.py --configuration 3 -e 120
+python trainWSclevrCombined.py --configuration 4 -e 120
+python trainWSclevrCombined.py --configuration 5 -e 120
