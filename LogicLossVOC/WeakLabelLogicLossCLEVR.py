@@ -448,3 +448,16 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
 
 
 
+
+def domainlossCOCO(output_tensor,configuration_dict):
+    #class 1 is person (blue), class 2 is horse (red)
+    output_tensor = output_tensor[0, :, :, :]  # Remove batch dimension
+    output_tensor = F.softmax(output_tensor, dim=0)  # Apply softmax over class dimension
+
+    #TO DO: gebruik van configuration dictionary
+    C,H,W = output_tensor.shape
+    l1 = 30*adjacency_loss(output_tensor, 2 , 1)
+    l2 = 2*ifXthenYatRelation(output_tensor, 1, 2, "under")
+    l3 = 2*ifXthenYatRelation(output_tensor, 2 , 1 , "above")
+    #l4 = 10*onehot2(output_tensor)
+    return 0.01*(l1+l2+l3)

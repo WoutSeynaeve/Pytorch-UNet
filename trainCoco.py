@@ -13,9 +13,9 @@ from torch import optim
 import itertools
 from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
-from LogicLossVOC.WeakLabelLogicLossCLEVR import calculateLogicLoss
-from evaluate import evaluate, evaluateWeaklySupervised, evaluateWeaklySupervisedCLEVR, evaluateFullySupervisedCLEVR,evaluateFullySupervisedCLEVRwPrecisionRecall
-from unet import UNet
+from LogicLossVOC.WeakLabelLogicLossCLEVR import calculateLogicLoss, domainlossCOCO
+from evaluate import evaluate, evaluateWeaklySupervised, evaluateWeaklySupervisedCLEVR, evaluateFullySupervisedCLEVR,evaluateFullySupervisedCOCOwPrecisionRecall
+from unet.unet_model import UNet
 from utils.data_loading import WeakLabelDataset,BasicDataset,WeakLabelDatasetCLEVR,BasicDatasetCLEVR,CombinedDatasetCLEVR
 import numpy as np 
 
@@ -71,18 +71,7 @@ def train_model(
 
     if configuration == 0: 
         configuration_dict = {
-            "logicLossMultiplier": 0.01,
-            #                   useTruePercentages,  useAtleast
-            "ImageLevel": [False,       True     ,       False   , 2], #note background percentage is ignored
-
-            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
-            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 1],      "linear"], 
-            "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [False, 1],
-
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10,                               False], 
-            "Point": [False, 10],
+            "domainLossMultiplier": 1,   
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
             "Adjacency": [False,  True,         30,              0.0001,                 True,                  True],
             #                 norm-mult   impl   impl-mult   symmetric 
@@ -129,11 +118,10 @@ def train_model(
     # try:
     #     dataset = CarvanaDataset(dir_img, dir_mask, img_scale)
     # except (AssertionError, RuntimeError, IndexError):
-    dataset = BasicDataset(dir_img, dir_mask, img_scale)
+    dataset = BasicDatasetCLEVR(dir_img, dir_mask, img_scale)
     if not debug:
         dataset_test = BasicDatasetCLEVR(dir_img_test, dir_mask_test, img_scale)
         n_test = len(dataset_test)
-    dataset_test_trainset = BasicDatasetCLEVR(dir_img, dir_mask, img_scale)
 
     # 2. Split into train / validation partitions
     n_val = int(len(dataset) * val_percent)
@@ -153,7 +141,6 @@ def train_model(
     val_loader = DataLoader(val_set, shuffle=False, drop_last=True, **loader_args)
     if not debug:
         test_loader = DataLoader(dataset_test,shuffle=True,**loader_args)
-    test_trainset_loader = DataLoader(dataset_test_trainset,shuffle=True,**loader_args)
     # # (Initialize logging)
     # experiment = wandb.init(project='U-Net', resume='allow', anonymous='must')
     # experiment.config.update(
@@ -266,7 +253,7 @@ def train_model(
         train_losses = []
         test_losses = []
         epochssinceimprovement = 0
-        logiclossMult = configuration_dict['logicLossMultiplier']
+        domainlossMult = configuration_dict['domainLossMultiplier']
         # 5. Begin training
         for epoch in range(1, epochs + 1):
             model.train()
@@ -285,9 +272,7 @@ def train_model(
             for batch in train_loader:
                 batch_n += 1
                 images, mask = batch['image'], batch["mask"]
-                print(images)
-                print(mask)
-                print(len(mask.unique()))
+             
                 assert images.shape[1] == model.n_channels, \
                     f'Network has been defined with {model.n_channels} input channels, ' \
                     f'but loaded images have {images.shape[1]} channels. Please check that ' \
@@ -296,8 +281,7 @@ def train_model(
                 images = images.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
                 with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
                     masks_pred = model(images)
-                    print(masks_pred)
-                    print("\n"*6)
+                  
                     #after a while, mask_pred becomes all NAN !! problem!!
                     # if epoch > 30:
                     #     signal = 1
@@ -308,8 +292,9 @@ def train_model(
                     # else:
                     _, _, H, W = images.shape 
                     #add domain loss: Adjacency + person above horse + horse under person + always horse + always persone + always background
-                    loss = cross_entropy(masks_pred,mask,H,W,device)
+                    loss = 0.5*cross_entropy(masks_pred,mask,H,W,device)
                     loss += diceLoss(masks_pred,mask,H,W,device)
+                    loss += domainlossMult*domainlossCOCO(masks_pred,configuration_dict)
                     if not loss.isnan():
                         if loss > 0:
                             optimizer.zero_grad(set_to_none=True)
@@ -329,7 +314,7 @@ def train_model(
                     pbar.set_postfix(**{'loss (batch)': loss.item()})
                 global_step += 1
                 epoch_loss += loss.detach() 
-                del images, weaklabel, masks_pred, loss  # Free memory
+                del images, masks_pred, loss  # Free memory
                 torch.cuda.empty_cache()  # Clear GPU memory
                 # experiment.log({
                 #     'train loss': loss.item(),
@@ -353,7 +338,7 @@ def train_model(
 
                         #val_score = evaluateWeaklySupervised2(model, val_loader, device, amp)
                         print("Test Set Eval:")
-                        test_score,test_score_shape = evaluateFullySupervisedCLEVRwPrecisionRecall(model, test_loader, device, amp)
+                        test_score,test_score_shape = evaluateFullySupervisedCOCOwPrecisionRecall(model, test_loader, device, amp)
                         test_scores.append(round(test_score.item(),3))
                         test_scores_shapes.append(round(test_score_shape.item(),3))
                         if test_score > max_test_score:
@@ -417,7 +402,7 @@ def train_model(
 
             if True: #epoch%3 == 0:
                 print("Training Set Eval:")
-                train_score,train_score_shape = evaluateFullySupervisedCLEVRwPrecisionRecall(model,test_trainset_loader,device,amp)
+                train_score,train_score_shape = evaluateFullySupervisedCOCOwPrecisionRecall(model,train_loader,device,amp)
                 train_scores.append(round(train_score.item(),3))
                 train_scores_shapes.append(round(train_score_shape.item(),3))
                 print("")
@@ -428,7 +413,7 @@ def train_model(
             if save_checkpoint:
                 Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
                 state_dict = model.state_dict()
-                state_dict['mask_values'] = dataset_test_trainset.mask_values
+                state_dict['mask_values'] = dataset.mask_values
                 torch.save(state_dict, str(dir_checkpoint / 'checkpoint_epoch{}.pth'.format(epoch)))
                 logging.info(f'Checkpoint {epoch} saved!')
                 print("/////////////////////////")

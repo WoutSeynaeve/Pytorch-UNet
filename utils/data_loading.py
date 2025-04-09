@@ -305,7 +305,7 @@ class BasicDatasetCLEVR(Dataset):
 
         self.mask_values = list(sorted(np.unique(np.concatenate(unique), axis=0).tolist()))
         #logging.info(f'Unique mask values: {self.mask_values}')
-        print("amount of unique mask values:",len(self.mask_values))
+        print("unique mask values:",self.mask_values)
         
 
     def __len__(self):
