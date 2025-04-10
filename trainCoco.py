@@ -30,6 +30,7 @@ torch.cuda.manual_seed_all(seed)
 debug = False
 printLosses = False
 calc_test_loss = False
+use_augmented = True
 
 debugIts = 400
 if debug:
@@ -41,11 +42,16 @@ else:
     # dir_img = Path('../../datasetCLEVR/imagesWeakDataset/')
     # dir_weaklabel = Path('../../datasetCLEVR/annotationsTrain/')
     # dir_checkpoint = Path('./checkpoints/')
-   
-    dir_img = Path('../../datasetCOCO/Images/')
-    dir_mask = Path('../../datasetCOCO/Masks')
-    dir_img_test = Path('../../datasetCOCO/ImagesTest/')
-    dir_mask_test = Path('../../datasetCOCO/MasksTest')
+    if use_augmented:
+        dir_img = Path('../../datasetCOCO/AugmentedImages/')
+        dir_mask = Path('../../datasetCOCO/AugmentedMasks')
+        dir_img_test = Path('../../datasetCOCO/AugmentedImagesTest/')
+        dir_mask_test = Path('../../datasetCOCO/AugmentedMasksTest')
+    else:
+        dir_img = Path('../../datasetCOCO/Images/')
+        dir_mask = Path('../../datasetCOCO/Masks')
+        dir_img_test = Path('../../datasetCOCO/ImagesTest/')
+        dir_mask_test = Path('../../datasetCOCO/MasksTest')
     dir_checkpoint = Path('./checkpoints/')
 
 
@@ -71,19 +77,15 @@ def train_model(
 
     if configuration == 0: 
         configuration_dict = {
-            "domainLossMultiplier": 1,   
+            "domainLossMultiplier": 0.01,   
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [False,  True,         30,              0.0001,                 True,                  True],
+            "Adjacency": [True,  True,         30,              0.0001,                 True,                  False],
             #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [False,   2,      True,    0.1,       True],
-            "SoftRelations": [False, 1],
+            "Relations": [True,   2,      True,    0.1,       False],
             #global constraints:
-            "OneHot": [False, 10],
-            "MinSizeBackground": [True, 1],
-            "MaxSizeBackground": [True, 20],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [True, 1],
-            "Smoothness": [False, 100],
+            "OneHot": [True, 10],
+
+            "Smoothness": [True, 100],
         } 
     
     
@@ -100,7 +102,7 @@ def train_model(
                     writeInfo += str(info) + " "
                 print("")
                 writeInfo += "\n"
-        elif k == "logicLossMultiplier":
+        elif k == "domainLossMultiplier":
             writeInfo += "logic loss multiplier: " + str(configuration_dict[k]) + "\n"
 
         else:
@@ -176,8 +178,7 @@ def train_model(
         epochs = 1
         signal = 0
             # 5. Begin training
-        for epoch in range(1, epochs + 1):
-            
+        for epoch in range(1, epochs + 1):       
             model.train()
             epoch_loss = 0
             with tqdm(total=n_train, desc=f'Epoch {epoch}/{epochs}', unit='img') as pbar:
@@ -271,8 +272,8 @@ def train_model(
                 test_iter_loader = iter(test_weaklabel_loader)
             for batch in train_loader:
                 batch_n += 1
-                images, mask = batch['image'], batch["mask"]
-             
+                images, mask, batch_id = batch['image'], batch["mask"], batch["id"]
+                batch_id = batch_id[0]
                 assert images.shape[1] == model.n_channels, \
                     f'Network has been defined with {model.n_channels} input channels, ' \
                     f'but loaded images have {images.shape[1]} channels. Please check that ' \
@@ -282,19 +283,14 @@ def train_model(
                 with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
                     masks_pred = model(images)
                   
-                    #after a while, mask_pred becomes all NAN !! problem!!
-                    # if epoch > 30:
-                    #     signal = 1
-                    # if epoch > 50:  #testing purposes
-                    #     signal = 2
-                    # if epoch == epochs:
-                    #     loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n,True)
-                    # else:
                     _, _, H, W = images.shape 
                     #add domain loss: Adjacency + person above horse + horse under person + always horse + always persone + always background
-                    loss = 0.5*cross_entropy(masks_pred,mask,H,W,device)
+                    loss = 0
+                    #bactchID goes from 1 to 130 or -130 to 130 (in case of augmentation)
+                    loss += 0.5*cross_entropy(masks_pred,mask,H,W,device)
                     loss += diceLoss(masks_pred,mask,H,W,device)
-                    loss += domainlossMult*domainlossCOCO(masks_pred,configuration_dict)
+                    loss += domainlossCOCO(masks_pred,configuration_dict)
+                
                     if not loss.isnan():
                         if loss > 0:
                             optimizer.zero_grad(set_to_none=True)
@@ -316,27 +312,13 @@ def train_model(
                 epoch_loss += loss.detach() 
                 del images, masks_pred, loss  # Free memory
                 torch.cuda.empty_cache()  # Clear GPU memory
-                # experiment.log({
-                #     'train loss': loss.item(),
-                #     'step': global_step,
-                #     'epoch': epoch
-                # })
-                
 
                 # Evaluation round
                 n_of_rounds = 1
                 division_step = (n_train // (n_of_rounds * batch_size))
                 if division_step > 0:
                     if global_step % division_step == 0:
-                        # histograms = {}
-                        # for tag, value in model.named_parameters():
-                        #     tag = tag.replace('/', '.')
-                        #     if not (torch.isinf(value) | torch.isnan(value)).any():
-                        #         histograms['Weights/' + tag] = wandb.Histogram(value.data.cpu())
-                        #     if not (torch.isinf(value.grad) | torch.isnan(value.grad)).any():
-                        #         histograms['Gradients/' + tag] = wandb.Histogram(value.grad.data.cpu())
-
-                        #val_score = evaluateWeaklySupervised2(model, val_loader, device, amp)
+                        
                         print("Test Set Eval:")
                         test_score,test_score_shape = evaluateFullySupervisedCOCOwPrecisionRecall(model, test_loader, device, amp)
                         test_scores.append(round(test_score.item(),3))
@@ -357,29 +339,6 @@ def train_model(
                         print("")
 
                         
-                    
-
-                        #scheduler.step(test_score)
-
-                        
-                        
-
-                        # try:
-                        #     experiment.log({
-                        #         'learning rate': optimizer.param_groups[0]['lr'],
-                        #         'validation Dice': val_score,
-                        #         'images': wandb.Image(images[0].cpu()),
-                        #         'masks': {
-                        #             'true': wandb.Image(true_masks[0].float().cpu()),
-                        #             'pred': wandb.Image(masks_pred.argmax(dim=1)[0].float().cpu()),
-                        #         },
-                        #         'step': global_step,
-                        #         'epoch': epoch,
-                        #         **histograms
-                        #     })
-                        # except:
-                        #     pass
-
                 #test loss: 90 test in-mages for 478 train, so every 5 iterations, we do a test one:
                 if calc_test_loss:
                     if batch_n%5 == 0:

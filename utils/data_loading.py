@@ -306,6 +306,21 @@ class BasicDatasetCLEVR(Dataset):
         self.mask_values = list(sorted(np.unique(np.concatenate(unique), axis=0).tolist()))
         #logging.info(f'Unique mask values: {self.mask_values}')
         print("unique mask values:",self.mask_values)
+        self.heterogeneousIds = {}
+        heteroId = 1
+
+        if listdir(images_dir)[0].endswith('n.jpg') or listdir(images_dir)[0].endswith('m.jpg'):
+            for file in listdir(images_dir):
+                if file.endswith('n.jpg'):
+                    self.heterogeneousIds[file[:-4]] = heteroId
+                    heteroId += 1
+            for file in listdir(images_dir):
+                if file.endswith('m.jpg'):
+                    self.heterogeneousIds[file[:-4]] = self.heterogeneousIds[(file[:-5]+'n')]*(-1)
+        else:
+            for file in listdir(images_dir):
+                self.heterogeneousIds[file[:-4]] = heteroId
+                heteroId += 1
         
 
     def __len__(self):
@@ -358,7 +373,8 @@ class BasicDatasetCLEVR(Dataset):
 
         return {
             'image': torch.as_tensor(img.copy()).float().contiguous(),
-            'mask': torch.as_tensor(mask.copy()).long().contiguous()
+            'mask': torch.as_tensor(mask.copy()).long().contiguous(),
+            'id': self.heterogeneousIds[name]
         }
 
 

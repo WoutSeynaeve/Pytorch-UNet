@@ -293,9 +293,8 @@ def onehot2(normalized_tensor):
         for c2 in range(C):
             if c1 != c2:
                 result += torch.log1p(-torch.exp(torch.log(normalized_tensor[c1])+torch.log(normalized_tensor[c2])))
-    #redundant part because model guarantees prob distr:
-    """
+   
     sum_to_one_penalty = torch.log1p(-torch.exp(torch.log(1-normalized_tensor).sum()))
     result += sum_to_one_penalty
-    """ 
+    
     return -result.sum()/(H*W)

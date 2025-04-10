@@ -449,15 +449,41 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
 
 
 
-def domainlossCOCO(output_tensor,configuration_dict):
+def domainlossCOCO(output_tensor,configuration,printLosses=False):
     #class 1 is person (blue), class 2 is horse (red)
     output_tensor = output_tensor[0, :, :, :]  # Remove batch dimension
     output_tensor = F.softmax(output_tensor, dim=0)  # Apply softmax over class dimension
 
     #TO DO: gebruik van configuration dictionary
     C,H,W = output_tensor.shape
-    l1 = 30*adjacency_loss(output_tensor, 2 , 1)
-    l2 = 2*ifXthenYatRelation(output_tensor, 1, 2, "under")
-    l3 = 2*ifXthenYatRelation(output_tensor, 2 , 1 , "above")
+    lossesArray = []
+
+    #adjacency
+    adjacencies = configuration.get("Adjacency")
+    if adjacencies[0]:
+        lossesArray.append(adjacency_loss(output_tensor, 2 , 1)*adjacencies[2])
+
+    #direcitonal constraint
+    relations = configuration.get('Relations')
+    if relations[0]:
+        lossesArray.append(ifXthenYatRelation(output_tensor, 1, 2, "under")*relations[1])
+        lossesArray.append(ifXthenYatRelation(output_tensor, 2 , 1 , "above")*relations[1])
+    
     #l4 = 10*onehot2(output_tensor)
-    return 0.01*(l1+l2+l3)
+
+    #one-hot global constraint
+    onehot = configuration.get("OneHot")
+    if onehot[0]:
+        lossesArray.append(onehot2(output_tensor)*onehot[1])
+    
+    #smoothness global constraint
+    smthns = configuration.get("Smoothness")
+    if smthns[0]:
+        for classes in range(3):
+            lossesArray.append(ifXthenXadjecent(output_tensor,classes)*smthns[1])
+
+    if printLosses:
+        for i in lossesArray:
+            print(i)
+
+    return configuration.get("domainLossMultiplier")*(sum(lossesArray))

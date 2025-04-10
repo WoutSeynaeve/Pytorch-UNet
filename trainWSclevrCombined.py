@@ -29,7 +29,7 @@ torch.cuda.manual_seed_all(seed)
 
 debug = False
 printLosses = False
-calc_test_loss = True
+calc_test_loss = False
 
 debugIts = 400
 if debug:
@@ -416,7 +416,8 @@ def train_model(
             batch_n = 0
             testbatch_index = 0
             tot_test_loss = 0
-            test_iter_loader = iter(test_weaklabel_loader)
+            if calc_test_loss:
+                test_iter_loader = iter(test_weaklabel_loader)
             for batch in train_loader:
                 batch_n += 1
                 images, mask, weaklabel, batch_id = batch['image'], batch["mask"], batch['weaklabel'], batch["id"]
@@ -437,7 +438,7 @@ def train_model(
                     #     loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n,True)
                     # else:
                     _, _, H, W = images.shape 
-                    if abs(batch_id) > 50: #goes from 1 to 239 (batchid*-1 is the mirrored version of batchid)
+                    if abs(batch_id[0]) > 50: #goes from 1 to 239 (batchid*-1 is the mirrored version of batchid)
                         loss = logiclossMult*calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_id)[0]
                     else:
                         loss = cross_entropy(masks_pred,mask,H,W,device)
