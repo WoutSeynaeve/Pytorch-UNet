@@ -482,6 +482,19 @@ def domainlossCOCO(output_tensor,configuration,printLosses=False):
         for classes in range(3):
             lossesArray.append(ifXthenXadjecent(output_tensor,classes)*smthns[1])
 
+    #minimum size global constraint: atleast 0.35% of the image is filled by each shape
+    minSizeShapes = configuration.get("MinSizeShapes")
+    if minSizeShapes[0]:
+        lossesArray.append(atleast_p_percent_is_class(output_tensor,[0],0.43)*minSizeShapes[1])
+        lossesArray.append(atleast_p_percent_is_class(output_tensor,[1],0.0035)*minSizeShapes[1])
+        lossesArray.append(atleast_p_percent_is_class(output_tensor,[2],0.015)*minSizeShapes[1])
+
+    maxSizeShapes = configuration.get("MaxSizeShapes")
+    if maxSizeShapes[0]:
+        lossesArray.append(atmost_p_percent_is_class(output_tensor,[0],0.98)*maxSizeShapes[1])
+        lossesArray.append(atmost_p_percent_is_class(output_tensor,[1],0.20)*maxSizeShapes[1])
+        lossesArray.append(atmost_p_percent_is_class(output_tensor,[2],0.42)*maxSizeShapes[1])
+
     if printLosses:
         for i in lossesArray:
             print(i)

@@ -315,7 +315,7 @@ def evaluateFullySupervisedCLEVRwPrecisionRecall(net, dataloader, device, amp):
         net.train()
         return iou_per_class.mean(),iou_per_class[1:].mean()
 @torch.inference_mode()
-def evaluateFullySupervisedCOCOwPrecisionRecall(net, dataloader, device, amp):
+def evaluateFullySupervisedCOCOwPrecisionRecall(net, dataloader, device, amp,domainAugmented):
     net.eval()  # Set the model to evaluation mode
     num_classes = 3 # CLEVR has 4 classes
 
@@ -330,37 +330,38 @@ def evaluateFullySupervisedCOCOwPrecisionRecall(net, dataloader, device, amp):
         valsize = 0  # Count the number of validation samples
         for batch in dataloader:
             valsize += 1
-            image, true_mask = batch['image'], batch["mask"]
-            image = image.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
-            true_mask = true_mask.to(device=device)
+            image, true_mask, batch_id = batch['image'], batch["mask"], batch["id"]
+            if batch_id[0] < 999:
+                image = image.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
+                true_mask = true_mask.to(device=device)
 
-            # Predict the mask
-            mask_pred = net(image)
+                # Predict the mask
+                mask_pred = net(image)
 
-            # Compute softmax probabilities and get class predictions
-            mask_pred = F.softmax(mask_pred, dim=1)
-            mask_pred_class = torch.argmax(mask_pred, dim=1)  # Get predicted class per pixel
+                # Compute softmax probabilities and get class predictions
+                mask_pred = F.softmax(mask_pred, dim=1)
+                mask_pred_class = torch.argmax(mask_pred, dim=1)  # Get predicted class per pixel
 
-            # Compute metrics for each class
-            for i in range(num_classes):
-                pred_i = (mask_pred_class == i)
-                true_i = (true_mask == i)
+                # Compute metrics for each class
+                for i in range(num_classes):
+                    pred_i = (mask_pred_class == i)
+                    true_i = (true_mask == i)
 
-                intersection = torch.sum(pred_i & true_i).float()
-                union = torch.sum(pred_i | true_i).float()
-                
-                tp = intersection  # True Positives
-                fp = torch.sum(pred_i & ~true_i).float()  # False Positives
-                fn = torch.sum(~pred_i & true_i).float()  # False Negatives
+                    intersection = torch.sum(pred_i & true_i).float()
+                    union = torch.sum(pred_i | true_i).float()
+                    
+                    tp = intersection  # True Positives
+                    fp = torch.sum(pred_i & ~true_i).float()  # False Positives
+                    fn = torch.sum(~pred_i & true_i).float()  # False Negatives
 
-                if union > 0:
-                    iou_per_class[i] += (intersection / union)
-                    valid_classes[i] += 1  # Class i is present in this batch
-                
-                if (tp + fp) > 0:  # Avoid division by zero
-                    precision_per_class[i] += (tp / (tp + fp))
-                if (tp + fn) > 0:  # Avoid division by zero
-                    recall_per_class[i] += (tp / (tp + fn))
+                    if union > 0:
+                        iou_per_class[i] += (intersection / union)
+                        valid_classes[i] += 1  # Class i is present in this batch
+                    
+                    if (tp + fp) > 0:  # Avoid division by zero
+                        precision_per_class[i] += (tp / (tp + fp))
+                    if (tp + fn) > 0:  # Avoid division by zero
+                        recall_per_class[i] += (tp / (tp + fn))
 
         # Compute final metrics (average over valid classes)
         for i in range(num_classes):
