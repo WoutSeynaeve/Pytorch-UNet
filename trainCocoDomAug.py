@@ -19,13 +19,7 @@ from unet.unet_model import UNet
 from utils.data_loading import WeakLabelDataset,BasicDataset,BasicDatasetCOCOdomExtended,WeakLabelDatasetCLEVR,BasicDatasetCLEVR,CombinedDatasetCLEVR
 import numpy as np 
 
-seed = 42
-torch.manual_seed(seed)
-random.seed(seed)
-np.random.seed(seed)
 
-torch.cuda.manual_seed(seed)
-torch.cuda.manual_seed_all(seed)
 
 debug = False
 printLosses = False
@@ -66,154 +60,111 @@ def train_model(
         configuration: int = 0,
         earlyStoppingAmount: int = 100,
 ):
+    
     configuration_dict = {}
     
-
     if configuration == 0: 
         configuration_dict = {
+            "seed": 42,
             "percentFullySupervised": 0.2,
 
-            "domainLossMultiplier": 0.01,   
+            "domainLossMultiplier": 0.001,   
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [False,  True,         30,              0.0001,                 True,                  False],
+            "Adjacency": [True,  True,         30,              0.0001,                 False,                  False],
             #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [False,   2,      True,    0.1,       False],
+            "Relations": [True,   2,      True,    0.1,       False, True, False],
             #global constraints:
-            "OneHot": [False, 35],
+            "OneHot": [True, 20],
 
             "Smoothness": [False, 100],
-            "MinSizeShapes": [False, 30],
-            "MaxSizeShapes": [False, 1],
-        } 
+            "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
+            "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
+        }
     if configuration == 1: 
         configuration_dict = {
+            "seed": 123,
             "percentFullySupervised": 0.2,
 
-            "domainLossMultiplier": 0.01,   
+            "domainLossMultiplier": 0.001,   
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [False,  True,         30,              0.0001,                 True,                  False],
+            "Adjacency": [True,  True,         30,              0.0001,                 False,                  False],
             #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [False,   2,      True,    0.1,       False],
+            "Relations": [True,   2,      True,    0.1,       False, True, False],
             #global constraints:
-            "OneHot": [True, 35],
+            "OneHot": [True, 20],
 
             "Smoothness": [False, 100],
-            "MinSizeShapes": [False, 30],
-            "MaxSizeShapes": [False, 1],
-        } 
+            "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
+            "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
+        }
     if configuration == 2: 
         configuration_dict = {
+            "seed": 999,
             "percentFullySupervised": 0.2,
 
-            "domainLossMultiplier": 0.01,   
+            "domainLossMultiplier": 0.001,   
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [False,  True,         30,              0.0001,                 True,                  False],
+            "Adjacency": [True,  True,         30,              0.0001,                 False,                  False],
             #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [False,   2,      True,    0.1,       False],
+            "Relations": [True,   2,      True,    0.1,       False, True, False],
             #global constraints:
-            "OneHot": [False, 35],
+            "OneHot": [True, 20],
 
-            "Smoothness": [True, 100],
-            "MinSizeShapes": [False, 30],
-            "MaxSizeShapes": [False, 1],
-        } 
+            "Smoothness": [False, 100],
+            "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
+            "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
+        }
     if configuration == 3: 
         configuration_dict = {
+            "seed": 0,
             "percentFullySupervised": 0.2,
 
-            "domainLossMultiplier": 0.01,   
+            "domainLossMultiplier": 0.001,   
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [False,  True,         30,              0.0001,                 True,                  False],
+            "Adjacency": [True,  True,         30,              0.0001,                 False,                  False],
             #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [False,   2,      True,    0.1,       False],
+            "Relations": [True,   2,      True,    0.1,       False, True, False],
             #global constraints:
-            "OneHot": [True, 35],
+            "OneHot": [True, 20],
 
-            "Smoothness": [True, 100],
-            "MinSizeShapes": [False, 30],
-            "MaxSizeShapes": [False, 1],
-        } 
+            "Smoothness": [False, 100],
+            "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
+            "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
+        }
     if configuration == 4: 
         configuration_dict = {
+            "seed": 100,
             "percentFullySupervised": 0.2,
 
-            "domainLossMultiplier": 0.01,   
+            "domainLossMultiplier": 0.001,   
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [True,  True,         30,              0.0001,                 True,                  False],
+            "Adjacency": [True,  True,         30,              0.0001,                 False,                  False],
             #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [True,   2,      True,    0.1,       False],
+            "Relations": [True,   2,      True,    0.1,       False, True, False],
             #global constraints:
-            "OneHot": [False, 35],
+            "OneHot": [True, 20],
 
             "Smoothness": [False, 100],
-            "MinSizeShapes": [False, 30],
-            "MaxSizeShapes": [False, 1],
-        } 
+            "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
+            "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
+        }
     if configuration == 5: 
         configuration_dict = {
+            "seed": 234,
             "percentFullySupervised": 0.2,
 
-            "domainLossMultiplier": 0.01,   
+            "domainLossMultiplier": 0.001,   
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [True,  True,         30,              0.0001,                 True,                  False],
+            "Adjacency": [True,  True,         30,              0.0001,                 False,                  False],
             #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [True,   2,      True,    0.1,       False],
+            "Relations": [True,   2,      True,    0.1,       False, True, False],
             #global constraints:
-            "OneHot": [True, 35],
+            "OneHot": [True, 20],
 
             "Smoothness": [False, 100],
-            "MinSizeShapes": [False, 30],
-            "MaxSizeShapes": [False, 1],
-        } 
-    if configuration == 6: 
-        configuration_dict = {
-            "percentFullySupervised": 0.2,
-
-            "domainLossMultiplier": 0.01,   
-            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [True,  True,         30,              0.0001,                 True,                  False],
-            #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [True,   2,      True,    0.1,       False],
-            #global constraints:
-            "OneHot": [True, 35],
-
-            "Smoothness": [True, 100],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [True, 1],
-        } 
-    if configuration == 7: 
-        configuration_dict = {
-            "percentFullySupervised": 0.2,
-
-            "domainLossMultiplier": 0.01,   
-            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [True,  True,         30,              0.0001,                 True,                  False],
-            #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [True,   2,      True,    0.1,       False],
-            #global constraints:
-            "OneHot": [True, 35],
-
-            "Smoothness": [False, 100],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [True, 1],
-        } 
-    if configuration == 8: 
-        configuration_dict = {
-            "percentFullySupervised": 0.2,
-
-            "domainLossMultiplier": 0.01,   
-            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [True,  True,         30,              0.0001,                 True,                  False],
-            #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [True,   2,      True,    0.1,       False],
-            #global constraints:
-            "OneHot": [True, 35],
-
-            "Smoothness": [False, 100],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [True, 1],
-        } 
-    
+            "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
+            "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
+        }
     
     
     
@@ -230,9 +181,11 @@ def train_model(
                 print("")
                 writeInfo += "\n"
         elif k == "domainLossMultiplier":
-            writeInfo += k + str(configuration_dict[k]) + "\n"
+            writeInfo += k +" "+ str(configuration_dict[k]) + "\n"
         elif k == "percentFullySupervised":
-            writeInfo += k + str(configuration_dict[k]) + "\n"
+            writeInfo += k + " " + str(configuration_dict[k]) + "\n"
+        elif k == "seed":
+            writeInfo += k + " " + str(configuration_dict[k]) + "\n"
         else:
             if configuration_dict[k][0] == True:
                 print("Active: ",k,"loss ",end='')
@@ -243,6 +196,13 @@ def train_model(
                 print("")
                 writeInfo += "\n"
         
+    seed = configuration_dict["seed"]
+    torch.manual_seed(seed)
+    random.seed(seed)
+    np.random.seed(seed)
+
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
 
     # 1. Create dataset
     # try:
@@ -416,13 +376,16 @@ def train_model(
                     #add domain loss: Adjacency + person above horse + horse under person + always horse + always persone + always background
                     loss = torch.zeros(1, device="cuda") 
                     #bactchID goes from 1 to 130 or -130 to 130 (in case of augmentation)
-                    if batch_id > 999:
-                        loss += domainlossCOCO(masks_pred,configuration_dict)
-                    else:
-                        if configuration == 8:
-                            loss += domainlossCOCO(masks_pred,configuration_dict)
-                        loss += 0.5*cross_entropy(masks_pred,mask,H,W,device)
+                    
+                        #print("domain loss:",loss)
+                    
+                    if abs(batch_id) > 120 and batch_id < 999:
+                        loss += cross_entropy(masks_pred,mask,H,W,device)
                         loss += diceLoss(masks_pred,mask,H,W,device)
+                    # elif batch_id >= 0:
+                    #     loss += domainlossCOCO(masks_pred,configuration_dict)
+                        
+
                     if not loss.isnan():
                         if loss > 0:
                             optimizer.zero_grad(set_to_none=True)
@@ -452,7 +415,7 @@ def train_model(
                     if global_step % division_step == 0:
                         
                         print("Test Set Eval:")
-                        test_score,test_score_shape = evaluateFullySupervisedCOCOwPrecisionRecall(model, test_loader, device, amp,True)
+                        test_score,test_score_shape = evaluateFullySupervisedCOCOwPrecisionRecall(model, test_loader, device, amp,-1000,1000)
                         test_scores.append(round(test_score.item(),3))
                         test_scores_shapes.append(round(test_score_shape.item(),3))
                         if test_score > max_test_score:
@@ -493,7 +456,7 @@ def train_model(
 
             if True: #epoch%3 == 0:
                 print("Training Set Eval:")
-                train_score,train_score_shape = evaluateFullySupervisedCOCOwPrecisionRecall(model,train_loader,device,amp,True)
+                train_score,train_score_shape = evaluateFullySupervisedCOCOwPrecisionRecall(model,train_loader,device,amp,120,130)
                 train_scores.append(round(train_score.item(),3))
                 train_scores_shapes.append(round(train_score_shape.item(),3))
                 print("")
@@ -511,6 +474,18 @@ def train_model(
 
         print("Max test score:",round(max_test_score.item(),3),"found at epoch:",max_test_score_epoch)
         print("Max test score only shapes:",round(max_test_score_shape.item(),3),"found at epoch:",max_test_score_shape_epoch)
+        # Calculate and print the median values for each epoch
+        generalizationRatioList = []
+        generalizationDifferenceList = []
+        for epoch in range(len(test_scores_shapes)):
+            if test_scores_shapes[epoch] != 0:
+                generalizationRatioList.append(test_scores_shapes[epoch] / train_scores_shapes[epoch])
+            generalizationDifferenceList.append(-test_scores_shapes[epoch] + train_scores_shapes[epoch])
+            # Calculate and print the average and median of the generalizationRatioList
+        avg_generalization_ratio = sum(generalizationRatioList) / len(generalizationRatioList)
+        median_generalization_ratio = sorted(generalizationRatioList)[len(generalizationRatioList) // 2]
+        avg_generatization_difference = sum(generalizationDifferenceList) / len(generalizationDifferenceList)
+        median_generatization_difference = sorted(generalizationDifferenceList)[len(generalizationDifferenceList) // 2]
 
         with open(experimentFileName, "w") as f:
             f.write(writeInfo + "\n")
@@ -523,7 +498,9 @@ def train_model(
                 f.write("Test Loss: " + str(test_losses) + "\n")
             f.write(f"Max test score: {round(max_test_score.item(),3)} found at epoch: {max_test_score_epoch}\n")
             f.write(f"Max test score shapes: {round(max_test_score_shape.item(),3)} found at epoch: {max_test_score_shape_epoch}\n")
-        
+            f.write(f"Avg generalisation ratio: {round(avg_generalization_ratio,3)}\n")
+            f.write(f"Avg generalisation diff: {round(avg_generatization_difference,3)}")
+
 
 def diceLoss(mask_pred, true_mask, H, W, device, smooth=1.0):
     """
@@ -580,15 +557,15 @@ def get_args():
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')
     parser.add_argument('--epochs', '-e', metavar='E', type=int, default=120, help='Number of epochs')
     parser.add_argument('--batch-size', '-b', dest='batch_size', metavar='B', type=int, default=1, help='Batch size')
-    parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-8,
+    parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-7,
                         help='Learning rate', dest='lr')
     parser.add_argument('--load', '-f', type=str, default=False, help='Load model from a .pth file')
     parser.add_argument('--scale', '-s', type=float, default=1, help='Downscaling factor of the images')
     parser.add_argument('--validation', '-v', dest='val', type=float, default=0,
                         help='Percent of the data that is used as validation (0-100)')
     parser.add_argument('--amp', action='store_true', default=True, help='Use mixed precision')
-    parser.add_argument('--bilinear', action='store_true', default=False, help='Use bilinear upsampling')
-    parser.add_argument('--classes', '-c', type=int, default=4, help='Number of classes')
+    parser.add_argument('--bilinear', action='store_true', default=True, help='Use bilinear upsampling')
+    parser.add_argument('--classes', '-c', type=int, default=3, help='Number of classes')
     parser.add_argument('--configuration', '-conf', dest='config', type=int, default=0, help='configuration id')
     parser.add_argument('--earlyStoppingAmount', '-earlystoppingAm', dest='earlystoppingAm', type=int, default=300, help='how many epochs without improvement to stop early')
 

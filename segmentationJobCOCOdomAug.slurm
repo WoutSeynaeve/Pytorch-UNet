@@ -19,12 +19,9 @@ echo Job is running on ${SLURM_CLUSTER_NAME} cluster
 echo The node architecture is $VSC_ARCH_LOCAL
 echo Current path is $(pwd)
 
-python trainCocoDomAug.py --configuration 0 -e 100 --bilinear
-python trainCocoDomAug.py --configuration 1 -e 100 --bilinear
-python trainCocoDomAug.py --configuration 2 -e 100 --bilinear
-python trainCocoDomAug.py --configuration 3 -e 100 --bilinear
-python trainCocoDomAug.py --configuration 4 -e 100 --bilinear
-python trainCocoDomAug.py --configuration 5 -e 100 --bilinear
-python trainCocoDomAug.py --configuration 6 -e 100 --bilinear
-python trainCocoDomAug.py --configuration 7 -e 100 --bilinear
-python trainCocoDomAug.py --configuration 8 -e 100 --bilinear
+python trainCocoDomAug.py --configuration 0 -e 100
+python trainCocoDomAug.py --configuration 1 -e 100 
+python trainCocoDomAug.py --configuration 2 -e 100 
+python trainCocoDomAug.py --configuration 3 -e 100 
+python trainCocoDomAug.py --configuration 4 -e 100 
+python trainCocoDomAug.py --configuration 5 -e 100

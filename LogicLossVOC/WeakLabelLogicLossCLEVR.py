@@ -468,6 +468,19 @@ def domainlossCOCO(output_tensor,configuration,printLosses=False):
     if relations[0]:
         lossesArray.append(ifXthenYatRelation(output_tensor, 1, 2, "under")*relations[1])
         lossesArray.append(ifXthenYatRelation(output_tensor, 2 , 1 , "above")*relations[1])
+    if relations[5]:
+        
+        lossesArray.append(ifXthenYatRelation(output_tensor, 2, 0, "left")*relations[1])
+        lossesArray.append(ifXthenYatRelation(output_tensor, 2, 0, "right")*relations[1])
+        lossesArray.append(ifXthenYatRelation(output_tensor, 1, 0, "above")*relations[1])
+        if relations[6]:
+            lossesArray.append(ifXthenYatRelation(output_tensor, 1, 2, "left")*relations[1])
+            lossesArray.append(ifXthenYatRelation(output_tensor, 1, 2, "right")*relations[1])
+        else:
+            lossesArray.append(ifXthenYatRelation(output_tensor, 1, 0, "left")*relations[1])
+            lossesArray.append(ifXthenYatRelation(output_tensor, 1, 0, "right")*relations[1])
+            lossesArray.append(ifXthenYatRelation(output_tensor, 2, 0, "under")*relations[1])
+
     
     #l4 = 10*onehot2(output_tensor)
 
@@ -485,15 +498,15 @@ def domainlossCOCO(output_tensor,configuration,printLosses=False):
     #minimum size global constraint: atleast 0.35% of the image is filled by each shape
     minSizeShapes = configuration.get("MinSizeShapes")
     if minSizeShapes[0]:
-        lossesArray.append(atleast_p_percent_is_class(output_tensor,[0],0.43)*minSizeShapes[1])
-        lossesArray.append(atleast_p_percent_is_class(output_tensor,[1],0.0035)*minSizeShapes[1])
-        lossesArray.append(atleast_p_percent_is_class(output_tensor,[2],0.015)*minSizeShapes[1])
+        lossesArray.append(atleast_p_percent_is_class(output_tensor,[0],minSizeShapes[2])*minSizeShapes[1]) #43%
+        lossesArray.append(atleast_p_percent_is_class(output_tensor,[1],minSizeShapes[3])*minSizeShapes[1]) #0.35%
+        lossesArray.append(atleast_p_percent_is_class(output_tensor,[2],minSizeShapes[4])*minSizeShapes[1]) #1.5
 
     maxSizeShapes = configuration.get("MaxSizeShapes")
     if maxSizeShapes[0]:
-        lossesArray.append(atmost_p_percent_is_class(output_tensor,[0],0.98)*maxSizeShapes[1])
-        lossesArray.append(atmost_p_percent_is_class(output_tensor,[1],0.20)*maxSizeShapes[1])
-        lossesArray.append(atmost_p_percent_is_class(output_tensor,[2],0.42)*maxSizeShapes[1])
+        lossesArray.append(atmost_p_percent_is_class(output_tensor,[0],maxSizeShapes[2])*maxSizeShapes[1])#98%
+        lossesArray.append(atmost_p_percent_is_class(output_tensor,[1],maxSizeShapes[3])*maxSizeShapes[1])#20%
+        lossesArray.append(atmost_p_percent_is_class(output_tensor,[2],maxSizeShapes[4])*maxSizeShapes[1])#42%
 
     if printLosses:
         for i in lossesArray:

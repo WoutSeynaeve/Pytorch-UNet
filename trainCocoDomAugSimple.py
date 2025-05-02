@@ -13,19 +13,19 @@ from torch import optim
 import itertools
 from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
-from LogicLossVOC.WeakLabelLogicLossCLEVR import calculateLogicLoss
-from evaluate import evaluate, evaluateWeaklySupervised, evaluateWeaklySupervisedCLEVR, evaluateFullySupervisedCLEVR,evaluateFullySupervisedCLEVRwPrecisionRecall
-from unet import UNet
-from utils.data_loading import WeakLabelDataset,BasicDataset,WeakLabelDatasetCLEVR,BasicDatasetCLEVR,CombinedDatasetCLEVR
+from LogicLossVOC.WeakLabelLogicLossCLEVR import calculateLogicLoss, domainlossCOCO
+from evaluate import evaluate, evaluateWeaklySupervised, evaluateWeaklySupervisedCLEVR, evaluateFullySupervisedCLEVR,evaluateFullySupervisedCOCOwPrecisionRecall
+from unet.unet_model import UNet
+from utils.data_loading import WeakLabelDataset,BasicDataset,BasicDatasetCOCOdomExtended,WeakLabelDatasetCLEVR,BasicDatasetCLEVR,CombinedDatasetCLEVR
 import numpy as np 
 
-# seed = 42
-# torch.manual_seed(seed)
-# random.seed(seed)
-# np.random.seed(seed)
+seed = 42
+torch.manual_seed(seed)
+random.seed(seed)
+np.random.seed(seed)
 
-# torch.cuda.manual_seed(seed)
-# torch.cuda.manual_seed_all(seed)
+torch.cuda.manual_seed(seed)
+torch.cuda.manual_seed_all(seed)
 
 debug = False
 printLosses = False
@@ -41,12 +41,11 @@ else:
     # dir_img = Path('../../datasetCLEVR/imagesWeakDataset/')
     # dir_weaklabel = Path('../../datasetCLEVR/annotationsTrain/')
     # dir_checkpoint = Path('./checkpoints/')
-    dir_img = Path('../../datasetCLEVRaug/ImagesTraining/')
-    dir_weaklabel = Path('../../datasetCLEVRaug/WeakLabelsTraining/')
-    dir_weaklabel_test = Path('../../datasetCLEVRaug/WeakLabelsTest/')
-    dir_mask = Path('../../datasetCLEVRaug/MasksTraining')
-    dir_img_test = Path('../../datasetCLEVRaug/ImagesValidation/')
-    dir_mask_test = Path('../../datasetCLEVRaug/MasksValidation')
+    dir_img = Path('../../datasetCOCO/DomainAugImages/')
+    dir_mask = Path('../../datasetCOCO/DomainAugMasks')
+    dir_img_test = Path('../../datasetCOCO/AugmentedImagesTest/')
+    dir_mask_test = Path('../../datasetCOCO/AugmentedMasksTest')
+    
     dir_checkpoint = Path('./checkpoints/')
 
 
@@ -69,263 +68,110 @@ def train_model(
 ):
     configuration_dict = {}
     
-
     if configuration == 0: 
-        
         configuration_dict = {
-            "seed": 42,
-            "FullySupervisedPercentage": 0,
+            "percentFullySupervised": 0.2,
 
-            "logicLossMultiplier": 0.01,
-            #                   useTruePercentages,  useAtleast
-            "ImageLevel": [False,       True     ,       False   , 2], #note background percentage is ignored
-
-            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
-            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 1],      "linear"], 
-            "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [False, 1],
-
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10,                               False], 
-            "Point": [True, 10],
+            "domainLossMultiplier": 0.001,   
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
             "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
             #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [False,   2,      True,    0.1,       True],
-            "SoftRelations": [False, 1],
-            #global constraints:
-            "OneHot": [False, 10],
-            "MinSizeBackground": [False, 1],
-            "MaxSizeBackground": [False, 20],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [False, 1],
-            "Smoothness": [False, 100],
-        } 
-    if configuration == 1: 
-        
-        configuration_dict = {
-            "seed": 42,
-            "FullySupervisedPercentage": 0,
-
-            "logicLossMultiplier": 0.01,
-            #                   useTruePercentages,  useAtleast
-            "ImageLevel": [False,       True     ,       False   , 2], #note background percentage is ignored
-
-            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
-            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 1],      "linear"], 
-            "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [False, 1],
-
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10,                               False], 
-            "Point": [True, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
-            #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [False,   2,      True,    0.1,       True],
-            "SoftRelations": [False, 1],
-            #global constraints:
-            "OneHot": [False, 10],
-            "MinSizeBackground": [True, 1],
-            "MaxSizeBackground": [True, 20],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [True, 1],
-            "Smoothness": [False, 100],
-        }
-    if configuration == 2: 
-        
-        configuration_dict = {
-            "seed": 42,
-            "FullySupervisedPercentage": 0,
-
-            "logicLossMultiplier": 0.01,
-            #                   useTruePercentages,  useAtleast
-            "ImageLevel": [False,       True     ,       False   , 2], #note background percentage is ignored
-
-            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
-            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 1],      "linear"], 
-            "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [False, 1],
-
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10,                               False], 
-            "Point": [True, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
-            #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [False,   2,      True,    0.1,       True],
-            "SoftRelations": [False, 1],
-            #global constraints:
-            "OneHot": [True, 20],
-            "MinSizeBackground": [True, 1],
-            "MaxSizeBackground": [True, 20],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [True, 1],
-            "Smoothness": [False, 100],
-        }
-    if configuration == 3: 
-        
-        configuration_dict = {
-            "seed": 42,
-            "FullySupervisedPercentage": 0,
-
-            "logicLossMultiplier": 0.01,
-            #                   useTruePercentages,  useAtleast
-            "ImageLevel": [True,       True     ,       False   , 2], #note background percentage is ignored
-
-            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
-            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 1],      "linear"], 
-            "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [False, 1],
-
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10,                               False], 
-            "Point": [True, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
-            #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [False,   2,      True,    0.1,       True],
-            "SoftRelations": [False, 1],
-            #global constraints:
-            "OneHot": [True, 20],
-            "MinSizeBackground": [True, 1],
-            "MaxSizeBackground": [True, 20],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [True, 1],
-            "Smoothness": [False, 100],
-        }
-    if configuration == 4: 
-        
-        configuration_dict = {
-            "seed": 42,
-            "FullySupervisedPercentage": 0,
-
-            "logicLossMultiplier": 0.01,
-            #                   useTruePercentages,  useAtleast
-            "ImageLevel": [False,       True     ,       False   , 2], #note background percentage is ignored
-
-            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
-            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 1],      "linear"], 
-            "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [False, 1],
-
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10,                               False], 
-            "Point": [False, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
-            #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [True,   2,      True,    0.1,       True],
-            "SoftRelations": [False, 1],
-            #global constraints:
-            "OneHot": [True, 20],
-            "MinSizeBackground": [True, 1],
-            "MaxSizeBackground": [True, 20],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [True, 1],
-            "Smoothness": [False, 100],
-        }
-    if configuration == 5: 
-        
-        configuration_dict = {
-            "seed": 42,
-            "FullySupervisedPercentage": 0,
-
-            "logicLossMultiplier": 0.01,
-            #                   useTruePercentages,  useAtleast
-            "ImageLevel": [True,       True     ,       True   , 2], #note background percentage is ignored
-
-            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
-            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 1],      "linear"], 
-            "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [False, 1],
-
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10,                               False], 
-            "Point": [False, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
-            #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [True,   2,      True,    0.1,       True],
-            "SoftRelations": [False, 1],
-            #global constraints:
-            "OneHot": [True, 20],
-            "MinSizeBackground": [True, 1],
-            "MaxSizeBackground": [True, 20],
-            "MinSizeShapes": [False, 30],
-            "MaxSizeShapes": [True, 1],
-            "Smoothness": [False, 100],
-        }
-    if configuration == 6: 
-        
-        configuration_dict = {
-            "seed": 42,
-            "FullySupervisedPercentage": 0,
-
-            "logicLossMultiplier": 0.01,
-            #                   useTruePercentages,  useAtleast
-            "ImageLevel": [False,       True     ,       True   , 2], #note background percentage is ignored
-
-            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
-            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 1],      "linear"], 
-            "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [False, 1],
-
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10,                               False], 
-            "Point": [False, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
-            #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [True,   2,      True,    0.1,       True],
-            "SoftRelations": [False, 1],
+            "Relations": [False,   2,      True,    0.1,       False, True, False],
             #global constraints:
             "OneHot": [False, 20],
-            "MinSizeBackground": [False, 1],
-            "MaxSizeBackground": [False, 20],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [False, 1],
+
             "Smoothness": [False, 100],
+            "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
+            "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
         }
-    if configuration == 7: 
+    if configuration == 1: 
         configuration_dict = {
-            "seed": 42,
-            "FullySupervisedPercentage": 0,
+            "percentFullySupervised": 0.2,
 
-            "logicLossMultiplier": 0.01,
-            #                   useTruePercentages,  useAtleast
-            "ImageLevel": [True,       True     ,       False   , 2], #note background percentage is ignored
-
-            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob
-            "BBox": [[False,      False       , 1],   [False, 0.2],  [False, 1],      "linear"], 
-            "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [False, 1],
-
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10,                               False], 
-            "Point": [False, 10],
+            "domainLossMultiplier": 0.001,   
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
             "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
             #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [True,   2,      True,    0.1,       True],
-            "SoftRelations": [False, 1],
+            "Relations": [False,   2,      True,    0.1,       False, True, False],
             #global constraints:
             "OneHot": [True, 20],
-            "MinSizeBackground": [True, 1],
-            "MaxSizeBackground": [True, 20],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [True, 1],
+
             "Smoothness": [False, 100],
+            "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
+            "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
         }
-    seed = configuration_dict["seed"]
-    torch.manual_seed(seed)
-    random.seed(seed)
-    np.random.seed(seed)
+    if configuration == 2: 
+        configuration_dict = {
+            "percentFullySupervised": 0.2,
 
-    torch.cuda.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
+            "domainLossMultiplier": 0.001,   
+            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
+            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
+            #                 norm-mult   impl   impl-mult   symmetric 
+            "Relations": [False,   2,      True,    0.1,       False, True, False],
+            #global constraints:
+            "OneHot": [True, 20],
 
-    experimentFileName = f"./experimentResultsCLEVRCombined/experiment_{configuration}.txt"
+            "Smoothness": [True, 100],
+            "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
+            "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
+        }
+    if configuration == 3: 
+        configuration_dict = {
+            "percentFullySupervised": 0.2,
+
+            "domainLossMultiplier": 0.001,   
+            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
+            "Adjacency": [True,  True,         30,              0.0001,                 False,                  False],
+            #                 norm-mult   impl   impl-mult   symmetric 
+            "Relations": [True,   2,      True,    0.1,       False, True, False],
+            #global constraints:
+            "OneHot": [True, 20],
+
+            "Smoothness": [True, 100],
+            "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
+            "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
+        }
+   
+    if configuration == 4: 
+        configuration_dict = {
+            "percentFullySupervised": 0.2,
+
+            "domainLossMultiplier": 0.001,   
+            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
+            "Adjacency": [True,  True,         30,              0.0001,                 True,                  False],
+            #                 norm-mult   impl   impl-mult   symmetric 
+            "Relations": [True,   2,      True,    0.1,       False, True, False],
+            #global constraints:
+            "OneHot": [True, 20],
+
+            "Smoothness": [False, 100],
+            "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
+            "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
+        }
+    if configuration == 5: 
+        configuration_dict = {
+            "percentFullySupervised": 0.2,
+
+            "domainLossMultiplier": 0.001,   
+            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
+            "Adjacency": [False,  True,         30,              0.0001,                 True,                  False],
+            #                 norm-mult   impl   impl-mult   symmetric 
+            "Relations": [False,   2,      True,    0.1,       False, True, False],
+            #global constraints:
+            "OneHot": [False, 35],
+
+            "Smoothness": [False, 100],
+            "MinSizeShapes": [False, 1,0.6,0.0035,0.015],
+            "MaxSizeShapes": [False, 1,0.98,0.20,0.42],
+        }
+  
+    
+    
+    
+    
+    
+    experimentFileName = f"./experimentResultsCOCO/experiment_{configuration}.txt"
     writeInfo = ""
     for k in configuration_dict.keys():
         if k == 'BBox':
@@ -337,14 +183,10 @@ def train_model(
                     writeInfo += str(info) + " "
                 print("")
                 writeInfo += "\n"
-        elif k == "seed":
-            writeInfo += k + " " + str(configuration_dict[k]) + "\n"
-
-        elif k == "logicLossMultiplier":
-            writeInfo += "logic loss multiplier: " + str(configuration_dict[k]) + "\n"
-        elif k == "FullySupervisedPercentage":
-            writeInfo += "FullySupervisedPercentage: " + str(configuration_dict[k]) + "\n"
-
+        elif k == "domainLossMultiplier":
+            writeInfo += k + str(configuration_dict[k]) + "\n"
+        elif k == "percentFullySupervised":
+            writeInfo += k + str(configuration_dict[k]) + "\n"
         else:
             if configuration_dict[k][0] == True:
                 print("Active: ",k,"loss ",end='')
@@ -360,15 +202,15 @@ def train_model(
     # try:
     #     dataset = CarvanaDataset(dir_img, dir_mask, img_scale)
     # except (AssertionError, RuntimeError, IndexError):
-    dataset = CombinedDatasetCLEVR(dir_img, dir_weaklabel,dir_mask,img_scale)
+    dataset = BasicDatasetCOCOdomExtended(dir_img, dir_mask, img_scale)
     if not debug:
         dataset_test = BasicDatasetCLEVR(dir_img_test, dir_mask_test, img_scale)
         n_test = len(dataset_test)
-    dataset_test_trainset = BasicDatasetCLEVR(dir_img, dir_mask, img_scale)
 
     # 2. Split into train / validation partitions
     n_val = int(len(dataset) * val_percent)
     n_train = len(dataset) - n_val
+    print(n_train,n_test)
     #train_set, val_set = random_split(dataset, [n_train, n_val], generator=torch.Generator().manual_seed(0))
     train_set = torch.utils.data.Subset(dataset, range(n_train))
     val_set = torch.utils.data.Subset(dataset, range(n_train, len(dataset)))
@@ -384,7 +226,6 @@ def train_model(
     val_loader = DataLoader(val_set, shuffle=False, drop_last=True, **loader_args)
     if not debug:
         test_loader = DataLoader(dataset_test,shuffle=True,**loader_args)
-    test_trainset_loader = DataLoader(dataset_test_trainset,shuffle=True,**loader_args)
     # # (Initialize logging)
     # experiment = wandb.init(project='U-Net', resume='allow', anonymous='must')
     # experiment.config.update(
@@ -420,8 +261,7 @@ def train_model(
         epochs = 1
         signal = 0
             # 5. Begin training
-        for epoch in range(1, epochs + 1):
-            
+        for epoch in range(1, epochs + 1):       
             model.train()
             epoch_loss = 0
             with tqdm(total=n_train, desc=f'Epoch {epoch}/{epochs}', unit='img') as pbar:
@@ -497,16 +337,13 @@ def train_model(
         train_losses = []
         test_losses = []
         epochssinceimprovement = 0
-        logiclossMult = configuration_dict['logicLossMultiplier']
-        FullySuperVpercentage = configuration_dict['FullySupervisedPercentage']
-        FullySuperVisedUntil = round(239*FullySuperVpercentage)
-        print(FullySuperVisedUntil)
+        domainlossMult = configuration_dict['domainLossMultiplier']
         # 5. Begin training
         for epoch in range(1, epochs + 1):
             model.train()
-            # if epoch == 170:
-            #     optimizer = optim.RMSprop(model.parameters(),lr=1e-9, weight_decay=weight_decay, momentum=momentum, foreach=True)
-            # epochssinceimprovement += 1
+            if epoch == 170:
+                optimizer = optim.RMSprop(model.parameters(),lr=1e-9, weight_decay=weight_decay, momentum=momentum, foreach=True)
+            epochssinceimprovement += 1
             if epochssinceimprovement > earlyStoppingAmount:
                 break
             epoch_loss = 0
@@ -518,7 +355,8 @@ def train_model(
                 test_iter_loader = iter(test_weaklabel_loader)
             for batch in train_loader:
                 batch_n += 1
-                images, mask, weaklabel, batch_id = batch['image'], batch["mask"], batch['weaklabel'], batch["id"]
+                images, mask, batch_id = batch['image'], batch["mask"], batch["id"]
+                batch_id = batch_id[0]
                 assert images.shape[1] == model.n_channels, \
                     f'Network has been defined with {model.n_channels} input channels, ' \
                     f'but loaded images have {images.shape[1]} channels. Please check that ' \
@@ -527,24 +365,22 @@ def train_model(
                 images = images.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
                 with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
                     masks_pred = model(images)
-                    #after a while, mask_pred becomes all NAN !! problem!!
-                    # if epoch > 30:
-                    #     signal = 1
-                    # if epoch > 50:  #testing purposes
-                    #     signal = 2
-                    # if epoch == epochs:
-                    #     loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n,True)
-                    # else:
+                  
                     _, _, H, W = images.shape 
-                    loss = 0
-                    if abs(batch_id[0]) > FullySuperVisedUntil: #goes from 1 to 239 (batchid*-1 is the mirrored version of batchid)
-                        if logiclossMult > 0:
-                            loss += logiclossMult*calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_id)[0]
+                    #add domain loss: Adjacency + person above horse + horse under person + always horse + always persone + always background
+                    loss = torch.zeros(1, device="cuda") 
+                    #bactchID goes from 1 to 130 or -130 to 130 (in case of augmentation)
+                    
+                        #print("domain loss:",loss)
+                    if configuration == 4 or configuration == 5:
+                        if batch_id > 999:
+                            loss += domainlossCOCO(masks_pred,configuration_dict)
+                        elif abs(batch_id) > 120 and batch_id < 999:
+                            loss += 0.5*cross_entropy(masks_pred,mask,H,W,device)
+                            loss += diceLoss(masks_pred,mask,H,W,device)
                     else:
-                        #loss += logiclossMult*calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_id)[0]
-                        loss += cross_entropy(masks_pred,mask,H,W,device)
-                        loss += diceLoss(masks_pred,mask,H,W,device)
-                        
+                        loss += domainlossCOCO(masks_pred,configuration_dict)
+
                     if not loss.isnan():
                         if loss > 0:
                             optimizer.zero_grad(set_to_none=True)
@@ -564,31 +400,17 @@ def train_model(
                     pbar.set_postfix(**{'loss (batch)': loss.item()})
                 global_step += 1
                 epoch_loss += loss.detach() 
-                del images, weaklabel, masks_pred, loss  # Free memory
+                del images, masks_pred, loss  # Free memory
                 torch.cuda.empty_cache()  # Clear GPU memory
-                # experiment.log({
-                #     'train loss': loss.item(),
-                #     'step': global_step,
-                #     'epoch': epoch
-                # })
-                
 
                 # Evaluation round
                 n_of_rounds = 1
                 division_step = (n_train // (n_of_rounds * batch_size))
                 if division_step > 0:
                     if global_step % division_step == 0:
-                        # histograms = {}
-                        # for tag, value in model.named_parameters():
-                        #     tag = tag.replace('/', '.')
-                        #     if not (torch.isinf(value) | torch.isnan(value)).any():
-                        #         histograms['Weights/' + tag] = wandb.Histogram(value.data.cpu())
-                        #     if not (torch.isinf(value.grad) | torch.isnan(value.grad)).any():
-                        #         histograms['Gradients/' + tag] = wandb.Histogram(value.grad.data.cpu())
-
-                        #val_score = evaluateWeaklySupervised2(model, val_loader, device, amp)
+                        
                         print("Test Set Eval:")
-                        test_score,test_score_shape = evaluateFullySupervisedCLEVRwPrecisionRecall(model, test_loader, device, amp)
+                        test_score,test_score_shape = evaluateFullySupervisedCOCOwPrecisionRecall(model, test_loader, device, amp,True)
                         test_scores.append(round(test_score.item(),3))
                         test_scores_shapes.append(round(test_score_shape.item(),3))
                         if test_score > max_test_score:
@@ -607,29 +429,6 @@ def train_model(
                         print("")
 
                         
-                    
-
-                        #scheduler.step(test_score)
-
-                        
-                        
-
-                        # try:
-                        #     experiment.log({
-                        #         'learning rate': optimizer.param_groups[0]['lr'],
-                        #         'validation Dice': val_score,
-                        #         'images': wandb.Image(images[0].cpu()),
-                        #         'masks': {
-                        #             'true': wandb.Image(true_masks[0].float().cpu()),
-                        #             'pred': wandb.Image(masks_pred.argmax(dim=1)[0].float().cpu()),
-                        #         },
-                        #         'step': global_step,
-                        #         'epoch': epoch,
-                        #         **histograms
-                        #     })
-                        # except:
-                        #     pass
-
                 #test loss: 90 test in-mages for 478 train, so every 5 iterations, we do a test one:
                 if calc_test_loss:
                     if batch_n%5 == 0:
@@ -652,7 +451,7 @@ def train_model(
 
             if True: #epoch%3 == 0:
                 print("Training Set Eval:")
-                train_score,train_score_shape = evaluateFullySupervisedCLEVRwPrecisionRecall(model,test_trainset_loader,device,amp)
+                train_score,train_score_shape = evaluateFullySupervisedCOCOwPrecisionRecall(model,train_loader,device,amp,True)
                 train_scores.append(round(train_score.item(),3))
                 train_scores_shapes.append(round(train_score_shape.item(),3))
                 print("")
@@ -663,24 +462,13 @@ def train_model(
             if save_checkpoint:
                 Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
                 state_dict = model.state_dict()
-                state_dict['mask_values'] = dataset_test_trainset.mask_values
+                state_dict['mask_values'] = dataset.mask_values
                 torch.save(state_dict, str(dir_checkpoint / 'checkpoint_epoch{}.pth'.format(epoch)))
                 logging.info(f'Checkpoint {epoch} saved!')
                 print("/////////////////////////")
 
         print("Max test score:",round(max_test_score.item(),3),"found at epoch:",max_test_score_epoch)
         print("Max test score only shapes:",round(max_test_score_shape.item(),3),"found at epoch:",max_test_score_shape_epoch)
-        generalizationRatioList = []
-        generalizationDifferenceList = []
-        for epoch in range(len(test_scores_shapes)):
-            if test_scores_shapes[epoch] != 0:
-                generalizationRatioList.append(test_scores_shapes[epoch] / train_scores_shapes[epoch])
-            generalizationDifferenceList.append(-test_scores_shapes[epoch] + train_scores_shapes[epoch])
-            # Calculate and print the average and median of the generalizationRatioList
-        avg_generalization_ratio = sum(generalizationRatioList) / len(generalizationRatioList)
-        median_generalization_ratio = sorted(generalizationRatioList)[len(generalizationRatioList) // 2]
-        avg_generatization_difference = sum(generalizationDifferenceList) / len(generalizationDifferenceList)
-        median_generatization_difference = sorted(generalizationDifferenceList)[len(generalizationDifferenceList) // 2]
 
         with open(experimentFileName, "w") as f:
             f.write(writeInfo + "\n")
@@ -693,8 +481,7 @@ def train_model(
                 f.write("Test Loss: " + str(test_losses) + "\n")
             f.write(f"Max test score: {round(max_test_score.item(),3)} found at epoch: {max_test_score_epoch}\n")
             f.write(f"Max test score shapes: {round(max_test_score_shape.item(),3)} found at epoch: {max_test_score_shape_epoch}\n")
-            f.write(f"Avg generalisation ratio: {round(avg_generalization_ratio,3)}\n")
-            f.write(f"Avg generalisation diff: {round(avg_generatization_difference,3)}")
+        
 
 def diceLoss(mask_pred, true_mask, H, W, device, smooth=1.0):
     """
@@ -751,7 +538,7 @@ def get_args():
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')
     parser.add_argument('--epochs', '-e', metavar='E', type=int, default=120, help='Number of epochs')
     parser.add_argument('--batch-size', '-b', dest='batch_size', metavar='B', type=int, default=1, help='Batch size')
-    parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-8,
+    parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-7,
                         help='Learning rate', dest='lr')
     parser.add_argument('--load', '-f', type=str, default=False, help='Load model from a .pth file')
     parser.add_argument('--scale', '-s', type=float, default=1, help='Downscaling factor of the images')
@@ -759,7 +546,7 @@ def get_args():
                         help='Percent of the data that is used as validation (0-100)')
     parser.add_argument('--amp', action='store_true', default=True, help='Use mixed precision')
     parser.add_argument('--bilinear', action='store_true', default=True, help='Use bilinear upsampling')
-    parser.add_argument('--classes', '-c', type=int, default=4, help='Number of classes')
+    parser.add_argument('--classes', '-c', type=int, default=3, help='Number of classes')
     parser.add_argument('--configuration', '-conf', dest='config', type=int, default=0, help='configuration id')
     parser.add_argument('--earlyStoppingAmount', '-earlystoppingAm', dest='earlystoppingAm', type=int, default=300, help='how many epochs without improvement to stop early')
 

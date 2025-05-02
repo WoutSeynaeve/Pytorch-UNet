@@ -13,3 +13,5 @@ python predict.py -i ../../DebugDataset/JPEGImages/2007_001185.jpg -o output.jpg
 python predictCLEVR.py -i ../../datasetCLEVRaug/ImagesTraining/CLEVR_train_069688n.png -o output.jpg --classes 4 --scale 1 -m './checkpoints/checkpoint_epoch44.pth'
 python predictCLEVR.py -i ../../DebugDatasetCLEVR/imagesWeakDataset/CLEVR_train_002236m.png -o output.jpg --classes 4 --scale 1 -m './DebugCheckpoints/checkpoint_epoch1.pth'
 python predictCLEVR.py -i ../../DebugDatasetCLEVR2/imagesWeakDataset/CLEVR_train_007881n.png -o output.jpg --classes 4 --scale 1 -m './DebugCheckpoints/checkpoint_epoch1.pth'
+
+python predictCLEVR.py -i ../../datasetCOCO/AugmentedImages/VulNogAan -o output.jpg --classes 3 --scale 1 -m './checkpoints/checkpoint_epoch120.pth'

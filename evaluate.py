@@ -315,7 +315,7 @@ def evaluateFullySupervisedCLEVRwPrecisionRecall(net, dataloader, device, amp):
         net.train()
         return iou_per_class.mean(),iou_per_class[1:].mean()
 @torch.inference_mode()
-def evaluateFullySupervisedCOCOwPrecisionRecall(net, dataloader, device, amp,domainAugmented):
+def evaluateFullySupervisedCOCOwPrecisionRecall(net, dataloader, device, amp,idmin,idmax):
     net.eval()  # Set the model to evaluation mode
     num_classes = 3 # CLEVR has 4 classes
 
@@ -331,7 +331,7 @@ def evaluateFullySupervisedCOCOwPrecisionRecall(net, dataloader, device, amp,dom
         for batch in dataloader:
             valsize += 1
             image, true_mask, batch_id = batch['image'], batch["mask"], batch["id"]
-            if batch_id[0] < 999:
+            if batch_id[0] <= idmax and batch_id[0] >= idmin:
                 image = image.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
                 true_mask = true_mask.to(device=device)
 
