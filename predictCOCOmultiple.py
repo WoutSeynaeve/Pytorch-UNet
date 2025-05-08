@@ -11,18 +11,18 @@ from unet import UNet
 from utils.utils import plot_img_and_mask
 
 # Define paths
-input_dir = "../../datasetCOCO/Images"
+input_dir = "../../datasetCOCO/ImagesTest"
 output_dir = "outputPredictionsCOCO"
 os.makedirs(output_dir, exist_ok=True)
 
 # Load the first 10 images from the directory
-image_filenames = sorted(os.listdir(input_dir))[:20]
+image_filenames = sorted(os.listdir(input_dir))[:100]
 in_files = [os.path.join(input_dir, f) for f in image_filenames]
 out_files = [os.path.join(output_dir, f"{os.path.splitext(f)[0]}_OUT.png") for f in image_filenames]
 
 # Load model
 #model_path = "./DebugCheckpoints/checkpoint_epoch1.pth"
-model_path = "./checkpoints/checkpoint_epoch120.pth"
+model_path = "./checkpoints/checkpoint_epoch25.pth"
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 net = UNet(n_channels=3, n_classes=3, bilinear=True)
 net.to(device=device)

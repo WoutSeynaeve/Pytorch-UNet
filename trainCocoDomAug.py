@@ -39,9 +39,7 @@ else:
     dir_mask = Path('../../datasetCOCO/DomainAugMasks')
     dir_img_test = Path('../../datasetCOCO/AugmentedImagesTest/')
     dir_mask_test = Path('../../datasetCOCO/AugmentedMasksTest')
-    
     dir_checkpoint = Path('./checkpoints/')
-
 
 
 def train_model(
@@ -70,15 +68,15 @@ def train_model(
 
             "domainLossMultiplier": 0.001,   
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [True,  True,         30,              0.0001,                 False,                  False],
+            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
             #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [True,   2,      True,    0.1,       False, True, False],
+            "Relations": [False,   2,      True,    0.1,       False, True, False],
             #global constraints:
-            "OneHot": [True, 20],
+            "OneHot": [False, 20],
 
             "Smoothness": [False, 100],
-            "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
-            "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
+            "MinSizeShapes": [False, 1,0.5,0.0035,0.015],
+            "MaxSizeShapes": [False, 1,0.98,0.20,0.42],
         }
     if configuration == 1: 
         configuration_dict = {
@@ -91,7 +89,7 @@ def train_model(
             #                 norm-mult   impl   impl-mult   symmetric 
             "Relations": [True,   2,      True,    0.1,       False, True, False],
             #global constraints:
-            "OneHot": [True, 20],
+            "OneHot": [False, 20],
 
             "Smoothness": [False, 100],
             "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
@@ -108,7 +106,7 @@ def train_model(
             #                 norm-mult   impl   impl-mult   symmetric 
             "Relations": [True,   2,      True,    0.1,       False, True, False],
             #global constraints:
-            "OneHot": [True, 20],
+            "OneHot": [False, 20],
 
             "Smoothness": [False, 100],
             "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
@@ -125,7 +123,7 @@ def train_model(
             #                 norm-mult   impl   impl-mult   symmetric 
             "Relations": [True,   2,      True,    0.1,       False, True, False],
             #global constraints:
-            "OneHot": [True, 20],
+            "OneHot": [False, 20],
 
             "Smoothness": [False, 100],
             "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
@@ -142,7 +140,7 @@ def train_model(
             #                 norm-mult   impl   impl-mult   symmetric 
             "Relations": [True,   2,      True,    0.1,       False, True, False],
             #global constraints:
-            "OneHot": [True, 20],
+            "OneHot": [False, 20],
 
             "Smoothness": [False, 100],
             "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
@@ -159,7 +157,7 @@ def train_model(
             #                 norm-mult   impl   impl-mult   symmetric 
             "Relations": [True,   2,      True,    0.1,       False, True, False],
             #global constraints:
-            "OneHot": [True, 20],
+            "OneHot": [False, 20],
 
             "Smoothness": [False, 100],
             "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
@@ -382,8 +380,8 @@ def train_model(
                     if abs(batch_id) > 120 and batch_id < 999:
                         loss += cross_entropy(masks_pred,mask,H,W,device)
                         loss += diceLoss(masks_pred,mask,H,W,device)
-                    # elif batch_id >= 0:
-                    #     loss += domainlossCOCO(masks_pred,configuration_dict)
+                    elif batch_id >= 0:
+                        loss += domainlossCOCO(masks_pred,configuration_dict)
                         
 
                     if not loss.isnan():
@@ -478,7 +476,7 @@ def train_model(
         generalizationRatioList = []
         generalizationDifferenceList = []
         for epoch in range(len(test_scores_shapes)):
-            if test_scores_shapes[epoch] != 0:
+            if test_scores_shapes[epoch] != 0 and train_scores_shapes[epoch] != 0:
                 generalizationRatioList.append(test_scores_shapes[epoch] / train_scores_shapes[epoch])
             generalizationDifferenceList.append(-test_scores_shapes[epoch] + train_scores_shapes[epoch])
             # Calculate and print the average and median of the generalizationRatioList

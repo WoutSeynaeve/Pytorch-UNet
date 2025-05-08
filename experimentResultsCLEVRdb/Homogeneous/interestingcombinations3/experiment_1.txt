@@ -1,0 +1,14 @@
+Active:  ImageLevel loss True  True  False  2  
+Active:  Area loss True  False  1  10  False  
+Active:  Relations loss True  2  True  0.1  True  
+Active:  OneHot loss True  20  
+Active:  MinSizeBackground loss True  1  
+Active:  MaxSizeBackground loss True  20  
+Active:  MinSizeShapes loss True  30  
+Active:  MaxSizeShapes loss True  1  
+
+Code crashed !
+
+
+Max test score: 0.829 found at epoch: 128
+Max test score only shapes: 0.774 found at epoch: 128
