@@ -22,7 +22,7 @@ out_files = [os.path.join(output_dir, f"{os.path.splitext(f)[0]}_OUT.png") for f
 
 # Load model
 #model_path = "./DebugCheckpoints/checkpoint_epoch1.pth"
-model_path = "./checkpoints/checkpoint_epoch25.pth"
+model_path = "./checkpoints/checkpoint_epoch79.pth"
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 net = UNet(n_channels=3, n_classes=3, bilinear=True)
 net.to(device=device)

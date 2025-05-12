@@ -13,6 +13,7 @@ from torch.utils.data import Dataset
 from tqdm import tqdm
 from LogicLossVOC.WeakLabelLogicLoss import read_dataset,parse_data
 from LogicLossVOC.WeakLabelLogicLossCLEVR import parse_dataCLEVR
+from LogicLossVOC.WeakLabelLogicLossCOCO import parse_dataCOCO
 def load_image(filename):
     ext = splitext(filename)[1]
     if ext == '.npy':
@@ -261,7 +262,7 @@ class WeakLabelDatasetCLEVR(Dataset):
 
             return img
     @staticmethod
-    def processWeaklabel(weaklabel_file):
+    def processWeaklabel(weaklabel_file,Dataset):
         extracted_data = read_dataset(weaklabel_file[0])
         parsed_data = parse_dataCLEVR(extracted_data)
         return [parsed_data]
@@ -471,8 +472,9 @@ class BasicDatasetCOCOdomExtended(Dataset):
 
 
 class CombinedDatasetCLEVR(Dataset):
-    def __init__(self, images_dir: str, weaklabel_dir: str, mask_dir: str, scale: float = 1.0, mask_suffix: str = ''):
+    def __init__(self, images_dir: str, weaklabel_dir: str, mask_dir: str, scale: float = 1.0, datasetcocoOrClevr = "CLEVR", mask_suffix: str = ''):
         self.images_dir = Path(images_dir)
+        self.datasetCocoOrClevr = datasetcocoOrClevr
         self.weaklabel_dir = Path(weaklabel_dir)
         self.mask_dir = Path(mask_dir)
         assert 0 < scale <= 1, 'Scale must be between 0 and 1'
@@ -493,11 +495,11 @@ class CombinedDatasetCLEVR(Dataset):
         self.heterogeneousIds = {}
         heteroId = 1
         for file in listdir(images_dir):
-            if file.endswith('n.png'):
+            if file.endswith('n.jpg') or file.endswith('n.png'):
                 self.heterogeneousIds[file[:-4]] = heteroId
                 heteroId += 1
         for file in listdir(images_dir):
-            if file.endswith('m.png'):
+            if file.endswith('m.jpg') or file.endswith('m.png'):
                 self.heterogeneousIds[file[:-4]] = self.heterogeneousIds[(file[:-5]+'n')]*(-1)
         self.mask_values = list(sorted(np.unique(np.concatenate(unique), axis=0).tolist()))
         logging.info(f'Unique mask values: {self.mask_values}')
@@ -534,9 +536,12 @@ class CombinedDatasetCLEVR(Dataset):
 
             return img
     @staticmethod
-    def processWeaklabel(weaklabel_file):
+    def processWeaklabel(weaklabel_file,datasetcooclr):
         extracted_data = read_dataset(weaklabel_file[0])
-        parsed_data = parse_dataCLEVR(extracted_data)
+        if datasetcooclr == "COCO":
+            parsed_data = parse_dataCOCO(extracted_data)
+        else:
+            parsed_data = parse_dataCLEVR(extracted_data)
         return [parsed_data]
 
     def __getitem__(self, idx):
@@ -557,7 +562,7 @@ class CombinedDatasetCLEVR(Dataset):
 
         img = self.preprocess(self.mask_values, img, self.scale, is_mask=False)
         mask = self.preprocess(self.mask_values, mask, self.scale, is_mask=True)
-        weaklabel = self.processWeaklabel(weaklabel_file)
+        weaklabel = self.processWeaklabel(weaklabel_file,self.datasetCocoOrClevr)
         return {
             'image': torch.as_tensor(img.copy()).float().contiguous(),
             'mask': torch.as_tensor(mask.copy()).long().contiguous(),

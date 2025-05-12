@@ -68,16 +68,17 @@ def train_model(
 
             "domainLossMultiplier": 0.001,   
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
+            "Adjacency": [True,  True,         30,              0.0001,                 False,                  False],
             #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [False,   2,      True,    0.1,       False, True, False],
+            "Relations": [True,   2,      True,    0.1,       False, True, False],
             #global constraints:
-            "OneHot": [False, 20],
+            "OneHot": [True, 20],
 
-            "Smoothness": [False, 100],
-            "MinSizeShapes": [False, 1,0.5,0.0035,0.015],
-            "MaxSizeShapes": [False, 1,0.98,0.20,0.42],
+            "Smoothness": [True, 100],
+            "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
+            "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
         }
+    
     if configuration == 1: 
         configuration_dict = {
             "seed": 123,
@@ -89,9 +90,9 @@ def train_model(
             #                 norm-mult   impl   impl-mult   symmetric 
             "Relations": [True,   2,      True,    0.1,       False, True, False],
             #global constraints:
-            "OneHot": [False, 20],
+            "OneHot": [True, 20],
 
-            "Smoothness": [False, 100],
+            "Smoothness": [True, 100],
             "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
             "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
         }
@@ -106,9 +107,9 @@ def train_model(
             #                 norm-mult   impl   impl-mult   symmetric 
             "Relations": [True,   2,      True,    0.1,       False, True, False],
             #global constraints:
-            "OneHot": [False, 20],
+            "OneHot": [True, 20],
 
-            "Smoothness": [False, 100],
+            "Smoothness": [True, 100],
             "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
             "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
         }
@@ -123,9 +124,9 @@ def train_model(
             #                 norm-mult   impl   impl-mult   symmetric 
             "Relations": [True,   2,      True,    0.1,       False, True, False],
             #global constraints:
-            "OneHot": [False, 20],
+            "OneHot": [True, 20],
 
-            "Smoothness": [False, 100],
+            "Smoothness": [True, 100],
             "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
             "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
         }
@@ -140,9 +141,9 @@ def train_model(
             #                 norm-mult   impl   impl-mult   symmetric 
             "Relations": [True,   2,      True,    0.1,       False, True, False],
             #global constraints:
-            "OneHot": [False, 20],
+            "OneHot": [True, 20],
 
-            "Smoothness": [False, 100],
+            "Smoothness": [True, 100],
             "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
             "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
         }
@@ -157,9 +158,9 @@ def train_model(
             #                 norm-mult   impl   impl-mult   symmetric 
             "Relations": [True,   2,      True,    0.1,       False, True, False],
             #global constraints:
-            "OneHot": [False, 20],
+            "OneHot": [True, 20],
 
-            "Smoothness": [False, 100],
+            "Smoothness": [True, 100],
             "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
             "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
         }

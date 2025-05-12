@@ -2,6 +2,65 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 
+def dyn_progr(normalized_tensor, I, percentage, mode='exact'):
+    _, H, W = normalized_tensor.shape
+    class_probs = normalized_tensor[I, :, :]
+    scalingFactor = 8
+    if scalingFactor > 1:
+        start = np.random.randint(0, scalingFactor)  # Randomly choose 0, 1, or 2
+        class_probs = class_probs[start::scalingFactor, start::scalingFactor]  # Apply offset
+    total_pixels = H * W
+    target_pixels = int(percentage * total_pixels)
+
+    # Initialize DP table
+    dp = torch.zeros((total_pixels + 1,), device=normalized_tensor.device)
+    dp[0] = 1
+
+    # Flatten the probabilities
+    flat_probs = class_probs.flatten()
+
+    # Dynamic programming update
+    for prob in flat_probs:
+        dp_new = dp.clone()
+        dp_new[1:] = dp[1:] * (1 - prob) + dp[:-1] * prob
+        dp = dp_new
+
+    if mode == 'exact':
+        return dp[target_pixels]
+    elif mode == 'atleast':
+        return dp[target_pixels:].sum()
+    elif mode == 'atmost':
+        return dp[:target_pixels + 1].sum()
+    else:
+        raise ValueError("mode must be 'exact', 'atleast', or 'atmost'")
+    
+
+
+def newBounding_box(normalized_tensor, x1, x2, y1, y2, I):
+    # Extract the probabilities of the bounding box and of class I
+    class_probs = normalized_tensor[I, :, :]
+    bbox_class_probs = class_probs[y1:y2, x1:x2]
+    # Clamp probabilities to avoid numerical issues
+    bbox_class_probs = torch.clamp(bbox_class_probs, min=1e-6, max=1-1e-6)
+    # For each column, calculate the probability of there being no class I in that column
+    no_class_I_in_columns = torch.log1p(-bbox_class_probs).sum(dim=0)
+
+    # For each row, calculate the probability of there being no class I in that row
+    no_class_I_in_rows = torch.log1p(-bbox_class_probs).sum(dim=1)
+
+    # Probability that there is at least one class I in each column
+    at_least_one_class_I_in_columns = 1 - torch.exp(no_class_I_in_columns)
+
+    # Probability that there is at least one class I in each row
+    at_least_one_class_I_in_rows = 1 - torch.exp(no_class_I_in_rows)
+
+    # logProbability that for all of the columns there is at least one class I
+    prob_all_columns_have_class_I = torch.sum(torch.log(at_least_one_class_I_in_columns))
+    # logProbability that for all of the rows there is at least one class I
+    prob_all_rows_have_class_I = torch.sum(torch.log(at_least_one_class_I_in_rows))
+    return -(prob_all_columns_have_class_I+prob_all_rows_have_class_I)
+
+
 def image_level_label(normalized_tensor, I, NOT = None):
 
     class_I_probs = normalized_tensor[I]  #Select probabilities for class I

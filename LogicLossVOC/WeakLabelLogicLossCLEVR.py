@@ -1,5 +1,5 @@
 import os
-from LogicLossVOC.LogicConstraints import atleast_p_percent_is_class_in_bounding_box,onehot,bounding_box_loss,onehot2,adjacency_loss,atmost_p_percent_is_class,atleast_p_percent_is_class, ifXthenXadjecent,atmost_p_percent_is_class_in_bounding_box, ifXthenYatRelation, scribble_loss, image_level_label, about_p_percent_is_class, about_p_percent_is_class_in_bounding_box
+from LogicLossVOC.LogicConstraints import dyn_progr,newBounding_box,atleast_p_percent_is_class_in_bounding_box,onehot,bounding_box_loss,onehot2,adjacency_loss,atmost_p_percent_is_class,atleast_p_percent_is_class, ifXthenXadjecent,atmost_p_percent_is_class_in_bounding_box, ifXthenYatRelation, scribble_loss, image_level_label, about_p_percent_is_class, about_p_percent_is_class_in_bounding_box
 import torch.nn.functional as F
 import torch
 import random
@@ -59,7 +59,6 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
     C,H,W = output_tensor.shape
     image_level_label, bounding_box, point, relation, soft_relation, scribble, area, full_bounding_box, adjacency = weaklabels[0]
     
-    
     loss = torch.zeros(1, device="cuda") 
 
     #Image-level
@@ -87,11 +86,22 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
         for bbox in bounding_box:
             shape,x1,x2,y1,y2,percentage = bbox
             shape,x1,x2,y1,y2,percentage = shape[0],x1[0],x2[0],y1[0],y2[0],percentage[0]
-            if bboxes[0][1]:
-                addloss = about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],float(percentage[:-1])/100,int(x1),int(x2),int(y1),int(y2))
+            if True:
+                addloss = 0
+                if bboxes[4]:
+                    addloss += newBounding_box(output_tensor,int(x1),int(x2),int(y1),int(y2),class_values[shape])
+                if not bboxes[5]:
+                    if bboxes[0][1]:
+                        addloss += about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],float(percentage[:-1])/100,int(x1),int(x2),int(y1),int(y2))
+                    else:
+                        #if you are not using exact percentages, assume that atleast 70 percent is filled (atmost implied constraint uses 0.3)
+                        addloss += atleast_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],0.7,int(x1),int(x2),int(y1),int(y2))
             else:
-                #if you are not using exact percentages, assume that atleast 70 percent is filled (atmost implied constraint uses 0.3)
-                addloss = atleast_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],0.7,int(x1),int(x2),int(y1),int(y2))
+                if bboxes[0][1]:
+                    addloss = about_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],float(percentage[:-1])/100,int(x1),int(x2),int(y1),int(y2))
+                else:
+                    #if you are not using exact percentages, assume that atleast 70 percent is filled (atmost implied constraint uses 0.3)
+                    addloss = atleast_p_percent_is_class_in_bounding_box(output_tensor,[class_values[shape]],0.7,int(x1),int(x2),int(y1),int(y2))
             if printLosses:
                 print("loss for",shape," bounding box to be filled",percentage,"= ",addloss*bboxes[0][2])
             loss += addloss*bboxes[0][2]
