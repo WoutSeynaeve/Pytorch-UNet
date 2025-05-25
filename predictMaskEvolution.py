@@ -19,7 +19,10 @@ checkpoint_dir = "./checkpoints"
 os.makedirs(output_dir, exist_ok=True)
 
 # Load the first image from the directory
-image_filenames = sorted(os.listdir(input_dir))[6]  #4th image from validation set
+# image_filenames = sorted(os.listdir(input_dir))[6]  #4th image from validation set
+image_filenames = 'CLEVR_val_013355n.png'
+image_filenames = 'CLEVR_val_014847n.png'
+print(image_filenames)
 in_file = os.path.join(input_dir, image_filenames)
 
 # Load model
@@ -63,7 +66,7 @@ def mask_to_image(mask: np.ndarray):
 # Process the single image for every checkpoint in increments of 2 epochs
 img = Image.open(in_file)
 
-for epoch in range(1, 49):  # Iterate in steps of 2 epochs
+for epoch in range(1, 120): 
     load_model(epoch)
     mask = predict_img(net, img, device)
     result = mask_to_image(mask)

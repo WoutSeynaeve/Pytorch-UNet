@@ -13,7 +13,7 @@ from torch import optim
 import itertools
 from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
-from LogicLossVOC.WeakLabelLogicLossCLEVR import calculateLogicLoss, domainlossCOCO
+from LogicLossVOC.WeakLabelLogicLossCOCO import calculateLogicLoss, domainlossCOCO
 from evaluate import evaluate, evaluateWeaklySupervised, evaluateWeaklySupervisedCLEVR, evaluateFullySupervisedCLEVR,evaluateFullySupervisedCOCOwPrecisionRecall
 from unet.unet_model import UNet
 from utils.data_loading import WeakLabelDataset,BasicDataset,BasicDatasetCOCOdomExtended,WeakLabelDatasetCLEVR,BasicDatasetCLEVR,CombinedDatasetCLEVR
@@ -68,15 +68,15 @@ def train_model(
 
             "domainLossMultiplier": 0.001,   
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [True,  True,         30,              0.0001,                 False,                  False],
+            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
             #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [True,   2,      True,    0.1,       False, True, False],
+            "Relations": [False,   2,      True,    0.1,       False, True, False],
             #global constraints:
             "OneHot": [True, 20],
 
-            "Smoothness": [True, 100],
-            "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
-            "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
+            "Smoothness": [False, 100],
+            "MinSizeShapes": [False, 1,0.5,0.0035,0.015],
+            "MaxSizeShapes": [False, 1,0.98,0.20,0.42],
         }
     
     if configuration == 1: 
@@ -86,15 +86,15 @@ def train_model(
 
             "domainLossMultiplier": 0.001,   
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [True,  True,         30,              0.0001,                 False,                  False],
+            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
             #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [True,   2,      True,    0.1,       False, True, False],
+            "Relations": [False,   2,      True,    0.1,       False, True, False],
             #global constraints:
             "OneHot": [True, 20],
 
-            "Smoothness": [True, 100],
-            "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
-            "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
+            "Smoothness": [False, 100],
+            "MinSizeShapes": [False, 1,0.5,0.0035,0.015],
+            "MaxSizeShapes": [False, 1,0.98,0.20,0.42],
         }
     if configuration == 2: 
         configuration_dict = {
@@ -103,15 +103,15 @@ def train_model(
 
             "domainLossMultiplier": 0.001,   
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [True,  True,         30,              0.0001,                 False,                  False],
+            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
             #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [True,   2,      True,    0.1,       False, True, False],
+            "Relations": [False,   2,      True,    0.1,       False, True, False],
             #global constraints:
             "OneHot": [True, 20],
 
-            "Smoothness": [True, 100],
-            "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
-            "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
+            "Smoothness": [False, 100],
+            "MinSizeShapes": [False, 1,0.5,0.0035,0.015],
+            "MaxSizeShapes": [False, 1,0.98,0.20,0.42],
         }
     if configuration == 3: 
         configuration_dict = {
@@ -120,15 +120,15 @@ def train_model(
 
             "domainLossMultiplier": 0.001,   
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [True,  True,         30,              0.0001,                 False,                  False],
+            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
             #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [True,   2,      True,    0.1,       False, True, False],
+            "Relations": [False,   2,      True,    0.1,       False, True, False],
             #global constraints:
             "OneHot": [True, 20],
 
-            "Smoothness": [True, 100],
-            "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
-            "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
+            "Smoothness": [False, 100],
+            "MinSizeShapes": [False, 1,0.5,0.0035,0.015],
+            "MaxSizeShapes": [False, 1,0.98,0.20,0.42],
         }
     if configuration == 4: 
         configuration_dict = {
@@ -137,15 +137,15 @@ def train_model(
 
             "domainLossMultiplier": 0.001,   
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [True,  True,         30,              0.0001,                 False,                  False],
+            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
             #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [True,   2,      True,    0.1,       False, True, False],
+            "Relations": [False,   2,      True,    0.1,       False, True, False],
             #global constraints:
             "OneHot": [True, 20],
 
-            "Smoothness": [True, 100],
-            "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
-            "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
+            "Smoothness": [False, 100],
+            "MinSizeShapes": [False, 1,0.5,0.0035,0.015],
+            "MaxSizeShapes": [False, 1,0.98,0.20,0.42],
         }
     if configuration == 5: 
         configuration_dict = {
@@ -154,16 +154,17 @@ def train_model(
 
             "domainLossMultiplier": 0.001,   
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [True,  True,         30,              0.0001,                 False,                  False],
+            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
             #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [True,   2,      True,    0.1,       False, True, False],
+            "Relations": [False,   2,      True,    0.1,       False, True, False],
             #global constraints:
             "OneHot": [True, 20],
 
-            "Smoothness": [True, 100],
-            "MinSizeShapes": [True, 1,0.5,0.0035,0.015],
-            "MaxSizeShapes": [True, 1,0.98,0.20,0.42],
+            "Smoothness": [False, 100],
+            "MinSizeShapes": [False, 1,0.5,0.0035,0.015],
+            "MaxSizeShapes": [False, 1,0.98,0.20,0.42],
         }
+
     
     
     
@@ -283,9 +284,9 @@ def train_model(
                             masks_pred = model(images)
                             #after a while, mask_pred becomes all NAN !! problem!!
                             if i == debugIts-1:
-                                loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,-1,True)
+                                loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,-1000,True)
                             else:
-                                loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,-1,printLosses)
+                                loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,-1000,printLosses)
                                 
                             if loss >=0 and loss < np.inf:
                                 pass

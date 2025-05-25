@@ -6,7 +6,7 @@
 #SBATCH --ntasks=8
 #SBATCH --gpus-per-node=1
 #SBATCH --time=16:00:00
-#SBATCH --job-name=weakSegmentation
+#SBATCH --job-name=COCOweakly
 #SBATCH --output=%x.log
 #SBATCH --mail-type=BEGIN,FAIL,END
 #SBATCH --mail-user=wout.seynaeve1@student.kuleuven.be
@@ -20,14 +20,9 @@ echo The node architecture is $VSC_ARCH_LOCAL
 echo Current path is $(pwd)
 
 
-python trainCocoWeakly.py --configuration 0 -e 120 -l 1e-8
-python trainCocoWeakly.py --configuration 1 -e 120 -l 1e-8
-python trainCocoWeakly.py --configuration 2 -e 120 -l 1e-8
-python trainCocoWeakly.py --configuration 3 -e 120 -l 1e-8
-python trainCocoWeakly.py --configuration 4 -e 120 -l 1e-8
-python trainCocoWeakly.py --configuration 5 -e 120 -l 1e-8
-python trainCocoWeakly.py --configuration 6 -e 120 -l 1e-8
-
+python trainCocoWeakly.py --configuration 0 -e 120 -l 1e-7
+python trainCocoWeakly.py --configuration 1 -e 120 -l 1e-7
+python trainCocoWeaklyHeterog.py --configuration 3 -e 120 -l 1e-7
 
 
 

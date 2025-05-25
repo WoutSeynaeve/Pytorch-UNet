@@ -6,7 +6,7 @@
 #SBATCH --ntasks=8
 #SBATCH --gpus-per-node=1
 #SBATCH --time=16:00:00
-#SBATCH --job-name=weakSegmentation
+#SBATCH --job-name=COCOdomAug
 #SBATCH --output=%x.log
 #SBATCH --mail-type=BEGIN,FAIL,END
 #SBATCH --mail-user=wout.seynaeve1@student.kuleuven.be
@@ -19,14 +19,12 @@ echo Job is running on ${SLURM_CLUSTER_NAME} cluster
 echo The node architecture is $VSC_ARCH_LOCAL
 echo Current path is $(pwd)
 
-
-python trainCocoDomAug.py --configuration 0 -e 100
-python trainCocoDomAug.py --configuration 1 -e 100
-python trainCocoDomAug.py --configuration 2 -e 100
-python trainCocoDomAug.py --configuration 3 -e 100
-python trainCocoDomAug.py --configuration 4 -e 100
-python trainCocoDomAug.py --configuration 5 -e 100
-
+python trainCocoDomAug.py --configuration 0 -e 100 -l 1e-7
+python trainCocoDomAug.py --configuration 1 -e 100 -l 1e-7
+python trainCocoDomAug.py --configuration 2 -e 100 -l 1e-7
+python trainCocoDomAug.py --configuration 3 -e 100 -l 1e-7
+python trainCocoDomAug.py --configuration 4 -e 100 -l 1e-7
+python trainCocoDomAug.py --configuration 5 -e 100 -l 1e-7
 
 
 

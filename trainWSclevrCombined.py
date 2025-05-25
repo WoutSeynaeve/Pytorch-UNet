@@ -69,10 +69,10 @@ def train_model(
 ):
     configuration_dict = {}
     
-
     if configuration == 0: 
         configuration_dict = {
             "seed": 42,
+            "Domain-directional": [False,   0.4],
             "FullySupervisedPercentage": 0,
 
             "logicLossMultiplier": 0.01,
@@ -80,9 +80,9 @@ def train_model(
             "ImageLevel": [False,       True     ,       False   , 2], #note background percentage is ignored
 
             #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob   useNew  useOnlyNew
-            "BBox": [[False,      False       , 1],   [True, 0.2],  [False, 1],      "linear", True,    True], 
+            "BBox": [[False,      False       , 1],   [True, 0.2],  [False, 1],      "linear", True,    False], 
             "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [True, 1],
+            "Scribbles": [False, 1],
 
             #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
             "Area": [False,       False         ,     1,                   10,                               False], 
@@ -90,19 +90,21 @@ def train_model(
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
             "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
             #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [False,   2,      True,    0.1,       True],
+            "Relations": [True,   2,      True,    0.1,       True],
             "SoftRelations": [False, 1],
             #global constraints:
-            "OneHot": [False, 20],
-            "MinSizeBackground": [False, 1],
-            "MaxSizeBackground": [False, 20],
-            "MinSizeShapes": [False, 30],
+            "OneHot": [True, 20],
+            "MinSizeBackground": [True, 1],
+            "MaxSizeBackground": [True, 20],
+                                      #Use mean
+            "MinSizeShapes": [True, 30, True],
             "MaxSizeShapes": [False, 1],
             "Smoothness": [False, 100],
-        } 
+        }
     if configuration == 1: 
         configuration_dict = {
             "seed": 42,
+            "Domain-directional": [False,   0.4],
             "FullySupervisedPercentage": 0,
 
             "logicLossMultiplier": 0.01,
@@ -110,42 +112,12 @@ def train_model(
             "ImageLevel": [False,       True     ,       False   , 2], #note background percentage is ignored
 
             #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob   useNew  useOnlyNew
-            "BBox": [[False,      False       , 1],   [True, 0.2],  [False, 1],      "linear", True,    True], 
+            "BBox": [[False,      False       , 1],   [True, 0.2],  [False, 1],      "linear", True,    False], 
             "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [True, 1],
+            "Scribbles": [False, 1],
 
             #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10,                               False], 
-            "Point": [False, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
-            #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [False,   2,      True,    0.1,       True],
-            "SoftRelations": [False, 1],
-            #global constraints:
-            "OneHot": [False, 20],
-            "MinSizeBackground": [True, 1],
-            "MaxSizeBackground": [True, 20],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [True, 1],
-            "Smoothness": [False, 100],
-        } 
-    if configuration == 2: 
-        configuration_dict = {
-            "seed": 42,
-            "FullySupervisedPercentage": 0,
-
-            "logicLossMultiplier": 0.01,
-            #                   useTruePercentages,  useAtleast
-            "ImageLevel": [False,       True     ,       False   , 2], #note background percentage is ignored
-
-            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob   useNew  useOnlyNew
-            "BBox": [[False,      False       , 1],   [True, 0.2],  [False, 1],      "linear", True,    True], 
-            "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [True, 1],
-
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10,                               False], 
+            "Area": [True,       False         ,     1,                   10,                               False], 
             "Point": [False, 10],
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
             "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
@@ -156,100 +128,76 @@ def train_model(
             "OneHot": [True, 20],
             "MinSizeBackground": [True, 1],
             "MaxSizeBackground": [True, 20],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [True, 1],
+                                      #Use mean
+            "MinSizeShapes": [True, 30, True],
+            "MaxSizeShapes": [False, 1],
+            "Smoothness": [False, 100],
+        }
+    if configuration == 2: 
+        configuration_dict = {
+            "seed": 42,
+            "Domain-directional": [False,   0.4],
+            "FullySupervisedPercentage": 0,
+
+            "logicLossMultiplier": 0.01,
+            #                   useTruePercentages,  useAtleast
+            "ImageLevel": [False,       True     ,       False   , 2], #note background percentage is ignored
+
+            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob   useNew  useOnlyNew
+            "BBox": [[False,      False       , 1],   [True, 0.2],  [False, 1],      "linear", True,    False], 
+            "BBoxFull": [False, 1,"linear"], #linear or prob
+            "Scribbles": [False, 1],
+
+            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
+            "Area": [True,       False         ,     1,                   10,                               False], 
+            "Point": [False, 10],
+            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
+            "Adjacency": [True,  True,         30,              0.0001,                 False,                  False],
+            #                 norm-mult   impl   impl-mult   symmetric 
+            "Relations": [True,   2,      True,    0.1,       True],
+            "SoftRelations": [False, 1],
+            #global constraints:
+            "OneHot": [True, 20],
+            "MinSizeBackground": [True, 1],
+            "MaxSizeBackground": [True, 20],
+                                      #Use mean
+            "MinSizeShapes": [True, 30, False],
+            "MaxSizeShapes": [False, 1],
             "Smoothness": [False, 100],
         }
     if configuration == 3: 
         configuration_dict = {
             "seed": 42,
+            "Domain-directional": [False,   0.4],
             "FullySupervisedPercentage": 0,
 
             "logicLossMultiplier": 0.01,
             #                   useTruePercentages,  useAtleast
-            "ImageLevel": [True,       True     ,       False   , 2], #note background percentage is ignored
+            "ImageLevel": [False,       True     ,       False   , 2], #note background percentage is ignored
 
             #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob   useNew  useOnlyNew
-            "BBox": [[False,      False       , 1],   [True, 0.2],  [False, 1],      "linear", True,    True], 
+            "BBox": [[False,      False       , 1],   [True, 0.2],  [False, 1],      "linear", True,    False], 
             "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [True, 1],
+            "Scribbles": [False, 1],
 
             #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10,                               False], 
+            "Area": [True,       False         ,     1,                   10,                               False], 
             "Point": [False, 10],
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
+            "Adjacency": [True,  True,         30,              0.0001,                 False,                  False],
             #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [False,   2,      True,    0.1,       True],
+            "Relations": [True,   2,      True,    0.1,       True],
             "SoftRelations": [False, 1],
             #global constraints:
             "OneHot": [True, 20],
             "MinSizeBackground": [True, 1],
             "MaxSizeBackground": [True, 20],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [True, 1],
+                                      #Use mean
+            "MinSizeShapes": [True, 30, True],
+            "MaxSizeShapes": [False, 1],
             "Smoothness": [False, 100],
         }
-    if configuration == 4: 
-        configuration_dict = {
-            "seed": 42,
-            "FullySupervisedPercentage": 0,
-
-            "logicLossMultiplier": 0.01,
-            #                   useTruePercentages,  useAtleast
-            "ImageLevel": [True,       True     ,       False   , 2], #note background percentage is ignored
-
-            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob   useNew  useOnlyNew
-            "BBox": [[False,      False       , 1],   [True, 0.2],  [False, 1],      "linear", True,    True], 
-            "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [True, 1],
-
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10,                               False], 
-            "Point": [False, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
-            #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [False,   2,      True,    0.1,       True],
-            "SoftRelations": [False, 1],
-            #global constraints:
-            "OneHot": [False, 20],
-            "MinSizeBackground": [True, 1],
-            "MaxSizeBackground": [True, 20],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [True, 1],
-            "Smoothness": [True, 100],
-        }
-    if configuration == 5: 
-        configuration_dict = {
-            "seed": 42,
-            "FullySupervisedPercentage": 0,
-
-            "logicLossMultiplier": 0.01,
-            #                   useTruePercentages,  useAtleast
-            "ImageLevel": [True,       True     ,       False   , 2], #note background percentage is ignored
-
-            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob   useNew  useOnlyNew
-            "BBox": [[True,      True       , 1],   [True, 0.2],  [False, 1],      "linear", True,    False], 
-            "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [True, 1],
-
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [False,       False         ,     1,                   10,                               False], 
-            "Point": [False, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
-            #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [False,   2,      True,    0.1,       True],
-            "SoftRelations": [False, 1],
-            #global constraints:
-            "OneHot": [False, 20],
-            "MinSizeBackground": [True, 1],
-            "MaxSizeBackground": [True, 20],
-            "MinSizeShapes": [True, 30],
-            "MaxSizeShapes": [True, 1],
-            "Smoothness": [True, 100],
-        }
+    
     
     
    
@@ -473,13 +421,20 @@ def train_model(
                     # else:
                     _, _, H, W = images.shape 
                     loss = 0
-                    if abs(batch_id[0]) > FullySuperVisedUntil: #goes from 1 to 239 (batchid*-1 is the mirrored version of batchid)
-                        if logiclossMult > 0:
+                    if logiclossMult > 0:
                             loss += logiclossMult*calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_id)[0]
+                       
                     else:
-                        #loss += logiclossMult*calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_id)[0]
                         loss += cross_entropy(masks_pred,mask,H,W,device)
                         loss += diceLoss(masks_pred,mask,H,W,device)
+                        
+                    # if abs(batch_id[0]) > FullySuperVisedUntil: #goes from 1 to 239 (batchid*-1 is the mirrored version of batchid)
+                    #     if logiclossMult > 0:
+                    #         loss += logiclossMult*calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_id)[0]
+                    # else:
+                    #     #loss += logiclossMult*calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_id)[0]
+                    #     loss += cross_entropy(masks_pred,mask,H,W,device)
+                    #     loss += diceLoss(masks_pred,mask,H,W,device)
                         
                     if not loss.isnan():
                         if loss > 0:
