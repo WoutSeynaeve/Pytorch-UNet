@@ -61,6 +61,82 @@ def newBounding_box(normalized_tensor, x1, x2, y1, y2, I):
     return -(prob_all_columns_have_class_I+prob_all_rows_have_class_I)
 
 
+
+def patch_level_label(normalized_tensor, I, patch_size=10):
+    """
+    For each center pixel, computes the probability that it and all neighbors in a patch_size x patch_size
+    region are class I. Then returns a logic loss enforcing that such a patch must exist somewhere.
+
+    Args:
+        normalized_tensor: Tensor of shape (C, H, W)
+        I: class index
+        patch_size: size of the square patch (default: 5)
+
+    Returns:
+        A scalar logic loss
+    """
+    class_I_probs = normalized_tensor[I]  # (H, W)
+    class_I_probs = torch.clamp(class_I_probs, min=1e-6, max=1.0 - 1e-6)
+
+    # Work in log-space for numerical stability
+    log_probs = torch.log(class_I_probs).unsqueeze(0).unsqueeze(0)  # shape: (1, 1, H, W)
+
+    # Create kernel of ones to compute log-product (i.e., sum of logs)
+    kernel = torch.ones((1, 1, patch_size, patch_size), dtype=torch.float32, device=class_I_probs.device)
+
+    # No padding — only compute over valid center pixels with full neighborhood
+    log_patch_product = F.conv2d(log_probs, kernel, padding=0)  # shape: (1, 1, H - k + 1, W - k + 1)
+    patch_probs = torch.exp(log_patch_product).squeeze(0).squeeze(0)  # shape: (H-k+1, W-k+1)
+    patch_probs = torch.clamp(patch_probs, min=1e-6, max=1.0 - 1e-6)
+
+    # Compute the probability that no such patch exists (i.e., all are < full patch)
+    no_patch_probs = 1.0 - patch_probs
+    log_no_patch_probs = torch.log(no_patch_probs)
+    log_total_no_patch = torch.sum(log_no_patch_probs)  # log of product over all (1 - patch_probs)
+    prob_no_patch = torch.exp(log_total_no_patch)
+
+    # Then the loss is: -log(1 - prob_no_patch) = encourage at least one full patch to exist
+    prob_at_least_one_patch = 1.0 - prob_no_patch
+    prob_at_least_one_patch = torch.clamp(prob_at_least_one_patch, min=1e-6, max=1.0)
+
+    logic_loss = -torch.log(prob_at_least_one_patch)
+
+    return logic_loss
+
+def patch_level_label2(normalized_tensor, I):
+    """
+    For each pixel, computes the probability that itself and all 8-connected neighbors (3x3 patch) are class I.
+
+    Args:
+        normalized_tensor: Tensor of shape (C, H, W), where C is the number of classes.
+        I: Class index to check for.
+
+    Returns:
+        Tensor of shape (H, W), where each value is the probability that the corresponding
+        pixel and all its neighbors are class I.
+    """
+    class_I_probs = normalized_tensor[I]  # Shape: (H, W)
+    class_I_probs = torch.clamp(class_I_probs, 1e-6, 1)
+
+    # Prepare for convolution: reshape to (1, 1, H, W)
+    input_tensor = class_I_probs.unsqueeze(0).unsqueeze(0)
+    print(input_tensor)
+    # Define a 3x3 kernel filled with ones to compute product over neighborhood
+    kernel = torch.ones((1, 1, 5, 5), dtype=torch.float32, device=class_I_probs.device)
+
+    # Apply convolution in log-space for numerical stability:
+    log_input = torch.log(class_I_probs).unsqueeze(0).unsqueeze(0)  # shape (1, 1, H, W)
+    log_sum = F.conv2d(log_input, kernel, padding=0)  # log of product over 3x3 patches
+    print(log_sum)
+    product = torch.exp(log_sum).squeeze()  # shape (H, W), probability that all 9 values are class I
+    product = torch.clamp(product, 0, 1-1e-6)
+    print(product)
+    res1 = torch.log(1-product)
+    res2 = res1.sum()
+    print(res2)
+    #-log (1-(exp sum log (1- exp sum log p, N(p) )
+    return -torch.log1p(-torch.exp(res2))
+
 def image_level_label(normalized_tensor, I, NOT = None):
 
     class_I_probs = normalized_tensor[I]  #Select probabilities for class I

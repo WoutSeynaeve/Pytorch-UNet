@@ -20,8 +20,9 @@ echo The node architecture is $VSC_ARCH_LOCAL
 echo Current path is $(pwd)
 
 
-python trainWSclevrCombined.py --configuration 2 -e 250
-python trainWSclevrCombined.py --configuration 3 -e 250
+python trainWSclevrCombined.py --configuration 0 -e 200 
+
+
 
 
 

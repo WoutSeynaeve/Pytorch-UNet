@@ -68,56 +68,25 @@ def train_model(
         earlyStoppingAmount: int = 100,
 ):
     configuration_dict = {}
+    #note: soms trainen met 1e-7 en dan 1e-8 kan wel helpen, zoals bij region ofz
     
     if configuration == 0: 
         configuration_dict = {
             "seed": 42,
             "Domain-directional": [False,   0.4],
             "FullySupervisedPercentage": 0,
-
-            "logicLossMultiplier": 0.01,
+        
+            "logicLossMultiplier": 0.01, # 0.01
             #                   useTruePercentages,  useAtleast
             "ImageLevel": [False,       True     ,       False   , 2], #note background percentage is ignored
 
             #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob   useNew  useOnlyNew
-            "BBox": [[False,      False       , 1],   [True, 0.2],  [False, 1],      "linear", True,    False], 
+            "BBox": [[False,      True       , 1],   [True, 0.2],  [False, 1],      "linear", False,    False], 
             "BBoxFull": [False, 1,"linear"], #linear or prob
             "Scribbles": [False, 1],
 
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
+            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area,    i dont get this
             "Area": [False,       False         ,     1,                   10,                               False], 
-            "Point": [False, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
-            #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [True,   2,      True,    0.1,       True],
-            "SoftRelations": [False, 1],
-            #global constraints:
-            "OneHot": [True, 20],
-            "MinSizeBackground": [True, 1],
-            "MaxSizeBackground": [True, 20],
-                                      #Use mean
-            "MinSizeShapes": [True, 30, True],
-            "MaxSizeShapes": [False, 1],
-            "Smoothness": [False, 100],
-        }
-    if configuration == 1: 
-        configuration_dict = {
-            "seed": 42,
-            "Domain-directional": [False,   0.4],
-            "FullySupervisedPercentage": 0,
-
-            "logicLossMultiplier": 0.01,
-            #                   useTruePercentages,  useAtleast
-            "ImageLevel": [False,       True     ,       False   , 2], #note background percentage is ignored
-
-            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob   useNew  useOnlyNew
-            "BBox": [[False,      False       , 1],   [True, 0.2],  [False, 1],      "linear", True,    False], 
-            "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [False, 1],
-
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [True,       False         ,     1,                   10,                               False], 
             "Point": [False, 10],
             #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
             "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
@@ -129,78 +98,14 @@ def train_model(
             "MinSizeBackground": [True, 1],
             "MaxSizeBackground": [True, 20],
                                       #Use mean
-            "MinSizeShapes": [True, 30, True],
+            "MinSizeShapes": [True, 10, False],
             "MaxSizeShapes": [False, 1],
-            "Smoothness": [False, 100],
+            "Smoothness": [True, 100],
+            "patch_domain": [False, 1],
         }
-    if configuration == 2: 
-        configuration_dict = {
-            "seed": 42,
-            "Domain-directional": [False,   0.4],
-            "FullySupervisedPercentage": 0,
-
-            "logicLossMultiplier": 0.01,
-            #                   useTruePercentages,  useAtleast
-            "ImageLevel": [False,       True     ,       False   , 2], #note background percentage is ignored
-
-            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob   useNew  useOnlyNew
-            "BBox": [[False,      False       , 1],   [True, 0.2],  [False, 1],      "linear", True,    False], 
-            "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [False, 1],
-
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [True,       False         ,     1,                   10,                               False], 
-            "Point": [False, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [True,  True,         30,              0.0001,                 False,                  False],
-            #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [True,   2,      True,    0.1,       True],
-            "SoftRelations": [False, 1],
-            #global constraints:
-            "OneHot": [True, 20],
-            "MinSizeBackground": [True, 1],
-            "MaxSizeBackground": [True, 20],
-                                      #Use mean
-            "MinSizeShapes": [True, 30, False],
-            "MaxSizeShapes": [False, 1],
-            "Smoothness": [False, 100],
-        }
-    if configuration == 3: 
-        configuration_dict = {
-            "seed": 42,
-            "Domain-directional": [False,   0.4],
-            "FullySupervisedPercentage": 0,
-
-            "logicLossMultiplier": 0.01,
-            #                   useTruePercentages,  useAtleast
-            "ImageLevel": [False,       True     ,       False   , 2], #note background percentage is ignored
-
-            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob   useNew  useOnlyNew
-            "BBox": [[False,      False       , 1],   [True, 0.2],  [False, 1],      "linear", True,    False], 
-            "BBoxFull": [False, 1,"linear"], #linear or prob
-            "Scribbles": [False, 1],
-
-            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area
-            "Area": [True,       False         ,     1,                   10,                               False], 
-            "Point": [False, 10],
-            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
-            "Adjacency": [True,  True,         30,              0.0001,                 False,                  False],
-            #                 norm-mult   impl   impl-mult   symmetric 
-            "Relations": [True,   2,      True,    0.1,       True],
-            "SoftRelations": [False, 1],
-            #global constraints:
-            "OneHot": [True, 20],
-            "MinSizeBackground": [True, 1],
-            "MaxSizeBackground": [True, 20],
-                                      #Use mean
-            "MinSizeShapes": [True, 30, True],
-            "MaxSizeShapes": [False, 1],
-            "Smoothness": [False, 100],
-        }
-    
-    
     
    
+    
     seed = configuration_dict["seed"]
     torch.manual_seed(seed)
     random.seed(seed)
@@ -210,6 +115,7 @@ def train_model(
     torch.cuda.manual_seed_all(seed)
 
     experimentFileName = f"./experimentResultsCLEVRCombined/experiment_{configuration}.txt"
+    dir_checkpoint = Path(f'./checkpoints_{configuration}/')
     writeInfo = ""
     for k in configuration_dict.keys():
         if k == 'BBox':
@@ -311,7 +217,7 @@ def train_model(
             with tqdm(total=n_train, desc=f'Epoch {epoch}/{epochs}', unit='img') as pbar:
                 for batch in train_loader:
                     for i in range(debugIts):
-                        images, weaklabel,idx = batch['image'], batch["weaklabel"]
+                        images, weaklabel = batch['image'], batch["weaklabel"]
                         assert images.shape[1] == model.n_channels, \
                             f'Network has been defined with {model.n_channels} input channels, ' \
                             f'but loaded images have {images.shape[1]} channels. Please check that ' \
@@ -332,9 +238,8 @@ def train_model(
                                 print(loss,"\n",masks_pred)
                                 report = 0
                                 assert(report == 1)
-                            loss += cross_entropy(masks_pred,mask,H,W,device)
-                            loss += diceLoss(masks_pred,mask,H,W,device)
-                        if loss < 0.0005:
+                            
+                        if loss < 0.0000005:
                             break
                        
                         optimizer.zero_grad(set_to_none=True)
@@ -387,6 +292,7 @@ def train_model(
         print(FullySuperVisedUntil)
         # 5. Begin training
         for epoch in range(1, epochs + 1):
+            newBest = False
             model.train()
             # if epoch == 170:
             #     optimizer = optim.RMSprop(model.parameters(),lr=1e-9, weight_decay=weight_decay, momentum=momentum, foreach=True)
@@ -420,21 +326,25 @@ def train_model(
                     #     loss = calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_n,True)
                     # else:
                     _, _, H, W = images.shape 
-                    loss = 0
-                    if logiclossMult > 0:
-                            loss += logiclossMult*calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_id)[0]
-                       
-                    else:
-                        loss += cross_entropy(masks_pred,mask,H,W,device)
-                        loss += diceLoss(masks_pred,mask,H,W,device)
-                        
-                    # if abs(batch_id[0]) > FullySuperVisedUntil: #goes from 1 to 239 (batchid*-1 is the mirrored version of batchid)
-                    #     if logiclossMult > 0:
-                    #         loss += logiclossMult*calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_id)[0]
-                    # else:
-                    #     #loss += logiclossMult*calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_id)[0]
+                    
+                    loss = torch.zeros(1, device="cuda") 
+                    #goes from 1 to 239 (batchid*-1 is the mirrored version of batchid)
+                    # if abs(batch_id) < 70:
                     #     loss += cross_entropy(masks_pred,mask,H,W,device)
                     #     loss += diceLoss(masks_pred,mask,H,W,device)
+                    # else:
+                    #     loss += logiclossMult*calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_id)[0]
+
+                    if batch_id > 0:
+                        if logiclossMult > 0:
+                            loss += logiclossMult*calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_id)[0]
+                        
+                        else:
+                            loss += cross_entropy(masks_pred,mask,H,W,device)
+                            loss += diceLoss(masks_pred,mask,H,W,device)
+                    
+                        
+  
                         
                     if not loss.isnan():
                         if loss > 0:
@@ -483,6 +393,7 @@ def train_model(
                         test_scores.append(round(test_score.item(),3))
                         test_scores_shapes.append(round(test_score_shape.item(),3))
                         if test_score > max_test_score:
+                            newBest = True
                             epochssinceimprovement = 0
                             max_test_score_epoch = epoch
                             max_test_score = test_score
@@ -555,8 +466,9 @@ def train_model(
                 Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
                 state_dict = model.state_dict()
                 state_dict['mask_values'] = dataset_test_trainset.mask_values
-                torch.save(state_dict, str(dir_checkpoint / 'checkpoint_epoch{}.pth'.format(epoch)))
-                logging.info(f'Checkpoint {epoch} saved!')
+                if newBest:
+                    torch.save(state_dict, str(dir_checkpoint / 'checkpoint_epoch{}.pth'.format(epoch)))
+                    logging.info(f'Checkpoint {epoch} saved!')
                 print("/////////////////////////")
 
         print("Max test score:",round(max_test_score.item(),3),"found at epoch:",max_test_score_epoch)

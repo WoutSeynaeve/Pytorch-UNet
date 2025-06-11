@@ -16,6 +16,7 @@ from utils.utils import plot_img_and_mask
 input_dir = "../../datasetCLEVRaug/ImagesValidation"
 output_dir = "outputMaskEvolutionsCLEVR"
 checkpoint_dir = "./checkpoints"
+tot_en_met_epoch = 228
 os.makedirs(output_dir, exist_ok=True)
 
 # Load the first image from the directory
@@ -51,7 +52,6 @@ def predict_img(net, full_img, device, scale_factor=1, out_threshold=0.5):
         output = F.interpolate(output, (full_img.size[1], full_img.size[0]), mode='bilinear')
         output = F.softmax(output, dim=1)
         mask = output.argmax(dim=1)
-    
     return mask[0].long().squeeze().numpy()
 
 # Function to save mask
@@ -66,10 +66,10 @@ def mask_to_image(mask: np.ndarray):
 # Process the single image for every checkpoint in increments of 2 epochs
 img = Image.open(in_file)
 
-for epoch in range(1, 120): 
+for epoch in range(1, tot_en_met_epoch+1): 
     load_model(epoch)
     mask = predict_img(net, img, device)
     result = mask_to_image(mask)
     out_file = os.path.join(output_dir, f"{os.path.splitext(image_filenames[0])[0]}_epoch{epoch}.png")
-    result.save(out_file)
+    result.save(out_file)   
     logging.info(f'Mask saved to {out_file}')

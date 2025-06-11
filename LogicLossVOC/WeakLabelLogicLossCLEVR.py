@@ -1,5 +1,5 @@
 import os
-from LogicLossVOC.LogicConstraints import dyn_progr,newBounding_box,atleast_p_percent_is_class_in_bounding_box,onehot,bounding_box_loss,onehot2,adjacency_loss,atmost_p_percent_is_class,atleast_p_percent_is_class, ifXthenXadjecent,atmost_p_percent_is_class_in_bounding_box, ifXthenYatRelation, scribble_loss, image_level_label, about_p_percent_is_class, about_p_percent_is_class_in_bounding_box
+from LogicLossVOC.LogicConstraints import dyn_progr, patch_level_label,newBounding_box,atleast_p_percent_is_class_in_bounding_box,onehot,bounding_box_loss,onehot2,adjacency_loss,atmost_p_percent_is_class,atleast_p_percent_is_class, ifXthenXadjecent,atmost_p_percent_is_class_in_bounding_box, ifXthenYatRelation, scribble_loss, image_level_label, about_p_percent_is_class, about_p_percent_is_class_in_bounding_box
 import torch.nn.functional as F
 import torch
 import random
@@ -81,6 +81,13 @@ def calculateLogicLoss(output_tensor,weaklabels,configuration,batch_n,printLosse
         addloss += ifXthenYatRelation(output_tensor, 3, 0, "above")*domDirec[1]
         loss += addloss
 
+    patchDomain = configuration.get("patch_domain")
+    if patchDomain[0]:
+        for label in image_level_label:
+                shape,percentage = label[0][0],label[1][0]
+                if shape != 'background':
+                    addloss = patch_level_label(output_tensor,class_values[shape])
+                    loss += addloss*patchDomain[1]
     #Image-level
     imglvl = configuration.get("ImageLevel")
     imlvlpercdict = {'cylinder': image_level_label[1][1][0][:-1],'sphere': image_level_label[2][1][0][:-1],'cube': image_level_label[3][1][0][:-1]}

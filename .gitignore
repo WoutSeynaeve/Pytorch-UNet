@@ -2,6 +2,12 @@
 data/
 __pycache__/
 checkpoints/
+checkpoints_0/
+checkpoints_1/
+checkpoints_2/
+checkpoints_3/
+checkpoints_4/
+
 *.pth
 *.jpg
 venv/

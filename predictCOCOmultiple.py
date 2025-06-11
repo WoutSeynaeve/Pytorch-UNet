@@ -22,7 +22,7 @@ out_files = [os.path.join(output_dir, f"{os.path.splitext(f)[0]}_OUT.png") for f
 
 # Load model
 #model_path = "./DebugCheckpoints/checkpoint_epoch1.pth"
-model_path = "./checkpoints/checkpoint_epoch10.pth"
+model_path = "./checkpoints/checkpoint_epoch76.pth"
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 net = UNet(n_channels=3, n_classes=3, bilinear=True)
 net.to(device=device)
@@ -52,7 +52,7 @@ def predict_img(net, full_img, device, scale_factor=1, out_threshold=0.5):
 # Function to save mask
 def mask_to_image(mask: np.ndarray):
     colors = [
-        (0, 0, 0), (0, 0, 255), (0, 255, 0), (255, 0, 0)
+        (0, 0, 0), (0, 0, 255), (255, 0, 0), (0, 255, 0)
     ]
     h, w = mask.shape
     out = np.zeros((h, w, 3), dtype=np.uint8)
