@@ -72,7 +72,7 @@ def train_model(
     
     if configuration == 0: 
         configuration_dict = {
-            "seed": 42,
+            "seed": 111,
             "Domain-directional": [False,   0.4],
             "FullySupervisedPercentage": 0,
         
@@ -81,7 +81,7 @@ def train_model(
             "ImageLevel": [False,       True     ,       False   , 2], #note background percentage is ignored
 
             #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob   useNew  useOnlyNew
-            "BBox": [[False,      True       , 1],   [True, 0.2],  [False, 1],      "linear", False,    False], 
+            "BBox": [[True,      False       , 1],   [True, 0.2],  [False, 1],      "linear", True,    True], 
             "BBoxFull": [False, 1,"linear"], #linear or prob
             "Scribbles": [False, 1],
 
@@ -94,13 +94,79 @@ def train_model(
             "Relations": [False,   2,      True,    0.1,       True],
             "SoftRelations": [False, 1],
             #global constraints:
-            "OneHot": [True, 20],
-            "MinSizeBackground": [True, 1],
-            "MaxSizeBackground": [True, 20],
+            "OneHot": [False, 20],
+            "MinSizeBackground": [False, 1],
+            "MaxSizeBackground": [False, 20],
                                       #Use mean
-            "MinSizeShapes": [True, 10, False],
+            "MinSizeShapes": [False, 10, False],
             "MaxSizeShapes": [False, 1],
-            "Smoothness": [True, 100],
+            "Smoothness": [False, 100],
+            "patch_domain": [False, 1],
+        }
+    if configuration == 1: 
+        configuration_dict = {
+            "seed": 222,
+            "Domain-directional": [False,   0.4],
+            "FullySupervisedPercentage": 0,
+        
+            "logicLossMultiplier": 0.01, # 0.01
+            #                   useTruePercentages,  useAtleast
+            "ImageLevel": [False,       True     ,       False   , 2], #note background percentage is ignored
+
+            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob   useNew  useOnlyNew
+            "BBox": [[True,      False       , 1],   [True, 0.2],  [False, 1],      "linear", True,    True], 
+            "BBoxFull": [False, 1,"linear"], #linear or prob
+            "Scribbles": [False, 1],
+
+            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area,    i dont get this
+            "Area": [False,       False         ,     1,                   10,                               False], 
+            "Point": [False, 10],
+            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
+            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
+            #                 norm-mult   impl   impl-mult   symmetric 
+            "Relations": [False,   2,      True,    0.1,       True],
+            "SoftRelations": [False, 1],
+            #global constraints:
+            "OneHot": [False, 20],
+            "MinSizeBackground": [False, 1],
+            "MaxSizeBackground": [False, 20],
+                                      #Use mean
+            "MinSizeShapes": [False, 10, False],
+            "MaxSizeShapes": [False, 1],
+            "Smoothness": [False, 100],
+            "patch_domain": [False, 1],
+        }
+    if configuration == 2: 
+        configuration_dict = {
+            "seed": 333,
+            "Domain-directional": [False,   0.4],
+            "FullySupervisedPercentage": 0,
+        
+            "logicLossMultiplier": 0.01, # 0.01
+            #                   useTruePercentages,  useAtleast
+            "ImageLevel": [False,       True     ,       False   , 2], #note background percentage is ignored
+
+            #               useTruePercentages      outsideBbox  BboxAtmost   linear-or-prob   useNew  useOnlyNew
+            "BBox": [[True,      False       , 1],   [True, 0.2],  [False, 1],      "linear", True,    True], 
+            "BBoxFull": [False, 1,"linear"], #linear or prob
+            "Scribbles": [False, 1],
+
+            #              useTruePercentages, generalfactor, boost factor for atleast minsize in area,    i dont get this
+            "Area": [False,       False         ,     1,                   10,                               False], 
+            "Point": [False, 10],
+            #                 implied-NOT  norm-multiplier  implied-multiplier  backgroundAdjacentToEachShape   Symmetric
+            "Adjacency": [False,  True,         30,              0.0001,                 False,                  False],
+            #                 norm-mult   impl   impl-mult   symmetric 
+            "Relations": [False,   2,      True,    0.1,       True],
+            "SoftRelations": [False, 1],
+            #global constraints:
+            "OneHot": [False, 20],
+            "MinSizeBackground": [False, 1],
+            "MaxSizeBackground": [False, 20],
+                                      #Use mean
+            "MinSizeShapes": [False, 10, False],
+            "MaxSizeShapes": [False, 1],
+            "Smoothness": [False, 100],
             "patch_domain": [False, 1],
         }
     
@@ -115,7 +181,7 @@ def train_model(
     torch.cuda.manual_seed_all(seed)
 
     experimentFileName = f"./experimentResultsCLEVRCombined/experiment_{configuration}.txt"
-    dir_checkpoint = Path(f'./checkpoints_{configuration}/')
+    #dir_checkpoint = Path(f'./checkpoints_{configuration}/')
     writeInfo = ""
     for k in configuration_dict.keys():
         if k == 'BBox':
@@ -335,13 +401,12 @@ def train_model(
                     # else:
                     #     loss += logiclossMult*calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_id)[0]
 
-                    if batch_id > 0:
-                        if logiclossMult > 0:
-                            loss += logiclossMult*calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_id)[0]
-                        
-                        else:
-                            loss += cross_entropy(masks_pred,mask,H,W,device)
-                            loss += diceLoss(masks_pred,mask,H,W,device)
+                    if logiclossMult > 0:
+                        loss += logiclossMult*calculateLogicLoss(masks_pred,weaklabel,configuration_dict,batch_id)[0]
+                    
+                    else:
+                        loss += cross_entropy(masks_pred,mask,H,W,device)
+                        loss += diceLoss(masks_pred,mask,H,W,device)
                     
                         
   
@@ -466,7 +531,7 @@ def train_model(
                 Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
                 state_dict = model.state_dict()
                 state_dict['mask_values'] = dataset_test_trainset.mask_values
-                if newBest:
+                if True: #or NewBest to only save improvements
                     torch.save(state_dict, str(dir_checkpoint / 'checkpoint_epoch{}.pth'.format(epoch)))
                     logging.info(f'Checkpoint {epoch} saved!')
                 print("/////////////////////////")

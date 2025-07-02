@@ -21,6 +21,8 @@ echo Current path is $(pwd)
 
 
 python trainWSclevrCombined.py --configuration 0 -e 200 
+python trainWSclevrCombined.py --configuration 1 -e 200 
+python trainWSclevrCombined.py --configuration 2 -e 200 
 
 
 

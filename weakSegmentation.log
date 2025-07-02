@@ -1,0 +1,6729 @@
+SLURM_JOB_ID: 64625943
+SLURM_JOB_USER: vsc37115
+SLURM_JOB_ACCOUNT: intro_vsc37115
+SLURM_JOB_NAME: weakSegmentation
+SLURM_CLUSTER_NAME: wice
+SLURM_JOB_PARTITION: interactive
+SLURM_NNODES: 1
+SLURM_NODELIST: k28i16
+SLURM_JOB_CPUS_PER_NODE: 8
+SLURM_JOB_GPUS: 1
+Date: Fri Jun 13 23:09:47 CEST 2025
+Walltime: 00-16:00:00
+========================================================================
+Job starting at 2025.06.13-23:09:55
+Job is running on k28i16
+Job is running on wice cluster
+The node architecture is icelake
+Current path is /vsc-hard-mounts/leuven-data/371/vsc37115/Thesis/SegmentationModel/Pytorch-UNet
+INFO: Using device cuda
+INFO: Network:
+	3 input channels
+	4 output channels (classes)
+	Bilinear upscaling
+INFO: Creating dataset with 478 examples
+INFO: Scanning mask files to determine unique values
+Active:  BBox loss [True, False, 1]  [True, 0.2]  [False, 1]  linear  True  True  
+  0%|          | 0/478 [00:00<?, ?it/s]  0%|          | 1/478 [00:00<03:50,  2.07it/s]  1%|          | 4/478 [00:00<00:58,  8.05it/s] 14%|█▍        | 66/478 [00:00<00:02, 147.42it/s] 19%|█▉        | 92/478 [00:00<00:02, 133.80it/s] 23%|██▎       | 112/478 [00:01<00:03, 112.82it/s] 34%|███▍      | 164/478 [00:01<00:01, 176.32it/s] 39%|███▉      | 188/478 [00:01<00:01, 166.57it/s] 51%|█████     | 243/478 [00:01<00:01, 233.93it/s] 59%|█████▉    | 284/478 [00:01<00:00, 262.29it/s] 66%|██████▌   | 315/478 [00:01<00:00, 249.27it/s] 72%|███████▏  | 343/478 [00:02<00:00, 141.36it/s] 86%|████████▋ | 413/478 [00:02<00:00, 198.80it/s] 96%|█████████▋| 461/478 [00:02<00:00, 242.48it/s]100%|██████████| 478/478 [00:02<00:00, 181.76it/s]
+INFO: Unique mask values: [[0, 0, 0], [0, 0, 255], [0, 255, 0], [255, 0, 0]]
+INFO: Creating dataset with 90 examples
+INFO: Scanning mask files to determine unique values
+../../datasetCLEVRaug/ImagesValidation ../../datasetCLEVRaug/MasksValidation
+  0%|          | 0/90 [00:00<?, ?it/s]  1%|          | 1/90 [00:00<00:26,  3.30it/s]  3%|▎         | 3/90 [00:00<00:16,  5.17it/s]100%|██████████| 90/90 [00:00<00:00, 144.16it/s]
+INFO: Creating dataset with 478 examples
+INFO: Scanning mask files to determine unique values
+unique mask values: [[0, 0, 0], [0, 0, 255], [0, 255, 0], [255, 0, 0]]
+../../datasetCLEVRaug/ImagesTraining ../../datasetCLEVRaug/MasksTraining
+  0%|          | 0/478 [00:00<?, ?it/s]  0%|          | 1/478 [00:00<03:14,  2.45it/s]  1%|▏         | 7/478 [00:00<00:27, 16.90it/s]  5%|▍         | 23/478 [00:00<00:08, 54.42it/s]  7%|▋         | 32/478 [00:00<00:07, 61.65it/s] 22%|██▏       | 105/478 [00:00<00:01, 209.56it/s] 27%|██▋       | 127/478 [00:01<00:01, 201.96it/s] 36%|███▌      | 171/478 [00:01<00:01, 254.34it/s] 41%|████▏     | 198/478 [00:01<00:01, 196.73it/s] 46%|████▌     | 221/478 [00:01<00:01, 192.30it/s] 53%|█████▎    | 253/478 [00:01<00:01, 219.41it/s] 58%|█████▊    | 277/478 [00:01<00:01, 185.33it/s] 66%|██████▌   | 314/478 [00:01<00:00, 224.55it/s] 71%|███████   | 340/478 [00:02<00:00, 212.31it/s] 76%|███████▌  | 364/478 [00:02<00:00, 193.80it/s] 81%|████████  | 385/478 [00:02<00:00, 147.99it/s]100%|██████████| 478/478 [00:02<00:00, 191.59it/s]
+/apps/leuven/rocky8/icelake/2023a/software/PyTorch/2.1.2-foss-2023a-CUDA-12.1.1/lib/python3.11/site-packages/torch/utils/data/dataloader.py:557: UserWarning: This DataLoader will create 64 worker processes in total. Our suggested max number of worker in current system is 8, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(_create_warning_msg(
+INFO: Starting training:
+        Epochs:          200
+        Batch size:      1
+        Learning rate:   1e-08
+        Training size:   478
+        Validation size: 0
+        Checkpoints:     True
+        Device:          cuda
+        Images scaling:  1
+        Mixed Precision: True
+    
+unique mask values: [[0, 0, 0], [0, 0, 255], [0, 255, 0], [255, 0, 0]]
+range(0, 478) range(478, 478)
+0
+Epoch 1/200:
+
+Test Set Eval:
+IoU per class: [0.415, 0.091, 0.125, 0.036] mIoU: 0.167 mIoU_shapes: 0.084
+
+Training Set Eval:
+INFO: Checkpoint 1 saved!
+IoU per class: [0.414, 0.089, 0.118, 0.028] mIoU: 0.162 mIoU_shapes: 0.078
+
+Average loss this epoch =  0.5483925153022032
+/////////////////////////
+Epoch 2/200:
+
+Test Set Eval:
+IoU per class: [0.43, 0.1, 0.061, 0.039] mIoU: 0.158 mIoU_shapes: 0.067
+
+Training Set Eval:
+INFO: Checkpoint 2 saved!
+IoU per class: [0.436, 0.128, 0.072, 0.035] mIoU: 0.168 mIoU_shapes: 0.078
+
+Average loss this epoch =  0.4022683498749673
+/////////////////////////
+Epoch 3/200:
+
+Test Set Eval:
+IoU per class: [0.438, 0.014, 0.171, 0.054] mIoU: 0.169 mIoU_shapes: 0.08
+
+Training Set Eval:
+INFO: Checkpoint 3 saved!
+IoU per class: [0.451, 0.015, 0.171, 0.045] mIoU: 0.17 mIoU_shapes: 0.077
+
+Average loss this epoch =  0.3298873582145659
+/////////////////////////
+Epoch 4/200:
+
+Test Set Eval:
+IoU per class: [0.621, 0.085, 0.221, 0.066] mIoU: 0.248 mIoU_shapes: 0.124
+
+Training Set Eval:
+INFO: Checkpoint 4 saved!
+IoU per class: [0.629, 0.12, 0.215, 0.05] mIoU: 0.253 mIoU_shapes: 0.128
+
+Average loss this epoch =  0.28674332367326427
+/////////////////////////
+Epoch 5/200:
+
+Test Set Eval:
+IoU per class: [0.81, 0.109, 0.269, 0.112] mIoU: 0.325 mIoU_shapes: 0.163
+
+Training Set Eval:
+INFO: Checkpoint 5 saved!
+IoU per class: [0.822, 0.153, 0.25, 0.089] mIoU: 0.328 mIoU_shapes: 0.164
+
+Average loss this epoch =  0.253719090417838
+/////////////////////////
+Epoch 6/200:
+
+Test Set Eval:
+IoU per class: [0.938, 0.1, 0.323, 0.241] mIoU: 0.4 mIoU_shapes: 0.221
+
+Training Set Eval:
+INFO: Checkpoint 6 saved!
+IoU per class: [0.944, 0.077, 0.323, 0.192] mIoU: 0.384 mIoU_shapes: 0.197
+
+Average loss this epoch =  0.22705930446481107
+/////////////////////////
+Epoch 7/200:
+
+Test Set Eval:
+IoU per class: [0.975, 0.121, 0.432, 0.29] mIoU: 0.455 mIoU_shapes: 0.281
+
+Training Set Eval:
+INFO: Checkpoint 7 saved!
+IoU per class: [0.972, 0.127, 0.415, 0.252] mIoU: 0.442 mIoU_shapes: 0.265
+
+Average loss this epoch =  0.20503624313546026
+/////////////////////////
+Epoch 8/200:
+
+Test Set Eval:
+IoU per class: [0.987, 0.141, 0.457, 0.314] mIoU: 0.475 mIoU_shapes: 0.304
+
+Training Set Eval:
+INFO: Checkpoint 8 saved!
+IoU per class: [0.985, 0.148, 0.505, 0.324] mIoU: 0.49 mIoU_shapes: 0.326
+
+Average loss this epoch =  0.18558888455315115
+/////////////////////////
+Epoch 9/200:
+
+Test Set Eval:
+IoU per class: [0.99, 0.175, 0.469, 0.273] mIoU: 0.477 mIoU_shapes: 0.306
+
+Training Set Eval:
+INFO: Checkpoint 9 saved!
+IoU per class: [0.989, 0.212, 0.576, 0.378] mIoU: 0.539 mIoU_shapes: 0.389
+
+Average loss this epoch =  0.16826675925793508
+/////////////////////////
+Epoch 10/200:
+
+Test Set Eval:
+IoU per class: [0.987, 0.136, 0.568, 0.381] mIoU: 0.518 mIoU_shapes: 0.362
+
+Training Set Eval:
+INFO: Checkpoint 10 saved!
+IoU per class: [0.987, 0.214, 0.632, 0.436] mIoU: 0.567 mIoU_shapes: 0.427
+
+Average loss this epoch =  0.1516305771831688
+/////////////////////////
+Epoch 11/200:
+
+Test Set Eval:
+IoU per class: [0.978, 0.191, 0.52, 0.24] mIoU: 0.482 mIoU_shapes: 0.317
+
+Training Set Eval:
+INFO: Checkpoint 11 saved!
+IoU per class: [0.982, 0.248, 0.608, 0.382] mIoU: 0.555 mIoU_shapes: 0.413
+
+Average loss this epoch =  0.13570348188966888
+/////////////////////////
+Epoch 12/200:
+
+Test Set Eval:
+IoU per class: [0.979, 0.223, 0.573, 0.271] mIoU: 0.512 mIoU_shapes: 0.356
+
+Training Set Eval:
+INFO: Checkpoint 12 saved!
+IoU per class: [0.982, 0.302, 0.679, 0.385] mIoU: 0.587 mIoU_shapes: 0.455
+
+Average loss this epoch =  0.1208468241671638
+/////////////////////////
+Epoch 13/200:
+
+Test Set Eval:
+IoU per class: [0.971, 0.201, 0.585, 0.258] mIoU: 0.504 mIoU_shapes: 0.348
+
+Training Set Eval:
+INFO: Checkpoint 13 saved!
+IoU per class: [0.977, 0.285, 0.685, 0.411] mIoU: 0.59 mIoU_shapes: 0.46
+
+Average loss this epoch =  0.10651481500729357
+/////////////////////////
+Epoch 14/200:
+
+Test Set Eval:
+IoU per class: [0.963, 0.192, 0.567, 0.252] mIoU: 0.494 mIoU_shapes: 0.337
+
+Training Set Eval:
+INFO: Checkpoint 14 saved!
+IoU per class: [0.972, 0.277, 0.688, 0.443] mIoU: 0.595 mIoU_shapes: 0.469
+
+Average loss this epoch =  0.092462818991689
+/////////////////////////
+Epoch 15/200:
+
+Test Set Eval:
+IoU per class: [0.968, 0.238, 0.564, 0.281] mIoU: 0.513 mIoU_shapes: 0.361
+
+Training Set Eval:
+INFO: Checkpoint 15 saved!
+IoU per class: [0.975, 0.327, 0.661, 0.481] mIoU: 0.611 mIoU_shapes: 0.49
+
+Average loss this epoch =  0.07892093099809591
+/////////////////////////
+Epoch 16/200:
+
+Test Set Eval:
+IoU per class: [0.97, 0.314, 0.536, 0.183] mIoU: 0.501 mIoU_shapes: 0.344
+
+Training Set Eval:
+INFO: Checkpoint 16 saved!
+IoU per class: [0.972, 0.396, 0.653, 0.393] mIoU: 0.604 mIoU_shapes: 0.481
+
+Average loss this epoch =  0.06618986568690344
+/////////////////////////
+Epoch 17/200:
+
+Test Set Eval:
+IoU per class: [0.981, 0.345, 0.688, 0.221] mIoU: 0.559 mIoU_shapes: 0.418
+
+Training Set Eval:
+INFO: Checkpoint 17 saved!
+IoU per class: [0.982, 0.562, 0.735, 0.478] mIoU: 0.689 mIoU_shapes: 0.592
+
+Average loss this epoch =  0.054385029621204076
+/////////////////////////
+Epoch 18/200:
+
+Test Set Eval:
+IoU per class: [0.985, 0.418, 0.702, 0.351] mIoU: 0.614 mIoU_shapes: 0.49
+
+Training Set Eval:
+INFO: Checkpoint 18 saved!
+IoU per class: [0.985, 0.64, 0.751, 0.577] mIoU: 0.738 mIoU_shapes: 0.656
+
+Average loss this epoch =  0.04401637121224503
+/////////////////////////
+Epoch 19/200:
+
+Test Set Eval:
+IoU per class: [0.989, 0.459, 0.654, 0.381] mIoU: 0.621 mIoU_shapes: 0.498
+
+Training Set Eval:
+INFO: Checkpoint 19 saved!
+IoU per class: [0.989, 0.659, 0.705, 0.595] mIoU: 0.737 mIoU_shapes: 0.653
+
+Average loss this epoch =  0.0344067338121486
+/////////////////////////
+Epoch 20/200:
+
+Test Set Eval:
+IoU per class: [0.989, 0.469, 0.616, 0.473] mIoU: 0.637 mIoU_shapes: 0.519
+
+Training Set Eval:
+INFO: Checkpoint 20 saved!
+IoU per class: [0.989, 0.731, 0.726, 0.726] mIoU: 0.793 mIoU_shapes: 0.728
+
+Average loss this epoch =  0.026791199480639342
+/////////////////////////
+Epoch 21/200:
+
+Test Set Eval:
+IoU per class: [0.988, 0.499, 0.664, 0.452] mIoU: 0.651 mIoU_shapes: 0.538
+
+Training Set Eval:
+INFO: Checkpoint 21 saved!
+IoU per class: [0.99, 0.719, 0.752, 0.73] mIoU: 0.798 mIoU_shapes: 0.734
+
+Average loss this epoch =  0.020838615784585228
+/////////////////////////
+Epoch 22/200:
+
+Test Set Eval:
+IoU per class: [0.987, 0.496, 0.679, 0.32] mIoU: 0.621 mIoU_shapes: 0.498
+
+Training Set Eval:
+INFO: Checkpoint 22 saved!
+IoU per class: [0.989, 0.745, 0.777, 0.606] mIoU: 0.779 mIoU_shapes: 0.709
+
+Average loss this epoch =  0.01638416366098316
+/////////////////////////
+Epoch 23/200:
+
+Test Set Eval:
+IoU per class: [0.986, 0.465, 0.686, 0.319] mIoU: 0.614 mIoU_shapes: 0.49
+
+Training Set Eval:
+INFO: Checkpoint 23 saved!
+IoU per class: [0.987, 0.741, 0.761, 0.618] mIoU: 0.777 mIoU_shapes: 0.706
+
+Average loss this epoch =  0.013033802040451242
+/////////////////////////
+Epoch 24/200:
+
+Test Set Eval:
+IoU per class: [0.985, 0.473, 0.51, 0.405] mIoU: 0.593 mIoU_shapes: 0.463
+
+Training Set Eval:
+INFO: Checkpoint 24 saved!
+IoU per class: [0.987, 0.726, 0.645, 0.729] mIoU: 0.772 mIoU_shapes: 0.7
+
+Average loss this epoch =  0.010186000847916224
+/////////////////////////
+Epoch 25/200:
+
+Test Set Eval:
+IoU per class: [0.986, 0.506, 0.691, 0.357] mIoU: 0.635 mIoU_shapes: 0.518
+
+Training Set Eval:
+INFO: Checkpoint 25 saved!
+IoU per class: [0.988, 0.778, 0.796, 0.694] mIoU: 0.814 mIoU_shapes: 0.756
+
+Average loss this epoch =  0.008077191009681095
+/////////////////////////
+Epoch 26/200:
+
+Test Set Eval:
+IoU per class: [0.979, 0.51, 0.711, 0.217] mIoU: 0.604 mIoU_shapes: 0.479
+
+Training Set Eval:
+INFO: Checkpoint 26 saved!
+IoU per class: [0.983, 0.751, 0.782, 0.509] mIoU: 0.756 mIoU_shapes: 0.68
+
+Average loss this epoch =  0.006181747843530886
+/////////////////////////
+Epoch 27/200:
+
+Test Set Eval:
+IoU per class: [0.979, 0.521, 0.696, 0.31] mIoU: 0.627 mIoU_shapes: 0.509
+
+Training Set Eval:
+INFO: Checkpoint 27 saved!
+IoU per class: [0.979, 0.718, 0.758, 0.579] mIoU: 0.759 mIoU_shapes: 0.685
+
+Average loss this epoch =  0.004949263448994529
+/////////////////////////
+Epoch 28/200:
+
+Test Set Eval:
+IoU per class: [0.971, 0.508, 0.665, 0.253] mIoU: 0.599 mIoU_shapes: 0.475
+
+Training Set Eval:
+INFO: Checkpoint 28 saved!
+IoU per class: [0.976, 0.71, 0.736, 0.535] mIoU: 0.739 mIoU_shapes: 0.66
+
+Average loss this epoch =  0.004105218534190286
+/////////////////////////
+Epoch 29/200:
+
+Test Set Eval:
+IoU per class: [0.974, 0.507, 0.732, 0.377] mIoU: 0.647 mIoU_shapes: 0.539
+
+Training Set Eval:
+INFO: Checkpoint 29 saved!
+IoU per class: [0.978, 0.694, 0.775, 0.666] mIoU: 0.778 mIoU_shapes: 0.712
+
+Average loss this epoch =  0.003717251651955449
+/////////////////////////
+Epoch 30/200:
+
+Test Set Eval:
+IoU per class: [0.975, 0.461, 0.777, 0.258] mIoU: 0.617 mIoU_shapes: 0.498
+
+Training Set Eval:
+INFO: Checkpoint 30 saved!
+IoU per class: [0.975, 0.657, 0.789, 0.521] mIoU: 0.735 mIoU_shapes: 0.655
+
+Average loss this epoch =  0.003176966471652107
+/////////////////////////
+Epoch 31/200:
+
+Test Set Eval:
+IoU per class: [0.973, 0.508, 0.69, 0.251] mIoU: 0.605 mIoU_shapes: 0.483
+
+Training Set Eval:
+INFO: Checkpoint 31 saved!
+IoU per class: [0.976, 0.676, 0.783, 0.494] mIoU: 0.732 mIoU_shapes: 0.651
+
+Average loss this epoch =  0.0028104116228335075
+/////////////////////////
+Epoch 32/200:
+
+Test Set Eval:
+IoU per class: [0.968, 0.347, 0.672, 0.435] mIoU: 0.606 mIoU_shapes: 0.485
+
+Training Set Eval:
+INFO: Checkpoint 32 saved!
+IoU per class: [0.973, 0.554, 0.752, 0.672] mIoU: 0.738 mIoU_shapes: 0.659
+
+Average loss this epoch =  0.0032938923297068066
+/////////////////////////
+Epoch 33/200:
+
+Test Set Eval:
+IoU per class: [0.964, 0.476, 0.747, 0.13] mIoU: 0.579 mIoU_shapes: 0.451
+
+Training Set Eval:
+INFO: Checkpoint 33 saved!
+IoU per class: [0.967, 0.644, 0.799, 0.351] mIoU: 0.69 mIoU_shapes: 0.598
+
+Average loss this epoch =  0.0020337488860764762
+/////////////////////////
+Epoch 34/200:
+
+Test Set Eval:
+IoU per class: [0.963, 0.441, 0.753, 0.097] mIoU: 0.564 mIoU_shapes: 0.431
+
+Training Set Eval:
+INFO: Checkpoint 34 saved!
+IoU per class: [0.966, 0.63, 0.805, 0.292] mIoU: 0.673 mIoU_shapes: 0.575
+
+Average loss this epoch =  0.001884104193005103
+/////////////////////////
+Epoch 35/200:
+
+Test Set Eval:
+IoU per class: [0.965, 0.432, 0.675, 0.159] mIoU: 0.558 mIoU_shapes: 0.422
+
+Training Set Eval:
+INFO: Checkpoint 35 saved!
+IoU per class: [0.969, 0.637, 0.779, 0.412] mIoU: 0.699 mIoU_shapes: 0.609
+
+Average loss this epoch =  0.0017191029492781252
+/////////////////////////
+Epoch 36/200:
+
+Test Set Eval:
+IoU per class: [0.962, 0.486, 0.724, 0.251] mIoU: 0.606 mIoU_shapes: 0.487
+
+Training Set Eval:
+INFO: Checkpoint 36 saved!
+IoU per class: [0.969, 0.647, 0.8, 0.533] mIoU: 0.737 mIoU_shapes: 0.66
+
+Average loss this epoch =  0.0015116007258203737
+/////////////////////////
+Epoch 37/200:
+
+Test Set Eval:
+IoU per class: [0.967, 0.432, 0.719, 0.185] mIoU: 0.576 mIoU_shapes: 0.445
+
+Training Set Eval:
+INFO: Checkpoint 37 saved!
+IoU per class: [0.972, 0.574, 0.816, 0.41] mIoU: 0.693 mIoU_shapes: 0.6
+
+Average loss this epoch =  0.0013705651630417572
+/////////////////////////
+Epoch 38/200:
+
+Test Set Eval:
+IoU per class: [0.963, 0.48, 0.657, 0.226] mIoU: 0.582 mIoU_shapes: 0.455
+
+Training Set Eval:
+INFO: Checkpoint 38 saved!
+IoU per class: [0.969, 0.64, 0.774, 0.522] mIoU: 0.726 mIoU_shapes: 0.645
+
+Average loss this epoch =  0.001253704146860035
+/////////////////////////
+Epoch 39/200:
+
+Test Set Eval:
+IoU per class: [0.959, 0.468, 0.61, 0.296] mIoU: 0.583 mIoU_shapes: 0.458
+
+Training Set Eval:
+INFO: Checkpoint 39 saved!
+IoU per class: [0.966, 0.592, 0.701, 0.533] mIoU: 0.698 mIoU_shapes: 0.609
+
+Average loss this epoch =  0.0012921445289915078
+/////////////////////////
+Epoch 40/200:
+
+Test Set Eval:
+IoU per class: [0.965, 0.478, 0.723, 0.243] mIoU: 0.602 mIoU_shapes: 0.481
+
+Training Set Eval:
+INFO: Checkpoint 40 saved!
+IoU per class: [0.972, 0.635, 0.806, 0.434] mIoU: 0.712 mIoU_shapes: 0.625
+
+Average loss this epoch =  0.00130842220833112
+/////////////////////////
+Epoch 41/200:
+
+Test Set Eval:
+IoU per class: [0.964, 0.375, 0.493, 0.272] mIoU: 0.526 mIoU_shapes: 0.38
+
+Training Set Eval:
+INFO: Checkpoint 41 saved!
+IoU per class: [0.968, 0.558, 0.61, 0.53] mIoU: 0.666 mIoU_shapes: 0.566
+
+Average loss this epoch =  0.001069139237184405
+/////////////////////////
+Epoch 42/200:
+
+Test Set Eval:
+IoU per class: [0.963, 0.464, 0.7, 0.093] mIoU: 0.555 mIoU_shapes: 0.419
+
+Training Set Eval:
+INFO: Checkpoint 42 saved!
+IoU per class: [0.968, 0.584, 0.764, 0.206] mIoU: 0.631 mIoU_shapes: 0.518
+
+Average loss this epoch =  0.0016370133874805402
+/////////////////////////
+Epoch 43/200:
+
+Test Set Eval:
+IoU per class: [0.963, 0.424, 0.681, 0.362] mIoU: 0.607 mIoU_shapes: 0.489
+
+Training Set Eval:
+INFO: Checkpoint 43 saved!
+IoU per class: [0.969, 0.589, 0.748, 0.591] mIoU: 0.724 mIoU_shapes: 0.643
+
+Average loss this epoch =  0.0015077971264907007
+/////////////////////////
+Epoch 44/200:
+
+Test Set Eval:
+IoU per class: [0.966, 0.411, 0.648, 0.296] mIoU: 0.58 mIoU_shapes: 0.451
+
+Training Set Eval:
+INFO: Checkpoint 44 saved!
+IoU per class: [0.971, 0.618, 0.731, 0.562] mIoU: 0.721 mIoU_shapes: 0.637
+
+Average loss this epoch =  0.001045378244571606
+/////////////////////////
+Epoch 45/200:
+
+Test Set Eval:
+IoU per class: [0.96, 0.435, 0.657, 0.272] mIoU: 0.581 mIoU_shapes: 0.455
+
+Training Set Eval:
+INFO: Checkpoint 45 saved!
+IoU per class: [0.966, 0.616, 0.711, 0.546] mIoU: 0.709 mIoU_shapes: 0.624
+
+Average loss this epoch =  0.0012887483111984062
+/////////////////////////
+Epoch 46/200:
+
+Test Set Eval:
+IoU per class: [0.964, 0.407, 0.609, 0.224] mIoU: 0.551 mIoU_shapes: 0.413
+
+Training Set Eval:
+INFO: Checkpoint 46 saved!
+IoU per class: [0.967, 0.579, 0.691, 0.418] mIoU: 0.664 mIoU_shapes: 0.563
+
+Average loss this epoch =  0.0009420707385410325
+/////////////////////////
+Epoch 47/200:
+
+Test Set Eval:
+IoU per class: [0.964, 0.433, 0.671, 0.256] mIoU: 0.581 mIoU_shapes: 0.453
+
+Training Set Eval:
+INFO: Checkpoint 47 saved!
+IoU per class: [0.97, 0.624, 0.76, 0.55] mIoU: 0.726 mIoU_shapes: 0.645
+
+Average loss this epoch =  0.0008904114677317471
+/////////////////////////
+Epoch 48/200:
+
+Test Set Eval:
+IoU per class: [0.962, 0.43, 0.561, 0.431] mIoU: 0.596 mIoU_shapes: 0.474
+
+Training Set Eval:
+INFO: Checkpoint 48 saved!
+IoU per class: [0.968, 0.557, 0.618, 0.682] mIoU: 0.706 mIoU_shapes: 0.619
+
+Average loss this epoch =  0.001139672730258319
+/////////////////////////
+Epoch 49/200:
+
+Test Set Eval:
+IoU per class: [0.961, 0.462, 0.593, 0.292] mIoU: 0.577 mIoU_shapes: 0.449
+
+Training Set Eval:
+INFO: Checkpoint 49 saved!
+IoU per class: [0.966, 0.584, 0.653, 0.559] mIoU: 0.69 mIoU_shapes: 0.598
+
+Average loss this epoch =  0.0012171990452451188
+/////////////////////////
+Epoch 50/200:
+
+Test Set Eval:
+IoU per class: [0.96, 0.461, 0.634, 0.272] mIoU: 0.582 mIoU_shapes: 0.456
+
+Training Set Eval:
+INFO: Checkpoint 50 saved!
+IoU per class: [0.966, 0.61, 0.693, 0.509] mIoU: 0.694 mIoU_shapes: 0.604
+
+Average loss this epoch =  0.0009274316258011503
+/////////////////////////
+Epoch 51/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.395, 0.508, 0.151] mIoU: 0.502 mIoU_shapes: 0.351
+
+Training Set Eval:
+INFO: Checkpoint 51 saved!
+IoU per class: [0.96, 0.55, 0.573, 0.394] mIoU: 0.619 mIoU_shapes: 0.506
+
+Average loss this epoch =  0.0008017465035785691
+/////////////////////////
+Epoch 52/200:
+
+Test Set Eval:
+IoU per class: [0.963, 0.47, 0.607, 0.273] mIoU: 0.578 mIoU_shapes: 0.45
+
+Training Set Eval:
+INFO: Checkpoint 52 saved!
+IoU per class: [0.969, 0.631, 0.675, 0.512] mIoU: 0.697 mIoU_shapes: 0.606
+
+Average loss this epoch =  0.000834760930248883
+/////////////////////////
+Epoch 53/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.461, 0.555, 0.373] mIoU: 0.587 mIoU_shapes: 0.463
+
+Training Set Eval:
+INFO: Checkpoint 53 saved!
+IoU per class: [0.965, 0.591, 0.644, 0.638] mIoU: 0.71 mIoU_shapes: 0.624
+
+Average loss this epoch =  0.0008701160238377719
+/////////////////////////
+Epoch 54/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.403, 0.519, 0.224] mIoU: 0.524 mIoU_shapes: 0.382
+
+Training Set Eval:
+INFO: Checkpoint 54 saved!
+IoU per class: [0.958, 0.535, 0.583, 0.493] mIoU: 0.642 mIoU_shapes: 0.537
+
+Average loss this epoch =  0.0006952494632250096
+/////////////////////////
+Epoch 55/200:
+
+Test Set Eval:
+IoU per class: [0.959, 0.521, 0.608, 0.352] mIoU: 0.61 mIoU_shapes: 0.494
+
+Training Set Eval:
+INFO: Checkpoint 55 saved!
+IoU per class: [0.968, 0.649, 0.699, 0.606] mIoU: 0.73 mIoU_shapes: 0.651
+
+Average loss this epoch =  0.0006365442500453614
+/////////////////////////
+Epoch 56/200:
+
+Test Set Eval:
+IoU per class: [0.961, 0.458, 0.584, 0.428] mIoU: 0.608 mIoU_shapes: 0.49
+
+Training Set Eval:
+INFO: Checkpoint 56 saved!
+IoU per class: [0.966, 0.598, 0.648, 0.618] mIoU: 0.708 mIoU_shapes: 0.621
+
+Average loss this epoch =  0.000648657584788909
+/////////////////////////
+Epoch 57/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.449, 0.557, 0.313] mIoU: 0.569 mIoU_shapes: 0.44
+
+Training Set Eval:
+INFO: Checkpoint 57 saved!
+IoU per class: [0.963, 0.571, 0.634, 0.485] mIoU: 0.663 mIoU_shapes: 0.563
+
+Average loss this epoch =  0.0006987758635477042
+/////////////////////////
+Epoch 58/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.441, 0.591, 0.369] mIoU: 0.59 mIoU_shapes: 0.467
+
+Training Set Eval:
+INFO: Checkpoint 58 saved!
+IoU per class: [0.965, 0.582, 0.646, 0.637] mIoU: 0.708 mIoU_shapes: 0.622
+
+Average loss this epoch =  0.0007393861415495932
+/////////////////////////
+Epoch 59/200:
+
+Test Set Eval:
+IoU per class: [0.958, 0.416, 0.625, 0.275] mIoU: 0.569 mIoU_shapes: 0.439
+
+Training Set Eval:
+INFO: Checkpoint 59 saved!
+IoU per class: [0.964, 0.622, 0.666, 0.513] mIoU: 0.691 mIoU_shapes: 0.6
+
+Average loss this epoch =  0.000957999394029753
+/////////////////////////
+Epoch 60/200:
+
+Test Set Eval:
+IoU per class: [0.958, 0.464, 0.625, 0.213] mIoU: 0.565 mIoU_shapes: 0.434
+
+Training Set Eval:
+INFO: Checkpoint 60 saved!
+IoU per class: [0.964, 0.634, 0.649, 0.477] mIoU: 0.681 mIoU_shapes: 0.586
+
+Average loss this epoch =  0.0007347217040081902
+/////////////////////////
+Epoch 61/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.428, 0.558, 0.254] mIoU: 0.548 mIoU_shapes: 0.413
+
+Training Set Eval:
+INFO: Checkpoint 61 saved!
+IoU per class: [0.96, 0.592, 0.615, 0.471] mIoU: 0.66 mIoU_shapes: 0.559
+
+Average loss this epoch =  0.0005691587675565456
+/////////////////////////
+Epoch 62/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.43, 0.587, 0.198] mIoU: 0.542 mIoU_shapes: 0.405
+
+Training Set Eval:
+INFO: Checkpoint 62 saved!
+IoU per class: [0.961, 0.575, 0.642, 0.415] mIoU: 0.648 mIoU_shapes: 0.544
+
+Average loss this epoch =  0.0004791830000019473
+/////////////////////////
+Epoch 63/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.43, 0.578, 0.244] mIoU: 0.552 mIoU_shapes: 0.417
+
+Training Set Eval:
+INFO: Checkpoint 63 saved!
+IoU per class: [0.961, 0.607, 0.608, 0.512] mIoU: 0.672 mIoU_shapes: 0.576
+
+Average loss this epoch =  0.0005872296364237574
+/////////////////////////
+Epoch 64/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.421, 0.484, 0.229] mIoU: 0.522 mIoU_shapes: 0.378
+
+Training Set Eval:
+INFO: Checkpoint 64 saved!
+IoU per class: [0.958, 0.579, 0.534, 0.486] mIoU: 0.639 mIoU_shapes: 0.533
+
+Average loss this epoch =  0.0003843484251569006
+/////////////////////////
+Epoch 65/200:
+
+Test Set Eval:
+IoU per class: [0.956, 0.422, 0.636, 0.229] mIoU: 0.561 mIoU_shapes: 0.429
+
+Training Set Eval:
+INFO: Checkpoint 65 saved!
+IoU per class: [0.963, 0.557, 0.673, 0.458] mIoU: 0.663 mIoU_shapes: 0.563
+
+Average loss this epoch =  0.0005001865607924043
+/////////////////////////
+Epoch 66/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.411, 0.524, 0.31] mIoU: 0.55 mIoU_shapes: 0.415
+
+Training Set Eval:
+INFO: Checkpoint 66 saved!
+IoU per class: [0.96, 0.576, 0.551, 0.539] mIoU: 0.656 mIoU_shapes: 0.555
+
+Average loss this epoch =  0.0004855991968549944
+/////////////////////////
+Epoch 67/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.488, 0.603, 0.4] mIoU: 0.612 mIoU_shapes: 0.497
+
+Training Set Eval:
+INFO: Checkpoint 67 saved!
+IoU per class: [0.962, 0.599, 0.627, 0.581] mIoU: 0.692 mIoU_shapes: 0.602
+
+Average loss this epoch =  0.0007953911271554156
+/////////////////////////
+Epoch 68/200:
+
+Test Set Eval:
+IoU per class: [0.956, 0.454, 0.444, 0.414] mIoU: 0.567 mIoU_shapes: 0.438
+
+Training Set Eval:
+INFO: Checkpoint 68 saved!
+IoU per class: [0.961, 0.587, 0.533, 0.578] mIoU: 0.665 mIoU_shapes: 0.566
+
+Average loss this epoch =  0.0003588718038722561
+/////////////////////////
+Epoch 69/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.448, 0.589, 0.398] mIoU: 0.597 mIoU_shapes: 0.478
+
+Training Set Eval:
+INFO: Checkpoint 69 saved!
+IoU per class: [0.959, 0.555, 0.594, 0.58] mIoU: 0.672 mIoU_shapes: 0.576
+
+Average loss this epoch =  0.00059154754403246
+/////////////////////////
+Epoch 70/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.381, 0.475, 0.225] mIoU: 0.51 mIoU_shapes: 0.36
+
+Training Set Eval:
+INFO: Checkpoint 70 saved!
+IoU per class: [0.961, 0.544, 0.539, 0.441] mIoU: 0.621 mIoU_shapes: 0.508
+
+Average loss this epoch =  0.0006078931826427891
+/////////////////////////
+Epoch 71/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.429, 0.571, 0.355] mIoU: 0.577 mIoU_shapes: 0.452
+
+Training Set Eval:
+INFO: Checkpoint 71 saved!
+IoU per class: [0.96, 0.558, 0.597, 0.591] mIoU: 0.676 mIoU_shapes: 0.582
+
+Average loss this epoch =  0.0005629466043855356
+/////////////////////////
+Epoch 72/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.438, 0.62, 0.313] mIoU: 0.581 mIoU_shapes: 0.457
+
+Training Set Eval:
+INFO: Checkpoint 72 saved!
+IoU per class: [0.959, 0.563, 0.63, 0.527] mIoU: 0.67 mIoU_shapes: 0.573
+
+Average loss this epoch =  0.0004741725001375047
+/////////////////////////
+Epoch 73/200:
+
+Test Set Eval:
+IoU per class: [0.958, 0.504, 0.64, 0.424] mIoU: 0.632 mIoU_shapes: 0.523
+
+Training Set Eval:
+INFO: Checkpoint 73 saved!
+IoU per class: [0.966, 0.63, 0.668, 0.644] mIoU: 0.727 mIoU_shapes: 0.647
+
+Average loss this epoch =  0.0005121960238432784
+/////////////////////////
+Epoch 74/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.426, 0.622, 0.319] mIoU: 0.58 mIoU_shapes: 0.456
+
+Training Set Eval:
+INFO: Checkpoint 74 saved!
+IoU per class: [0.962, 0.578, 0.666, 0.569] mIoU: 0.694 mIoU_shapes: 0.604
+
+Average loss this epoch =  0.00047291151275195836
+/////////////////////////
+Epoch 75/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.404, 0.608, 0.329] mIoU: 0.574 mIoU_shapes: 0.447
+
+Training Set Eval:
+INFO: Checkpoint 75 saved!
+IoU per class: [0.962, 0.585, 0.631, 0.586] mIoU: 0.691 mIoU_shapes: 0.601
+
+Average loss this epoch =  0.000657979788640553
+/////////////////////////
+Epoch 76/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.446, 0.535, 0.333] mIoU: 0.566 mIoU_shapes: 0.438
+
+Training Set Eval:
+INFO: Checkpoint 76 saved!
+IoU per class: [0.958, 0.554, 0.546, 0.587] mIoU: 0.661 mIoU_shapes: 0.562
+
+Average loss this epoch =  0.0004882194631768071
+/////////////////////////
+Epoch 77/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.413, 0.427, 0.239] mIoU: 0.507 mIoU_shapes: 0.36
+
+Training Set Eval:
+INFO: Checkpoint 77 saved!
+IoU per class: [0.955, 0.561, 0.467, 0.493] mIoU: 0.619 mIoU_shapes: 0.507
+
+Average loss this epoch =  0.0005878628422525638
+/////////////////////////
+Epoch 78/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.435, 0.582, 0.287] mIoU: 0.564 mIoU_shapes: 0.434
+
+Training Set Eval:
+INFO: Checkpoint 78 saved!
+IoU per class: [0.959, 0.58, 0.604, 0.52] mIoU: 0.666 mIoU_shapes: 0.568
+
+Average loss this epoch =  0.000654678963218274
+/////////////////////////
+Epoch 79/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.454, 0.583, 0.226] mIoU: 0.555 mIoU_shapes: 0.421
+
+Training Set Eval:
+INFO: Checkpoint 79 saved!
+IoU per class: [0.962, 0.554, 0.604, 0.328] mIoU: 0.612 mIoU_shapes: 0.495
+
+Average loss this epoch =  0.0003832628225681672
+/////////////////////////
+Epoch 80/200:
+
+Test Set Eval:
+IoU per class: [0.961, 0.434, 0.54, 0.443] mIoU: 0.594 mIoU_shapes: 0.472
+
+Training Set Eval:
+INFO: Checkpoint 80 saved!
+IoU per class: [0.964, 0.58, 0.561, 0.626] mIoU: 0.683 mIoU_shapes: 0.589
+
+Average loss this epoch =  0.0006247020042092231
+/////////////////////////
+Epoch 81/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.469, 0.493, 0.351] mIoU: 0.568 mIoU_shapes: 0.438
+
+Training Set Eval:
+INFO: Checkpoint 81 saved!
+IoU per class: [0.962, 0.576, 0.537, 0.602] mIoU: 0.669 mIoU_shapes: 0.572
+
+Average loss this epoch =  0.0005207051480165585
+/////////////////////////
+Epoch 82/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.403, 0.533, 0.16] mIoU: 0.513 mIoU_shapes: 0.365
+
+Training Set Eval:
+INFO: Checkpoint 82 saved!
+IoU per class: [0.959, 0.524, 0.577, 0.449] mIoU: 0.627 mIoU_shapes: 0.516
+
+Average loss this epoch =  0.0005414315721479918
+/////////////////////////
+Epoch 83/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.424, 0.447, 0.306] mIoU: 0.532 mIoU_shapes: 0.392
+
+Training Set Eval:
+INFO: Checkpoint 83 saved!
+IoU per class: [0.956, 0.53, 0.496, 0.495] mIoU: 0.619 mIoU_shapes: 0.507
+
+Average loss this epoch =  0.000416600336340182
+/////////////////////////
+Epoch 84/200:
+
+Test Set Eval:
+IoU per class: [0.958, 0.463, 0.474, 0.451] mIoU: 0.586 mIoU_shapes: 0.462
+
+Training Set Eval:
+INFO: Checkpoint 84 saved!
+IoU per class: [0.962, 0.598, 0.527, 0.639] mIoU: 0.681 mIoU_shapes: 0.588
+
+Average loss this epoch =  0.00038315337073354045
+/////////////////////////
+Epoch 85/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.41, 0.493, 0.408] mIoU: 0.566 mIoU_shapes: 0.437
+
+Training Set Eval:
+INFO: Checkpoint 85 saved!
+IoU per class: [0.959, 0.565, 0.529, 0.597] mIoU: 0.663 mIoU_shapes: 0.564
+
+Average loss this epoch =  0.0007104631747161993
+/////////////////////////
+Epoch 86/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.418, 0.48, 0.345] mIoU: 0.549 mIoU_shapes: 0.414
+
+Training Set Eval:
+INFO: Checkpoint 86 saved!
+IoU per class: [0.959, 0.556, 0.523, 0.576] mIoU: 0.654 mIoU_shapes: 0.552
+
+Average loss this epoch =  0.00039210301438136083
+/////////////////////////
+Epoch 87/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.389, 0.457, 0.34] mIoU: 0.535 mIoU_shapes: 0.396
+
+Training Set Eval:
+INFO: Checkpoint 87 saved!
+IoU per class: [0.958, 0.548, 0.491, 0.565] mIoU: 0.64 mIoU_shapes: 0.535
+
+Average loss this epoch =  0.00037961727530387655
+/////////////////////////
+Epoch 88/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.462, 0.533, 0.329] mIoU: 0.57 mIoU_shapes: 0.442
+
+Training Set Eval:
+INFO: Checkpoint 88 saved!
+IoU per class: [0.96, 0.585, 0.558, 0.537] mIoU: 0.66 mIoU_shapes: 0.56
+
+Average loss this epoch =  0.0005738175314340631
+/////////////////////////
+Epoch 89/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.457, 0.57, 0.291] mIoU: 0.569 mIoU_shapes: 0.439
+
+Training Set Eval:
+INFO: Checkpoint 89 saved!
+IoU per class: [0.963, 0.574, 0.6, 0.512] mIoU: 0.662 mIoU_shapes: 0.562
+
+Average loss this epoch =  0.00046719124377023224
+/////////////////////////
+Epoch 90/200:
+
+Test Set Eval:
+IoU per class: [0.964, 0.466, 0.602, 0.541] mIoU: 0.643 mIoU_shapes: 0.536
+
+Training Set Eval:
+INFO: Checkpoint 90 saved!
+IoU per class: [0.967, 0.596, 0.618, 0.715] mIoU: 0.724 mIoU_shapes: 0.643
+
+Average loss this epoch =  0.0006349296874082238
+/////////////////////////
+Epoch 91/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.435, 0.537, 0.356] mIoU: 0.57 mIoU_shapes: 0.443
+
+Training Set Eval:
+INFO: Checkpoint 91 saved!
+IoU per class: [0.957, 0.529, 0.55, 0.51] mIoU: 0.637 mIoU_shapes: 0.53
+
+Average loss this epoch =  0.0007143775663615271
+/////////////////////////
+Epoch 92/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.471, 0.57, 0.371] mIoU: 0.592 mIoU_shapes: 0.471
+
+Training Set Eval:
+INFO: Checkpoint 92 saved!
+IoU per class: [0.96, 0.555, 0.561, 0.595] mIoU: 0.668 mIoU_shapes: 0.57
+
+Average loss this epoch =  0.0004474405651311994
+/////////////////////////
+Epoch 93/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.439, 0.499, 0.32] mIoU: 0.553 mIoU_shapes: 0.419
+
+Training Set Eval:
+INFO: Checkpoint 93 saved!
+IoU per class: [0.96, 0.57, 0.518, 0.613] mIoU: 0.665 mIoU_shapes: 0.567
+
+Average loss this epoch =  0.00043569293231644887
+/////////////////////////
+Epoch 94/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.491, 0.503, 0.399] mIoU: 0.587 mIoU_shapes: 0.464
+
+Training Set Eval:
+INFO: Checkpoint 94 saved!
+IoU per class: [0.96, 0.578, 0.507, 0.609] mIoU: 0.664 mIoU_shapes: 0.565
+
+Average loss this epoch =  0.0003736670358909224
+/////////////////////////
+Epoch 95/200:
+
+Test Set Eval:
+IoU per class: [0.956, 0.453, 0.566, 0.253] mIoU: 0.557 mIoU_shapes: 0.424
+
+Training Set Eval:
+INFO: Checkpoint 95 saved!
+IoU per class: [0.96, 0.574, 0.57, 0.427] mIoU: 0.633 mIoU_shapes: 0.524
+
+Average loss this epoch =  0.00032254978702656896
+/////////////////////////
+Epoch 96/200:
+
+Test Set Eval:
+IoU per class: [0.956, 0.463, 0.501, 0.5] mIoU: 0.605 mIoU_shapes: 0.488
+
+Training Set Eval:
+INFO: Checkpoint 96 saved!
+IoU per class: [0.96, 0.552, 0.519, 0.635] mIoU: 0.667 mIoU_shapes: 0.569
+
+Average loss this epoch =  0.0003803571896572991
+/////////////////////////
+Epoch 97/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.448, 0.495, 0.34] mIoU: 0.559 mIoU_shapes: 0.428
+
+Training Set Eval:
+INFO: Checkpoint 97 saved!
+IoU per class: [0.959, 0.576, 0.509, 0.574] mIoU: 0.654 mIoU_shapes: 0.553
+
+Average loss this epoch =  0.0005648835682968714
+/////////////////////////
+Epoch 98/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.394, 0.462, 0.286] mIoU: 0.523 mIoU_shapes: 0.381
+
+Training Set Eval:
+INFO: Checkpoint 98 saved!
+IoU per class: [0.955, 0.517, 0.488, 0.51] mIoU: 0.618 mIoU_shapes: 0.505
+
+Average loss this epoch =  0.000345007551514454
+/////////////////////////
+Epoch 99/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.4, 0.348, 0.314] mIoU: 0.502 mIoU_shapes: 0.354
+
+Training Set Eval:
+INFO: Checkpoint 99 saved!
+IoU per class: [0.954, 0.524, 0.393, 0.544] mIoU: 0.604 mIoU_shapes: 0.487
+
+Average loss this epoch =  0.0006756154064354038
+/////////////////////////
+Epoch 100/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.387, 0.553, 0.146] mIoU: 0.51 mIoU_shapes: 0.362
+
+Training Set Eval:
+INFO: Checkpoint 100 saved!
+IoU per class: [0.958, 0.487, 0.578, 0.371] mIoU: 0.598 mIoU_shapes: 0.479
+
+Average loss this epoch =  0.0004971137106668001
+/////////////////////////
+Epoch 101/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.449, 0.456, 0.264] mIoU: 0.531 mIoU_shapes: 0.39
+
+Training Set Eval:
+INFO: Checkpoint 101 saved!
+IoU per class: [0.96, 0.565, 0.522, 0.492] mIoU: 0.635 mIoU_shapes: 0.526
+
+Average loss this epoch =  0.0005774080254542777
+/////////////////////////
+Epoch 102/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.397, 0.434, 0.323] mIoU: 0.526 mIoU_shapes: 0.385
+
+Training Set Eval:
+INFO: Checkpoint 102 saved!
+IoU per class: [0.958, 0.53, 0.468, 0.553] mIoU: 0.627 mIoU_shapes: 0.517
+
+Average loss this epoch =  0.0007900458499477498
+/////////////////////////
+Epoch 103/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.446, 0.434, 0.326] mIoU: 0.539 mIoU_shapes: 0.402
+
+Training Set Eval:
+INFO: Checkpoint 103 saved!
+IoU per class: [0.958, 0.579, 0.49, 0.56] mIoU: 0.647 mIoU_shapes: 0.543
+
+Average loss this epoch =  0.0004937712679847015
+/////////////////////////
+Epoch 104/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.492, 0.504, 0.353] mIoU: 0.576 mIoU_shapes: 0.45
+
+Training Set Eval:
+INFO: Checkpoint 104 saved!
+IoU per class: [0.959, 0.586, 0.536, 0.5] mIoU: 0.645 mIoU_shapes: 0.541
+
+Average loss this epoch =  0.00038932603647519353
+/////////////////////////
+Epoch 105/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.477, 0.496, 0.311] mIoU: 0.559 mIoU_shapes: 0.428
+
+Training Set Eval:
+INFO: Checkpoint 105 saved!
+IoU per class: [0.958, 0.594, 0.536, 0.54] mIoU: 0.657 mIoU_shapes: 0.556
+
+Average loss this epoch =  0.0003070319733859106
+/////////////////////////
+Epoch 106/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.459, 0.472, 0.348] mIoU: 0.558 mIoU_shapes: 0.426
+
+Training Set Eval:
+INFO: Checkpoint 106 saved!
+IoU per class: [0.958, 0.593, 0.513, 0.534] mIoU: 0.65 mIoU_shapes: 0.547
+
+Average loss this epoch =  0.0003634047807509929
+/////////////////////////
+Epoch 107/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.43, 0.465, 0.45] mIoU: 0.575 mIoU_shapes: 0.449
+
+Training Set Eval:
+INFO: Checkpoint 107 saved!
+IoU per class: [0.958, 0.553, 0.499, 0.591] mIoU: 0.65 mIoU_shapes: 0.548
+
+Average loss this epoch =  0.00033417072879719437
+/////////////////////////
+Epoch 108/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.404, 0.449, 0.257] mIoU: 0.515 mIoU_shapes: 0.37
+
+Training Set Eval:
+INFO: Checkpoint 108 saved!
+IoU per class: [0.956, 0.544, 0.472, 0.477] mIoU: 0.612 mIoU_shapes: 0.498
+
+Average loss this epoch =  0.000224180831320615
+/////////////////////////
+Epoch 109/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.425, 0.558, 0.287] mIoU: 0.556 mIoU_shapes: 0.423
+
+Training Set Eval:
+INFO: Checkpoint 109 saved!
+IoU per class: [0.961, 0.575, 0.57, 0.518] mIoU: 0.656 mIoU_shapes: 0.554
+
+Average loss this epoch =  0.00032859011923418884
+/////////////////////////
+Epoch 110/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.431, 0.489, 0.191] mIoU: 0.515 mIoU_shapes: 0.37
+
+Training Set Eval:
+INFO: Checkpoint 110 saved!
+IoU per class: [0.957, 0.561, 0.534, 0.46] mIoU: 0.628 mIoU_shapes: 0.518
+
+Average loss this epoch =  0.0003513733400460566
+/////////////////////////
+Epoch 111/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.382, 0.403, 0.275] mIoU: 0.502 mIoU_shapes: 0.353
+
+Training Set Eval:
+INFO: Checkpoint 111 saved!
+IoU per class: [0.956, 0.556, 0.438, 0.546] mIoU: 0.624 mIoU_shapes: 0.513
+
+Average loss this epoch =  0.0011725541687410746
+/////////////////////////
+Epoch 112/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.431, 0.476, 0.404] mIoU: 0.566 mIoU_shapes: 0.437
+
+Training Set Eval:
+INFO: Checkpoint 112 saved!
+IoU per class: [0.959, 0.546, 0.502, 0.63] mIoU: 0.659 mIoU_shapes: 0.559
+
+Average loss this epoch =  0.0004307450921465662
+/////////////////////////
+Epoch 113/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.459, 0.488, 0.384] mIoU: 0.571 mIoU_shapes: 0.444
+
+Training Set Eval:
+INFO: Checkpoint 113 saved!
+IoU per class: [0.961, 0.563, 0.512, 0.629] mIoU: 0.666 mIoU_shapes: 0.568
+
+Average loss this epoch =  0.0006855016722339965
+/////////////////////////
+Epoch 114/200:
+
+Test Set Eval:
+IoU per class: [0.958, 0.453, 0.566, 0.449] mIoU: 0.606 mIoU_shapes: 0.489
+
+Training Set Eval:
+INFO: Checkpoint 114 saved!
+IoU per class: [0.963, 0.585, 0.579, 0.667] mIoU: 0.699 mIoU_shapes: 0.61
+
+Average loss this epoch =  0.0004581623870458563
+/////////////////////////
+Epoch 115/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.431, 0.43, 0.429] mIoU: 0.561 mIoU_shapes: 0.43
+
+Training Set Eval:
+INFO: Checkpoint 115 saved!
+IoU per class: [0.958, 0.545, 0.482, 0.601] mIoU: 0.646 mIoU_shapes: 0.543
+
+Average loss this epoch =  0.0004549398394808111
+/////////////////////////
+Epoch 116/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.357, 0.395, 0.376] mIoU: 0.519 mIoU_shapes: 0.376
+
+Training Set Eval:
+INFO: Checkpoint 116 saved!
+IoU per class: [0.955, 0.494, 0.448, 0.532] mIoU: 0.607 mIoU_shapes: 0.491
+
+Average loss this epoch =  0.0007333502983947179
+/////////////////////////
+Epoch 117/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.435, 0.482, 0.366] mIoU: 0.559 mIoU_shapes: 0.427
+
+Training Set Eval:
+INFO: Checkpoint 117 saved!
+IoU per class: [0.959, 0.56, 0.514, 0.582] mIoU: 0.654 mIoU_shapes: 0.552
+
+Average loss this epoch =  0.00033705376057445257
+/////////////////////////
+Epoch 118/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.426, 0.423, 0.31] mIoU: 0.528 mIoU_shapes: 0.386
+
+Training Set Eval:
+INFO: Checkpoint 118 saved!
+IoU per class: [0.958, 0.543, 0.467, 0.492] mIoU: 0.615 mIoU_shapes: 0.501
+
+Average loss this epoch =  0.0006068530317130947
+/////////////////////////
+Epoch 119/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.435, 0.424, 0.39] mIoU: 0.551 mIoU_shapes: 0.416
+
+Training Set Eval:
+INFO: Checkpoint 119 saved!
+IoU per class: [0.959, 0.571, 0.487, 0.601] mIoU: 0.654 mIoU_shapes: 0.553
+
+Average loss this epoch =  0.0008769174375294641
+/////////////////////////
+Epoch 120/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.458, 0.53, 0.376] mIoU: 0.579 mIoU_shapes: 0.455
+
+Training Set Eval:
+INFO: Checkpoint 120 saved!
+IoU per class: [0.959, 0.576, 0.556, 0.593] mIoU: 0.671 mIoU_shapes: 0.575
+
+Average loss this epoch =  0.0004188588286543491
+/////////////////////////
+Epoch 121/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.382, 0.468, 0.395] mIoU: 0.549 mIoU_shapes: 0.415
+
+Training Set Eval:
+INFO: Checkpoint 121 saved!
+IoU per class: [0.957, 0.534, 0.485, 0.596] mIoU: 0.643 mIoU_shapes: 0.538
+
+Average loss this epoch =  0.00034035112568524094
+/////////////////////////
+Epoch 122/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.407, 0.409, 0.291] mIoU: 0.514 mIoU_shapes: 0.369
+
+Training Set Eval:
+INFO: Checkpoint 122 saved!
+IoU per class: [0.955, 0.522, 0.442, 0.544] mIoU: 0.616 mIoU_shapes: 0.503
+
+Average loss this epoch =  0.000305267245699671
+/////////////////////////
+Epoch 123/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.399, 0.464, 0.193] mIoU: 0.502 mIoU_shapes: 0.352
+
+Training Set Eval:
+INFO: Checkpoint 123 saved!
+IoU per class: [0.955, 0.517, 0.464, 0.421] mIoU: 0.589 mIoU_shapes: 0.467
+
+Average loss this epoch =  0.0002744630852004973
+/////////////////////////
+Epoch 124/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.364, 0.478, 0.41] mIoU: 0.551 mIoU_shapes: 0.417
+
+Training Set Eval:
+INFO: Checkpoint 124 saved!
+IoU per class: [0.956, 0.492, 0.475, 0.604] mIoU: 0.632 mIoU_shapes: 0.524
+
+Average loss this epoch =  0.00040535114424996796
+/////////////////////////
+Epoch 125/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.429, 0.463, 0.434] mIoU: 0.57 mIoU_shapes: 0.442
+
+Training Set Eval:
+INFO: Checkpoint 125 saved!
+IoU per class: [0.957, 0.529, 0.453, 0.599] mIoU: 0.634 mIoU_shapes: 0.527
+
+Average loss this epoch =  0.0004928505445623996
+/////////////////////////
+Epoch 126/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.442, 0.447, 0.415] mIoU: 0.564 mIoU_shapes: 0.434
+
+Training Set Eval:
+INFO: Checkpoint 126 saved!
+IoU per class: [0.957, 0.557, 0.46, 0.578] mIoU: 0.638 mIoU_shapes: 0.532
+
+Average loss this epoch =  0.0004005410307122075
+/////////////////////////
+Epoch 127/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.409, 0.487, 0.413] mIoU: 0.565 mIoU_shapes: 0.436
+
+Training Set Eval:
+INFO: Checkpoint 127 saved!
+IoU per class: [0.959, 0.549, 0.517, 0.614] mIoU: 0.66 mIoU_shapes: 0.56
+
+Average loss this epoch =  0.00031235203084586553
+/////////////////////////
+Epoch 128/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.445, 0.547, 0.367] mIoU: 0.577 mIoU_shapes: 0.453
+
+Training Set Eval:
+INFO: Checkpoint 128 saved!
+IoU per class: [0.957, 0.536, 0.541, 0.558] mIoU: 0.648 mIoU_shapes: 0.545
+
+Average loss this epoch =  0.0003359338977845643
+/////////////////////////
+Epoch 129/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.422, 0.472, 0.41] mIoU: 0.564 mIoU_shapes: 0.435
+
+Training Set Eval:
+INFO: Checkpoint 129 saved!
+IoU per class: [0.959, 0.569, 0.497, 0.592] mIoU: 0.654 mIoU_shapes: 0.553
+
+Average loss this epoch =  0.00042240945115747813
+/////////////////////////
+Epoch 130/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.435, 0.477, 0.295] mIoU: 0.54 mIoU_shapes: 0.403
+
+Training Set Eval:
+INFO: Checkpoint 130 saved!
+IoU per class: [0.96, 0.565, 0.506, 0.583] mIoU: 0.653 mIoU_shapes: 0.551
+
+Average loss this epoch =  0.00023194076688219813
+/////////////////////////
+Epoch 131/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.401, 0.422, 0.38] mIoU: 0.538 mIoU_shapes: 0.401
+
+Training Set Eval:
+INFO: Checkpoint 131 saved!
+IoU per class: [0.956, 0.528, 0.457, 0.584] mIoU: 0.631 mIoU_shapes: 0.523
+
+Average loss this epoch =  0.00030485599858990275
+/////////////////////////
+Epoch 132/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.421, 0.425, 0.263] mIoU: 0.515 mIoU_shapes: 0.37
+
+Training Set Eval:
+INFO: Checkpoint 132 saved!
+IoU per class: [0.956, 0.536, 0.455, 0.535] mIoU: 0.62 mIoU_shapes: 0.508
+
+Average loss this epoch =  0.00043510065791995957
+/////////////////////////
+Epoch 133/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.438, 0.459, 0.323] mIoU: 0.543 mIoU_shapes: 0.407
+
+Training Set Eval:
+INFO: Checkpoint 133 saved!
+IoU per class: [0.956, 0.534, 0.468, 0.529] mIoU: 0.622 mIoU_shapes: 0.51
+
+Average loss this epoch =  0.00029088612879669317
+/////////////////////////
+Epoch 134/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.39, 0.373, 0.345] mIoU: 0.514 mIoU_shapes: 0.369
+
+Training Set Eval:
+INFO: Checkpoint 134 saved!
+IoU per class: [0.954, 0.512, 0.382, 0.573] mIoU: 0.605 mIoU_shapes: 0.489
+
+Average loss this epoch =  0.00027978741349535507
+/////////////////////////
+Epoch 135/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.389, 0.467, 0.455] mIoU: 0.566 mIoU_shapes: 0.437
+
+Training Set Eval:
+INFO: Checkpoint 135 saved!
+IoU per class: [0.957, 0.51, 0.468, 0.631] mIoU: 0.642 mIoU_shapes: 0.536
+
+Average loss this epoch =  0.00045455069472101446
+/////////////////////////
+Epoch 136/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.418, 0.496, 0.334] mIoU: 0.549 mIoU_shapes: 0.416
+
+Training Set Eval:
+INFO: Checkpoint 136 saved!
+IoU per class: [0.957, 0.531, 0.496, 0.576] mIoU: 0.64 mIoU_shapes: 0.534
+
+Average loss this epoch =  0.0003000894974465151
+/////////////////////////
+Epoch 137/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.4, 0.379, 0.277] mIoU: 0.501 mIoU_shapes: 0.352
+
+Training Set Eval:
+INFO: Checkpoint 137 saved!
+IoU per class: [0.956, 0.534, 0.41, 0.528] mIoU: 0.607 mIoU_shapes: 0.491
+
+Average loss this epoch =  0.0002600458064837436
+/////////////////////////
+Epoch 138/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.411, 0.459, 0.512] mIoU: 0.585 mIoU_shapes: 0.461
+
+Training Set Eval:
+INFO: Checkpoint 138 saved!
+IoU per class: [0.961, 0.583, 0.483, 0.679] mIoU: 0.676 mIoU_shapes: 0.582
+
+Average loss this epoch =  0.0003895403887437477
+/////////////////////////
+Epoch 139/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.381, 0.418, 0.403] mIoU: 0.538 mIoU_shapes: 0.401
+
+Training Set Eval:
+INFO: Checkpoint 139 saved!
+IoU per class: [0.957, 0.53, 0.451, 0.612] mIoU: 0.638 mIoU_shapes: 0.531
+
+Average loss this epoch =  0.00021881458961315234
+/////////////////////////
+Epoch 140/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.43, 0.43, 0.434] mIoU: 0.561 mIoU_shapes: 0.431
+
+Training Set Eval:
+INFO: Checkpoint 140 saved!
+IoU per class: [0.957, 0.559, 0.435, 0.623] mIoU: 0.644 mIoU_shapes: 0.539
+
+Average loss this epoch =  0.000559552444074942
+/////////////////////////
+Epoch 141/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.402, 0.399, 0.356] mIoU: 0.526 mIoU_shapes: 0.385
+
+Training Set Eval:
+INFO: Checkpoint 141 saved!
+IoU per class: [0.955, 0.531, 0.405, 0.575] mIoU: 0.617 mIoU_shapes: 0.504
+
+Average loss this epoch =  0.00020029040435368047
+/////////////////////////
+Epoch 142/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.445, 0.432, 0.302] mIoU: 0.532 mIoU_shapes: 0.393
+
+Training Set Eval:
+INFO: Checkpoint 142 saved!
+IoU per class: [0.957, 0.551, 0.447, 0.536] mIoU: 0.623 mIoU_shapes: 0.511
+
+Average loss this epoch =  0.00025227949584378357
+/////////////////////////
+Epoch 143/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.386, 0.399, 0.361] mIoU: 0.524 mIoU_shapes: 0.382
+
+Training Set Eval:
+INFO: Checkpoint 143 saved!
+IoU per class: [0.954, 0.527, 0.417, 0.528] mIoU: 0.607 mIoU_shapes: 0.491
+
+Average loss this epoch =  0.0004067049365662132
+/////////////////////////
+Epoch 144/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.445, 0.487, 0.311] mIoU: 0.55 mIoU_shapes: 0.415
+
+Training Set Eval:
+INFO: Checkpoint 144 saved!
+IoU per class: [0.958, 0.527, 0.492, 0.531] mIoU: 0.627 mIoU_shapes: 0.517
+
+Average loss this epoch =  0.0002580020405258594
+/////////////////////////
+Epoch 145/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.412, 0.481, 0.362] mIoU: 0.552 mIoU_shapes: 0.418
+
+Training Set Eval:
+INFO: Checkpoint 145 saved!
+IoU per class: [0.957, 0.527, 0.482, 0.579] mIoU: 0.636 mIoU_shapes: 0.529
+
+Average loss this epoch =  0.000349338583367639
+/////////////////////////
+Epoch 146/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.387, 0.434, 0.388] mIoU: 0.539 mIoU_shapes: 0.403
+
+Training Set Eval:
+INFO: Checkpoint 146 saved!
+IoU per class: [0.954, 0.48, 0.459, 0.565] mIoU: 0.615 mIoU_shapes: 0.501
+
+Average loss this epoch =  0.00026784684493451935
+/////////////////////////
+Epoch 147/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.426, 0.433, 0.404] mIoU: 0.553 mIoU_shapes: 0.421
+
+Training Set Eval:
+INFO: Checkpoint 147 saved!
+IoU per class: [0.956, 0.521, 0.454, 0.554] mIoU: 0.621 mIoU_shapes: 0.509
+
+Average loss this epoch =  0.00042280080926966965
+/////////////////////////
+Epoch 148/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.398, 0.39, 0.325] mIoU: 0.516 mIoU_shapes: 0.371
+
+Training Set Eval:
+INFO: Checkpoint 148 saved!
+IoU per class: [0.955, 0.531, 0.424, 0.547] mIoU: 0.614 mIoU_shapes: 0.5
+
+Average loss this epoch =  0.00033937138992373413
+/////////////////////////
+Epoch 149/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.434, 0.489, 0.368] mIoU: 0.561 mIoU_shapes: 0.431
+
+Training Set Eval:
+INFO: Checkpoint 149 saved!
+IoU per class: [0.957, 0.525, 0.494, 0.566] mIoU: 0.636 mIoU_shapes: 0.528
+
+Average loss this epoch =  0.00030372513138599477
+/////////////////////////
+Epoch 150/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.424, 0.432, 0.464] mIoU: 0.569 mIoU_shapes: 0.44
+
+Training Set Eval:
+INFO: Checkpoint 150 saved!
+IoU per class: [0.958, 0.552, 0.441, 0.64] mIoU: 0.648 mIoU_shapes: 0.544
+
+Average loss this epoch =  0.00034125956656045
+/////////////////////////
+Epoch 151/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.382, 0.529, 0.405] mIoU: 0.566 mIoU_shapes: 0.439
+
+Training Set Eval:
+INFO: Checkpoint 151 saved!
+IoU per class: [0.956, 0.522, 0.522, 0.601] mIoU: 0.65 mIoU_shapes: 0.548
+
+Average loss this epoch =  0.00031985872460209676
+/////////////////////////
+Epoch 152/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.395, 0.491, 0.341] mIoU: 0.544 mIoU_shapes: 0.409
+
+Training Set Eval:
+INFO: Checkpoint 152 saved!
+IoU per class: [0.955, 0.523, 0.489, 0.558] mIoU: 0.631 mIoU_shapes: 0.524
+
+Average loss this epoch =  0.0002553588613306628
+/////////////////////////
+Epoch 153/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.412, 0.529, 0.466] mIoU: 0.591 mIoU_shapes: 0.469
+
+Training Set Eval:
+INFO: Checkpoint 153 saved!
+IoU per class: [0.959, 0.556, 0.532, 0.62] mIoU: 0.667 mIoU_shapes: 0.569
+
+Average loss this epoch =  0.0005324548383138169
+/////////////////////////
+Epoch 154/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.395, 0.465, 0.278] mIoU: 0.522 mIoU_shapes: 0.379
+
+Training Set Eval:
+INFO: Checkpoint 154 saved!
+IoU per class: [0.955, 0.521, 0.483, 0.51] mIoU: 0.617 mIoU_shapes: 0.505
+
+Average loss this epoch =  0.0003070849691474787
+/////////////////////////
+Epoch 155/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.378, 0.481, 0.252] mIoU: 0.515 mIoU_shapes: 0.37
+
+Training Set Eval:
+INFO: Checkpoint 155 saved!
+IoU per class: [0.954, 0.481, 0.488, 0.464] mIoU: 0.597 mIoU_shapes: 0.478
+
+Average loss this epoch =  0.0003670755477629945
+/////////////////////////
+Epoch 156/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.376, 0.354, 0.34] mIoU: 0.505 mIoU_shapes: 0.357
+
+Training Set Eval:
+INFO: Checkpoint 156 saved!
+IoU per class: [0.955, 0.502, 0.402, 0.524] mIoU: 0.596 mIoU_shapes: 0.476
+
+Average loss this epoch =  0.0005386181830362296
+/////////////////////////
+Epoch 157/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.338, 0.424, 0.405] mIoU: 0.529 mIoU_shapes: 0.389
+
+Training Set Eval:
+INFO: Checkpoint 157 saved!
+IoU per class: [0.956, 0.478, 0.444, 0.587] mIoU: 0.616 mIoU_shapes: 0.503
+
+Average loss this epoch =  0.0006630369559491528
+/////////////////////////
+Epoch 158/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.405, 0.412, 0.317] mIoU: 0.523 mIoU_shapes: 0.378
+
+Training Set Eval:
+INFO: Checkpoint 158 saved!
+IoU per class: [0.961, 0.529, 0.462, 0.539] mIoU: 0.623 mIoU_shapes: 0.51
+
+Average loss this epoch =  0.0007688770359031326
+/////////////////////////
+Epoch 159/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.348, 0.431, 0.392] mIoU: 0.53 mIoU_shapes: 0.39
+
+Training Set Eval:
+INFO: Checkpoint 159 saved!
+IoU per class: [0.954, 0.481, 0.42, 0.577] mIoU: 0.608 mIoU_shapes: 0.493
+
+Average loss this epoch =  0.00034353707500082677
+/////////////////////////
+Epoch 160/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.367, 0.404, 0.275] mIoU: 0.498 mIoU_shapes: 0.349
+
+Training Set Eval:
+INFO: Checkpoint 160 saved!
+IoU per class: [0.953, 0.485, 0.424, 0.519] mIoU: 0.595 mIoU_shapes: 0.476
+
+Average loss this epoch =  0.0005244907599612758
+/////////////////////////
+Epoch 161/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.433, 0.558, 0.435] mIoU: 0.595 mIoU_shapes: 0.475
+
+Training Set Eval:
+INFO: Checkpoint 161 saved!
+IoU per class: [0.96, 0.562, 0.538, 0.645] mIoU: 0.677 mIoU_shapes: 0.582
+
+Average loss this epoch =  0.0005433863675743965
+/////////////////////////
+Epoch 162/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.329, 0.42, 0.395] mIoU: 0.523 mIoU_shapes: 0.381
+
+Training Set Eval:
+INFO: Checkpoint 162 saved!
+IoU per class: [0.955, 0.505, 0.434, 0.615] mIoU: 0.627 mIoU_shapes: 0.518
+
+Average loss this epoch =  0.00037041306495666504
+/////////////////////////
+Epoch 163/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.395, 0.436, 0.412] mIoU: 0.549 mIoU_shapes: 0.415
+
+Training Set Eval:
+INFO: Checkpoint 163 saved!
+IoU per class: [0.957, 0.526, 0.455, 0.607] mIoU: 0.636 mIoU_shapes: 0.529
+
+Average loss this epoch =  0.0003026540246967491
+/////////////////////////
+Epoch 164/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.403, 0.414, 0.311] mIoU: 0.52 mIoU_shapes: 0.376
+
+Training Set Eval:
+INFO: Checkpoint 164 saved!
+IoU per class: [0.955, 0.52, 0.447, 0.5] mIoU: 0.606 mIoU_shapes: 0.489
+
+Average loss this epoch =  0.00024927176815695343
+/////////////////////////
+Epoch 165/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.386, 0.503, 0.355] mIoU: 0.548 mIoU_shapes: 0.414
+
+Training Set Eval:
+INFO: Checkpoint 165 saved!
+IoU per class: [0.954, 0.479, 0.476, 0.56] mIoU: 0.617 mIoU_shapes: 0.505
+
+Average loss this epoch =  0.0001487069798313923
+/////////////////////////
+Epoch 166/200:
+
+Test Set Eval:
+IoU per class: [0.946, 0.357, 0.493, 0.278] mIoU: 0.519 mIoU_shapes: 0.376
+
+Training Set Eval:
+INFO: Checkpoint 166 saved!
+IoU per class: [0.952, 0.431, 0.465, 0.478] mIoU: 0.582 mIoU_shapes: 0.458
+
+Average loss this epoch =  0.0001961413038325609
+/////////////////////////
+Epoch 167/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.452, 0.456, 0.303] mIoU: 0.541 mIoU_shapes: 0.404
+
+Training Set Eval:
+INFO: Checkpoint 167 saved!
+IoU per class: [0.957, 0.545, 0.44, 0.504] mIoU: 0.611 mIoU_shapes: 0.496
+
+Average loss this epoch =  0.0003800130912948353
+/////////////////////////
+Epoch 168/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.438, 0.37, 0.342] mIoU: 0.525 mIoU_shapes: 0.383
+
+Training Set Eval:
+INFO: Checkpoint 168 saved!
+IoU per class: [0.957, 0.558, 0.396, 0.546] mIoU: 0.614 mIoU_shapes: 0.5
+
+Average loss this epoch =  0.00023997146402442805
+/////////////////////////
+Epoch 169/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.402, 0.447, 0.341] mIoU: 0.535 mIoU_shapes: 0.397
+
+Training Set Eval:
+INFO: Checkpoint 169 saved!
+IoU per class: [0.956, 0.502, 0.45, 0.569] mIoU: 0.619 mIoU_shapes: 0.507
+
+Average loss this epoch =  0.00034672791863086334
+/////////////////////////
+Epoch 170/200:
+
+Test Set Eval:
+IoU per class: [0.946, 0.316, 0.426, 0.174] mIoU: 0.465 mIoU_shapes: 0.305
+
+Training Set Eval:
+INFO: Checkpoint 170 saved!
+IoU per class: [0.952, 0.413, 0.423, 0.387] mIoU: 0.544 mIoU_shapes: 0.408
+
+Average loss this epoch =  0.0003196050931220274
+/////////////////////////
+Epoch 171/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.413, 0.484, 0.41] mIoU: 0.565 mIoU_shapes: 0.436
+
+Training Set Eval:
+INFO: Checkpoint 171 saved!
+IoU per class: [0.957, 0.52, 0.464, 0.599] mIoU: 0.635 mIoU_shapes: 0.528
+
+Average loss this epoch =  0.00033948034297472265
+/////////////////////////
+Epoch 172/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.433, 0.434, 0.459] mIoU: 0.57 mIoU_shapes: 0.442
+
+Training Set Eval:
+INFO: Checkpoint 172 saved!
+IoU per class: [0.959, 0.559, 0.454, 0.633] mIoU: 0.651 mIoU_shapes: 0.549
+
+Average loss this epoch =  0.0003071476288420386
+/////////////////////////
+Epoch 173/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.399, 0.531, 0.377] mIoU: 0.565 mIoU_shapes: 0.435
+
+Training Set Eval:
+INFO: Checkpoint 173 saved!
+IoU per class: [0.959, 0.533, 0.517, 0.591] mIoU: 0.65 mIoU_shapes: 0.547
+
+Average loss this epoch =  0.0002457808126465546
+/////////////////////////
+Epoch 174/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.326, 0.432, 0.394] mIoU: 0.525 mIoU_shapes: 0.384
+
+Training Set Eval:
+INFO: Checkpoint 174 saved!
+IoU per class: [0.955, 0.453, 0.444, 0.6] mIoU: 0.613 mIoU_shapes: 0.499
+
+Average loss this epoch =  0.00026423053886102336
+/////////////////////////
+Epoch 175/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.344, 0.434, 0.402] mIoU: 0.532 mIoU_shapes: 0.393
+
+Training Set Eval:
+INFO: Checkpoint 175 saved!
+IoU per class: [0.954, 0.445, 0.44, 0.583] mIoU: 0.605 mIoU_shapes: 0.489
+
+Average loss this epoch =  0.0002298647046837348
+/////////////////////////
+Epoch 176/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.357, 0.427, 0.433] mIoU: 0.542 mIoU_shapes: 0.406
+
+Training Set Eval:
+INFO: Checkpoint 176 saved!
+IoU per class: [0.956, 0.471, 0.448, 0.593] mIoU: 0.617 mIoU_shapes: 0.504
+
+Average loss this epoch =  0.00026650979304413417
+/////////////////////////
+Epoch 177/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.39, 0.519, 0.417] mIoU: 0.569 mIoU_shapes: 0.442
+
+Training Set Eval:
+INFO: Checkpoint 177 saved!
+IoU per class: [0.956, 0.492, 0.499, 0.561] mIoU: 0.627 mIoU_shapes: 0.517
+
+Average loss this epoch =  0.0002131159086107709
+/////////////////////////
+Epoch 178/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.363, 0.52, 0.316] mIoU: 0.537 mIoU_shapes: 0.4
+
+Training Set Eval:
+INFO: Checkpoint 178 saved!
+IoU per class: [0.956, 0.493, 0.491, 0.54] mIoU: 0.62 mIoU_shapes: 0.508
+
+Average loss this epoch =  0.00016344090822351527
+/////////////////////////
+Epoch 179/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.287, 0.477, 0.382] mIoU: 0.523 mIoU_shapes: 0.382
+
+Training Set Eval:
+INFO: Checkpoint 179 saved!
+IoU per class: [0.953, 0.402, 0.458, 0.544] mIoU: 0.589 mIoU_shapes: 0.468
+
+Average loss this epoch =  0.00015552443253445325
+/////////////////////////
+Epoch 180/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.345, 0.448, 0.359] mIoU: 0.525 mIoU_shapes: 0.384
+
+Training Set Eval:
+INFO: Checkpoint 180 saved!
+IoU per class: [0.955, 0.476, 0.457, 0.567] mIoU: 0.614 mIoU_shapes: 0.5
+
+Average loss this epoch =  0.00030168448282584986
+/////////////////////////
+Epoch 181/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.384, 0.498, 0.382] mIoU: 0.554 mIoU_shapes: 0.421
+
+Training Set Eval:
+INFO: Checkpoint 181 saved!
+IoU per class: [0.956, 0.507, 0.488, 0.568] mIoU: 0.63 mIoU_shapes: 0.521
+
+Average loss this epoch =  0.00015452641323520548
+/////////////////////////
+Epoch 182/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.37, 0.502, 0.29] mIoU: 0.528 mIoU_shapes: 0.388
+
+Training Set Eval:
+INFO: Checkpoint 182 saved!
+IoU per class: [0.955, 0.481, 0.493, 0.514] mIoU: 0.611 mIoU_shapes: 0.496
+
+Average loss this epoch =  0.00031134738707642176
+/////////////////////////
+Epoch 183/200:
+
+Test Set Eval:
+IoU per class: [0.945, 0.357, 0.393, 0.201] mIoU: 0.474 mIoU_shapes: 0.317
+
+Training Set Eval:
+INFO: Checkpoint 183 saved!
+IoU per class: [0.951, 0.446, 0.397, 0.402] mIoU: 0.549 mIoU_shapes: 0.415
+
+Average loss this epoch =  0.0003432822900835939
+/////////////////////////
+Epoch 184/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.375, 0.473, 0.271] mIoU: 0.516 mIoU_shapes: 0.373
+
+Training Set Eval:
+INFO: Checkpoint 184 saved!
+IoU per class: [0.954, 0.469, 0.476, 0.486] mIoU: 0.596 mIoU_shapes: 0.477
+
+Average loss this epoch =  0.0004148286256830064
+/////////////////////////
+Epoch 185/200:
+
+Test Set Eval:
+IoU per class: [0.946, 0.316, 0.39, 0.355] mIoU: 0.502 mIoU_shapes: 0.354
+
+Training Set Eval:
+INFO: Checkpoint 185 saved!
+IoU per class: [0.953, 0.441, 0.422, 0.539] mIoU: 0.589 mIoU_shapes: 0.467
+
+Average loss this epoch =  0.00029686121386962957
+/////////////////////////
+Epoch 186/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.349, 0.506, 0.224] mIoU: 0.507 mIoU_shapes: 0.36
+
+Training Set Eval:
+INFO: Checkpoint 186 saved!
+IoU per class: [0.954, 0.434, 0.498, 0.415] mIoU: 0.575 mIoU_shapes: 0.449
+
+Average loss this epoch =  0.0002769691300691421
+/////////////////////////
+Epoch 187/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.371, 0.409, 0.32] mIoU: 0.512 mIoU_shapes: 0.367
+
+Training Set Eval:
+INFO: Checkpoint 187 saved!
+IoU per class: [0.953, 0.475, 0.433, 0.49] mIoU: 0.588 mIoU_shapes: 0.466
+
+Average loss this epoch =  0.00019406033173265816
+/////////////////////////
+Epoch 188/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.363, 0.412, 0.392] mIoU: 0.529 mIoU_shapes: 0.389
+
+Training Set Eval:
+INFO: Checkpoint 188 saved!
+IoU per class: [0.954, 0.474, 0.415, 0.557] mIoU: 0.6 mIoU_shapes: 0.482
+
+Average loss this epoch =  0.0003688831708421268
+/////////////////////////
+Epoch 189/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.285, 0.425, 0.434] mIoU: 0.523 mIoU_shapes: 0.381
+
+Training Set Eval:
+INFO: Checkpoint 189 saved!
+IoU per class: [0.956, 0.433, 0.437, 0.633] mIoU: 0.615 mIoU_shapes: 0.501
+
+Average loss this epoch =  0.0002825054102362948
+/////////////////////////
+Epoch 190/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.322, 0.475, 0.451] mIoU: 0.55 mIoU_shapes: 0.416
+
+Training Set Eval:
+INFO: Checkpoint 190 saved!
+IoU per class: [0.956, 0.435, 0.478, 0.621] mIoU: 0.623 mIoU_shapes: 0.511
+
+Average loss this epoch =  0.0002514624570702908
+/////////////////////////
+Epoch 191/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.328, 0.461, 0.313] mIoU: 0.513 mIoU_shapes: 0.367
+
+Training Set Eval:
+INFO: Checkpoint 191 saved!
+IoU per class: [0.954, 0.403, 0.445, 0.505] mIoU: 0.577 mIoU_shapes: 0.451
+
+Average loss this epoch =  0.0001961559556019356
+/////////////////////////
+Epoch 192/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.364, 0.427, 0.255] mIoU: 0.498 mIoU_shapes: 0.349
+
+Training Set Eval:
+INFO: Checkpoint 192 saved!
+IoU per class: [0.952, 0.457, 0.415, 0.431] mIoU: 0.564 mIoU_shapes: 0.434
+
+Average loss this epoch =  0.00043587676526113536
+/////////////////////////
+Epoch 193/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.366, 0.449, 0.377] mIoU: 0.535 mIoU_shapes: 0.397
+
+Training Set Eval:
+INFO: Checkpoint 193 saved!
+IoU per class: [0.955, 0.477, 0.462, 0.582] mIoU: 0.619 mIoU_shapes: 0.507
+
+Average loss this epoch =  0.0005270710924180482
+/////////////////////////
+Epoch 194/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.34, 0.463, 0.313] mIoU: 0.516 mIoU_shapes: 0.372
+
+Training Set Eval:
+INFO: Checkpoint 194 saved!
+IoU per class: [0.954, 0.44, 0.484, 0.508] mIoU: 0.596 mIoU_shapes: 0.477
+
+Average loss this epoch =  0.00022539538506683446
+/////////////////////////
+Epoch 195/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.349, 0.493, 0.298] mIoU: 0.523 mIoU_shapes: 0.38
+
+Training Set Eval:
+INFO: Checkpoint 195 saved!
+IoU per class: [0.955, 0.449, 0.497, 0.487] mIoU: 0.597 mIoU_shapes: 0.477
+
+Average loss this epoch =  0.00019114185514310415
+/////////////////////////
+Epoch 196/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.307, 0.421, 0.418] mIoU: 0.524 mIoU_shapes: 0.382
+
+Training Set Eval:
+INFO: Checkpoint 196 saved!
+IoU per class: [0.955, 0.434, 0.447, 0.571] mIoU: 0.602 mIoU_shapes: 0.484
+
+Average loss this epoch =  0.0002555459675429755
+/////////////////////////
+Epoch 197/200:
+
+Test Set Eval:
+IoU per class: [0.944, 0.304, 0.4, 0.238] mIoU: 0.472 mIoU_shapes: 0.314
+
+Training Set Eval:
+INFO: Checkpoint 197 saved!
+IoU per class: [0.95, 0.401, 0.404, 0.438] mIoU: 0.548 mIoU_shapes: 0.415
+
+Average loss this epoch =  0.00028169628965305985
+/////////////////////////
+Epoch 198/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.332, 0.443, 0.354] mIoU: 0.519 mIoU_shapes: 0.376
+
+Training Set Eval:
+INFO: Checkpoint 198 saved!
+IoU per class: [0.952, 0.442, 0.437, 0.515] mIoU: 0.587 mIoU_shapes: 0.465
+
+Average loss this epoch =  0.0001758436465861907
+/////////////////////////
+Epoch 199/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.327, 0.524, 0.396] mIoU: 0.549 mIoU_shapes: 0.416
+
+Training Set Eval:
+INFO: Checkpoint 199 saved!
+IoU per class: [0.955, 0.445, 0.501, 0.531] mIoU: 0.608 mIoU_shapes: 0.492
+
+Average loss this epoch =  0.00018125827030656725
+/////////////////////////
+Epoch 200/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.34, 0.44, 0.346] mIoU: 0.519 mIoU_shapes: 0.375
+
+Training Set Eval:
+INFO: Checkpoint 200 saved!
+IoU per class: [0.955, 0.452, 0.457, 0.553] mIoU: 0.604 mIoU_shapes: 0.487
+
+Average loss this epoch =  0.00026725170253210983
+/////////////////////////
+Max test score: 0.651 found at epoch: 21
+Max test score only shapes: 0.539 found at epoch: 29
+INFO: Using device cuda
+INFO: Network:
+	3 input channels
+	4 output channels (classes)
+	Bilinear upscaling
+INFO: Creating dataset with 478 examples
+INFO: Scanning mask files to determine unique values
+Active:  BBox loss [True, False, 1]  [True, 0.2]  [False, 1]  linear  True  True  
+  0%|          | 0/478 [00:00<?, ?it/s]  0%|          | 1/478 [00:00<01:37,  4.89it/s]  1%|          | 5/478 [00:00<00:30, 15.52it/s]  4%|▍         | 21/478 [00:00<00:13, 34.43it/s] 21%|██        | 99/478 [00:00<00:02, 167.03it/s] 28%|██▊       | 135/478 [00:01<00:02, 167.74it/s] 36%|███▌      | 171/478 [00:01<00:01, 190.24it/s] 41%|████      | 197/478 [00:01<00:01, 197.09it/s] 46%|████▌     | 219/478 [00:01<00:01, 190.76it/s] 51%|█████▏    | 246/478 [00:01<00:01, 195.65it/s] 56%|█████▌    | 267/478 [00:01<00:01, 167.92it/s] 61%|██████    | 292/478 [00:01<00:01, 177.01it/s] 72%|███████▏  | 346/478 [00:02<00:00, 243.72it/s] 78%|███████▊  | 372/478 [00:02<00:00, 243.79it/s] 83%|████████▎ | 398/478 [00:02<00:00, 226.96it/s] 88%|████████▊ | 422/478 [00:02<00:00, 203.01it/s]100%|██████████| 478/478 [00:02<00:00, 191.83it/s]
+INFO: Unique mask values: [[0, 0, 0], [0, 0, 255], [0, 255, 0], [255, 0, 0]]
+INFO: Creating dataset with 90 examples
+INFO: Scanning mask files to determine unique values
+../../datasetCLEVRaug/ImagesValidation ../../datasetCLEVRaug/MasksValidation
+  0%|          | 0/90 [00:00<?, ?it/s]  1%|          | 1/90 [00:00<00:24,  3.70it/s]  2%|▏         | 2/90 [00:00<00:17,  4.90it/s] 17%|█▋        | 15/90 [00:00<00:01, 40.42it/s]100%|██████████| 90/90 [00:00<00:00, 144.21it/s]
+INFO: Creating dataset with 478 examples
+INFO: Scanning mask files to determine unique values
+unique mask values: [[0, 0, 0], [0, 0, 255], [0, 255, 0], [255, 0, 0]]
+../../datasetCLEVRaug/ImagesTraining ../../datasetCLEVRaug/MasksTraining
+  0%|          | 0/478 [00:00<?, ?it/s]  0%|          | 1/478 [00:00<01:53,  4.21it/s]  1%|▏         | 6/478 [00:00<00:30, 15.51it/s]  2%|▏         | 9/478 [00:00<00:26, 17.94it/s] 18%|█▊        | 85/478 [00:00<00:01, 213.83it/s] 24%|██▍       | 115/478 [00:00<00:02, 171.15it/s] 29%|██▉       | 139/478 [00:01<00:02, 161.23it/s] 36%|███▋      | 174/478 [00:01<00:01, 189.16it/s] 41%|████      | 197/478 [00:01<00:01, 167.21it/s] 47%|████▋     | 225/478 [00:01<00:01, 186.70it/s] 55%|█████▌    | 263/478 [00:01<00:00, 226.94it/s] 60%|██████    | 289/478 [00:01<00:00, 201.14it/s] 65%|██████▌   | 312/478 [00:01<00:00, 196.94it/s] 70%|███████   | 335/478 [00:02<00:00, 170.01it/s] 77%|███████▋  | 366/478 [00:02<00:00, 196.07it/s] 82%|████████▏ | 392/478 [00:02<00:00, 210.39it/s] 88%|████████▊ | 419/478 [00:02<00:00, 200.85it/s]100%|██████████| 478/478 [00:02<00:00, 191.88it/s]
+/apps/leuven/rocky8/icelake/2023a/software/PyTorch/2.1.2-foss-2023a-CUDA-12.1.1/lib/python3.11/site-packages/torch/utils/data/dataloader.py:557: UserWarning: This DataLoader will create 64 worker processes in total. Our suggested max number of worker in current system is 8, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(_create_warning_msg(
+INFO: Starting training:
+        Epochs:          200
+        Batch size:      1
+        Learning rate:   1e-08
+        Training size:   478
+        Validation size: 0
+        Checkpoints:     True
+        Device:          cuda
+        Images scaling:  1
+        Mixed Precision: True
+    
+unique mask values: [[0, 0, 0], [0, 0, 255], [0, 255, 0], [255, 0, 0]]
+range(0, 478) range(478, 478)
+0
+Epoch 1/200:
+
+Test Set Eval:
+IoU per class: [0.427, 0.07, 0.022, 0.027] mIoU: 0.136 mIoU_shapes: 0.04
+
+Training Set Eval:
+INFO: Checkpoint 1 saved!
+IoU per class: [0.418, 0.07, 0.021, 0.031] mIoU: 0.135 mIoU_shapes: 0.041
+
+Average loss this epoch =  0.5416046525643959
+/////////////////////////
+Epoch 2/200:
+
+Test Set Eval:
+IoU per class: [0.518, 0.163, 0.018, 0.004] mIoU: 0.176 mIoU_shapes: 0.062
+
+Training Set Eval:
+INFO: Checkpoint 2 saved!
+IoU per class: [0.522, 0.178, 0.022, 0.005] mIoU: 0.182 mIoU_shapes: 0.068
+
+Average loss this epoch =  0.37501813178281906
+/////////////////////////
+Epoch 3/200:
+
+Test Set Eval:
+IoU per class: [0.511, 0.215, 0.007, 0.019] mIoU: 0.188 mIoU_shapes: 0.08
+
+Training Set Eval:
+INFO: Checkpoint 3 saved!
+IoU per class: [0.524, 0.259, 0.008, 0.02] mIoU: 0.203 mIoU_shapes: 0.096
+
+Average loss this epoch =  0.29606851873038703
+/////////////////////////
+Epoch 4/200:
+
+Test Set Eval:
+IoU per class: [0.547, 0.247, 0.01, 0.035] mIoU: 0.21 mIoU_shapes: 0.097
+
+Training Set Eval:
+INFO: Checkpoint 4 saved!
+IoU per class: [0.565, 0.303, 0.01, 0.04] mIoU: 0.229 mIoU_shapes: 0.118
+
+Average loss this epoch =  0.24924398765404354
+/////////////////////////
+Epoch 5/200:
+
+Test Set Eval:
+IoU per class: [0.58, 0.253, 0.007, 0.15] mIoU: 0.248 mIoU_shapes: 0.137
+
+Training Set Eval:
+INFO: Checkpoint 5 saved!
+IoU per class: [0.594, 0.32, 0.009, 0.176] mIoU: 0.275 mIoU_shapes: 0.168
+
+Average loss this epoch =  0.21782652404019023
+/////////////////////////
+Epoch 6/200:
+
+Test Set Eval:
+IoU per class: [0.94, 0.279, 0.061, 0.139] mIoU: 0.355 mIoU_shapes: 0.16
+
+Training Set Eval:
+INFO: Checkpoint 6 saved!
+IoU per class: [0.945, 0.342, 0.069, 0.128] mIoU: 0.371 mIoU_shapes: 0.18
+
+Average loss this epoch =  0.19322139149430406
+/////////////////////////
+Epoch 7/200:
+
+Test Set Eval:
+IoU per class: [0.983, 0.319, 0.259, 0.09] mIoU: 0.412 mIoU_shapes: 0.222
+
+Training Set Eval:
+INFO: Checkpoint 7 saved!
+IoU per class: [0.985, 0.373, 0.268, 0.101] mIoU: 0.432 mIoU_shapes: 0.247
+
+Average loss this epoch =  0.17236459005826688
+/////////////////////////
+Epoch 8/200:
+
+Test Set Eval:
+IoU per class: [0.988, 0.336, 0.475, 0.109] mIoU: 0.477 mIoU_shapes: 0.307
+
+Training Set Eval:
+INFO: Checkpoint 8 saved!
+IoU per class: [0.988, 0.438, 0.5, 0.151] mIoU: 0.519 mIoU_shapes: 0.363
+
+Average loss this epoch =  0.15282585431342344
+/////////////////////////
+Epoch 9/200:
+
+Test Set Eval:
+IoU per class: [0.984, 0.394, 0.516, 0.196] mIoU: 0.522 mIoU_shapes: 0.368
+
+Training Set Eval:
+INFO: Checkpoint 9 saved!
+IoU per class: [0.982, 0.529, 0.568, 0.286] mIoU: 0.591 mIoU_shapes: 0.461
+
+Average loss this epoch =  0.13376872808863427
+/////////////////////////
+Epoch 10/200:
+
+Test Set Eval:
+IoU per class: [0.989, 0.418, 0.449, 0.319] mIoU: 0.544 mIoU_shapes: 0.395
+
+Training Set Eval:
+INFO: Checkpoint 10 saved!
+IoU per class: [0.989, 0.553, 0.552, 0.381] mIoU: 0.619 mIoU_shapes: 0.495
+
+Average loss this epoch =  0.11461149399250621
+/////////////////////////
+Epoch 11/200:
+
+Test Set Eval:
+IoU per class: [0.99, 0.469, 0.645, 0.487] mIoU: 0.648 mIoU_shapes: 0.534
+
+Training Set Eval:
+INFO: Checkpoint 11 saved!
+IoU per class: [0.991, 0.659, 0.753, 0.627] mIoU: 0.758 mIoU_shapes: 0.68
+
+Average loss this epoch =  0.09619411165245408
+/////////////////////////
+Epoch 12/200:
+
+Test Set Eval:
+IoU per class: [0.992, 0.471, 0.667, 0.495] mIoU: 0.656 mIoU_shapes: 0.544
+
+Training Set Eval:
+INFO: Checkpoint 12 saved!
+IoU per class: [0.991, 0.679, 0.752, 0.651] mIoU: 0.768 mIoU_shapes: 0.694
+
+Average loss this epoch =  0.07633507700644776
+/////////////////////////
+Epoch 13/200:
+
+Test Set Eval:
+IoU per class: [0.991, 0.443, 0.577, 0.432] mIoU: 0.611 mIoU_shapes: 0.484
+
+Training Set Eval:
+INFO: Checkpoint 13 saved!
+IoU per class: [0.99, 0.691, 0.706, 0.659] mIoU: 0.762 mIoU_shapes: 0.685
+
+Average loss this epoch =  0.059337743655408275
+/////////////////////////
+Epoch 14/200:
+
+Test Set Eval:
+IoU per class: [0.992, 0.442, 0.67, 0.501] mIoU: 0.651 mIoU_shapes: 0.538
+
+Training Set Eval:
+INFO: Checkpoint 14 saved!
+IoU per class: [0.992, 0.72, 0.777, 0.734] mIoU: 0.806 mIoU_shapes: 0.744
+
+Average loss this epoch =  0.046352833384749284
+/////////////////////////
+Epoch 15/200:
+
+Test Set Eval:
+IoU per class: [0.992, 0.51, 0.689, 0.533] mIoU: 0.681 mIoU_shapes: 0.578
+
+Training Set Eval:
+INFO: Checkpoint 15 saved!
+IoU per class: [0.992, 0.74, 0.789, 0.737] mIoU: 0.814 mIoU_shapes: 0.755
+
+Average loss this epoch =  0.03642686341098163
+/////////////////////////
+Epoch 16/200:
+
+Test Set Eval:
+IoU per class: [0.993, 0.496, 0.731, 0.429] mIoU: 0.662 mIoU_shapes: 0.552
+
+Training Set Eval:
+INFO: Checkpoint 16 saved!
+IoU per class: [0.992, 0.762, 0.787, 0.693] mIoU: 0.809 mIoU_shapes: 0.747
+
+Average loss this epoch =  0.028646977875521992
+/////////////////////////
+Epoch 17/200:
+
+Test Set Eval:
+IoU per class: [0.993, 0.562, 0.668, 0.553] mIoU: 0.694 mIoU_shapes: 0.594
+
+Training Set Eval:
+INFO: Checkpoint 17 saved!
+IoU per class: [0.992, 0.756, 0.774, 0.709] mIoU: 0.808 mIoU_shapes: 0.746
+
+Average loss this epoch =  0.022788277231000957
+/////////////////////////
+Epoch 18/200:
+
+Test Set Eval:
+IoU per class: [0.994, 0.487, 0.746, 0.534] mIoU: 0.69 mIoU_shapes: 0.589
+
+Training Set Eval:
+INFO: Checkpoint 18 saved!
+IoU per class: [0.993, 0.72, 0.82, 0.769] mIoU: 0.826 mIoU_shapes: 0.77
+
+Average loss this epoch =  0.018781955272084
+/////////////////////////
+Epoch 19/200:
+
+Test Set Eval:
+IoU per class: [0.994, 0.558, 0.715, 0.654] mIoU: 0.73 mIoU_shapes: 0.642
+
+Training Set Eval:
+INFO: Checkpoint 19 saved!
+IoU per class: [0.993, 0.738, 0.793, 0.78] mIoU: 0.826 mIoU_shapes: 0.77
+
+Average loss this epoch =  0.014722950787723812
+/////////////////////////
+Epoch 20/200:
+
+Test Set Eval:
+IoU per class: [0.994, 0.578, 0.744, 0.665] mIoU: 0.745 mIoU_shapes: 0.662
+
+Training Set Eval:
+INFO: Checkpoint 20 saved!
+IoU per class: [0.993, 0.783, 0.804, 0.794] mIoU: 0.844 mIoU_shapes: 0.794
+
+Average loss this epoch =  0.011677927551907974
+/////////////////////////
+Epoch 21/200:
+
+Test Set Eval:
+IoU per class: [0.994, 0.577, 0.734, 0.538] mIoU: 0.711 mIoU_shapes: 0.616
+
+Training Set Eval:
+INFO: Checkpoint 21 saved!
+IoU per class: [0.994, 0.782, 0.82, 0.702] mIoU: 0.824 mIoU_shapes: 0.768
+
+Average loss this epoch =  0.009555292927570423
+/////////////////////////
+Epoch 22/200:
+
+Test Set Eval:
+IoU per class: [0.994, 0.482, 0.713, 0.663] mIoU: 0.713 mIoU_shapes: 0.619
+
+Training Set Eval:
+INFO: Checkpoint 22 saved!
+IoU per class: [0.994, 0.734, 0.808, 0.797] mIoU: 0.833 mIoU_shapes: 0.78
+
+Average loss this epoch =  0.007764737975148477
+/////////////////////////
+Epoch 23/200:
+
+Test Set Eval:
+IoU per class: [0.994, 0.571, 0.754, 0.578] mIoU: 0.724 mIoU_shapes: 0.634
+
+Training Set Eval:
+INFO: Checkpoint 23 saved!
+IoU per class: [0.993, 0.789, 0.817, 0.767] mIoU: 0.842 mIoU_shapes: 0.791
+
+Average loss this epoch =  0.006331889699193723
+/////////////////////////
+Epoch 24/200:
+
+Test Set Eval:
+IoU per class: [0.993, 0.529, 0.559, 0.471] mIoU: 0.638 mIoU_shapes: 0.52
+
+Training Set Eval:
+INFO: Checkpoint 24 saved!
+IoU per class: [0.993, 0.734, 0.707, 0.692] mIoU: 0.782 mIoU_shapes: 0.711
+
+Average loss this epoch =  0.0050438188608720215
+/////////////////////////
+Epoch 25/200:
+
+Test Set Eval:
+IoU per class: [0.994, 0.61, 0.765, 0.67] mIoU: 0.76 mIoU_shapes: 0.682
+
+Training Set Eval:
+INFO: Checkpoint 25 saved!
+IoU per class: [0.994, 0.823, 0.814, 0.8] mIoU: 0.858 mIoU_shapes: 0.812
+
+Average loss this epoch =  0.004123643851180456
+/////////////////////////
+Epoch 26/200:
+
+Test Set Eval:
+IoU per class: [0.994, 0.607, 0.744, 0.688] mIoU: 0.758 mIoU_shapes: 0.68
+
+Training Set Eval:
+INFO: Checkpoint 26 saved!
+IoU per class: [0.994, 0.801, 0.805, 0.796] mIoU: 0.849 mIoU_shapes: 0.8
+
+Average loss this epoch =  0.003575915572034764
+/////////////////////////
+Epoch 27/200:
+
+Test Set Eval:
+IoU per class: [0.994, 0.568, 0.743, 0.57] mIoU: 0.719 mIoU_shapes: 0.627
+
+Training Set Eval:
+INFO: Checkpoint 27 saved!
+IoU per class: [0.994, 0.819, 0.794, 0.779] mIoU: 0.847 mIoU_shapes: 0.797
+
+Average loss this epoch =  0.0033482909202575684
+/////////////////////////
+Epoch 28/200:
+
+Test Set Eval:
+IoU per class: [0.994, 0.623, 0.796, 0.708] mIoU: 0.78 mIoU_shapes: 0.709
+
+Training Set Eval:
+INFO: Checkpoint 28 saved!
+IoU per class: [0.994, 0.797, 0.834, 0.806] mIoU: 0.858 mIoU_shapes: 0.812
+
+Average loss this epoch =  0.0030954704623840845
+/////////////////////////
+Epoch 29/200:
+
+Test Set Eval:
+IoU per class: [0.994, 0.577, 0.762, 0.591] mIoU: 0.731 mIoU_shapes: 0.643
+
+Training Set Eval:
+INFO: Checkpoint 29 saved!
+IoU per class: [0.994, 0.831, 0.809, 0.798] mIoU: 0.858 mIoU_shapes: 0.813
+
+Average loss this epoch =  0.002423667508687933
+/////////////////////////
+Epoch 30/200:
+
+Test Set Eval:
+IoU per class: [0.993, 0.614, 0.702, 0.667] mIoU: 0.744 mIoU_shapes: 0.661
+
+Training Set Eval:
+INFO: Checkpoint 30 saved!
+IoU per class: [0.993, 0.811, 0.784, 0.772] mIoU: 0.84 mIoU_shapes: 0.789
+
+Average loss this epoch =  0.0021700976283979215
+/////////////////////////
+Epoch 31/200:
+
+Test Set Eval:
+IoU per class: [0.993, 0.626, 0.769, 0.66] mIoU: 0.762 mIoU_shapes: 0.685
+
+Training Set Eval:
+INFO: Checkpoint 31 saved!
+IoU per class: [0.994, 0.828, 0.827, 0.787] mIoU: 0.859 mIoU_shapes: 0.814
+
+Average loss this epoch =  0.0024021696844859102
+/////////////////////////
+Epoch 32/200:
+
+Test Set Eval:
+IoU per class: [0.993, 0.547, 0.739, 0.504] mIoU: 0.696 mIoU_shapes: 0.597
+
+Training Set Eval:
+INFO: Checkpoint 32 saved!
+IoU per class: [0.992, 0.752, 0.787, 0.709] mIoU: 0.81 mIoU_shapes: 0.749
+
+Average loss this epoch =  0.0018754640134308628
+/////////////////////////
+Epoch 33/200:
+
+Test Set Eval:
+IoU per class: [0.993, 0.638, 0.581, 0.671] mIoU: 0.721 mIoU_shapes: 0.63
+
+Training Set Eval:
+INFO: Checkpoint 33 saved!
+IoU per class: [0.993, 0.826, 0.705, 0.766] mIoU: 0.822 mIoU_shapes: 0.765
+
+Average loss this epoch =  0.0016468951642263883
+/////////////////////////
+Epoch 34/200:
+
+Test Set Eval:
+IoU per class: [0.993, 0.59, 0.742, 0.746] mIoU: 0.768 mIoU_shapes: 0.693
+
+Training Set Eval:
+INFO: Checkpoint 34 saved!
+IoU per class: [0.992, 0.758, 0.787, 0.807] mIoU: 0.836 mIoU_shapes: 0.784
+
+Average loss this epoch =  0.0013335423240102983
+/////////////////////////
+Epoch 35/200:
+
+Test Set Eval:
+IoU per class: [0.993, 0.634, 0.743, 0.607] mIoU: 0.744 mIoU_shapes: 0.661
+
+Training Set Eval:
+INFO: Checkpoint 35 saved!
+IoU per class: [0.993, 0.818, 0.794, 0.759] mIoU: 0.841 mIoU_shapes: 0.79
+
+Average loss this epoch =  0.0012725606623055048
+/////////////////////////
+Epoch 36/200:
+
+Test Set Eval:
+IoU per class: [0.992, 0.661, 0.773, 0.623] mIoU: 0.762 mIoU_shapes: 0.686
+
+Training Set Eval:
+INFO: Checkpoint 36 saved!
+IoU per class: [0.993, 0.821, 0.807, 0.736] mIoU: 0.839 mIoU_shapes: 0.788
+
+Average loss this epoch =  0.0012685602928305271
+/////////////////////////
+Epoch 37/200:
+
+Test Set Eval:
+IoU per class: [0.992, 0.614, 0.725, 0.649] mIoU: 0.745 mIoU_shapes: 0.663
+
+Training Set Eval:
+INFO: Checkpoint 37 saved!
+IoU per class: [0.992, 0.798, 0.798, 0.763] mIoU: 0.838 mIoU_shapes: 0.786
+
+Average loss this epoch =  0.0011861160958661196
+/////////////////////////
+Epoch 38/200:
+
+Test Set Eval:
+IoU per class: [0.993, 0.65, 0.723, 0.625] mIoU: 0.748 mIoU_shapes: 0.666
+
+Training Set Eval:
+INFO: Checkpoint 38 saved!
+IoU per class: [0.991, 0.804, 0.811, 0.731] mIoU: 0.834 mIoU_shapes: 0.782
+
+Average loss this epoch =  0.0014500595535693309
+/////////////////////////
+Epoch 39/200:
+
+Test Set Eval:
+IoU per class: [0.991, 0.606, 0.797, 0.672] mIoU: 0.767 mIoU_shapes: 0.692
+
+Training Set Eval:
+INFO: Checkpoint 39 saved!
+IoU per class: [0.992, 0.785, 0.814, 0.792] mIoU: 0.846 mIoU_shapes: 0.797
+
+Average loss this epoch =  0.0015441034628257593
+/////////////////////////
+Epoch 40/200:
+
+Test Set Eval:
+IoU per class: [0.992, 0.641, 0.753, 0.592] mIoU: 0.744 mIoU_shapes: 0.662
+
+Training Set Eval:
+INFO: Checkpoint 40 saved!
+IoU per class: [0.992, 0.837, 0.788, 0.752] mIoU: 0.842 mIoU_shapes: 0.792
+
+Average loss this epoch =  0.003375285589545342
+/////////////////////////
+Epoch 41/200:
+
+Test Set Eval:
+IoU per class: [0.991, 0.562, 0.76, 0.428] mIoU: 0.685 mIoU_shapes: 0.583
+
+Training Set Eval:
+INFO: Checkpoint 41 saved!
+IoU per class: [0.991, 0.763, 0.809, 0.644] mIoU: 0.802 mIoU_shapes: 0.739
+
+Average loss this epoch =  0.0016441867690704856
+/////////////////////////
+Epoch 42/200:
+
+Test Set Eval:
+IoU per class: [0.993, 0.633, 0.785, 0.539] mIoU: 0.737 mIoU_shapes: 0.652
+
+Training Set Eval:
+INFO: Checkpoint 42 saved!
+IoU per class: [0.992, 0.805, 0.798, 0.693] mIoU: 0.822 mIoU_shapes: 0.765
+
+Average loss this epoch =  0.0012607790186814185
+/////////////////////////
+Epoch 43/200:
+
+Test Set Eval:
+IoU per class: [0.991, 0.61, 0.575, 0.608] mIoU: 0.696 mIoU_shapes: 0.598
+
+Training Set Eval:
+INFO: Checkpoint 43 saved!
+IoU per class: [0.99, 0.79, 0.711, 0.731] mIoU: 0.806 mIoU_shapes: 0.744
+
+Average loss this epoch =  0.0009350933789209341
+/////////////////////////
+Epoch 44/200:
+
+Test Set Eval:
+IoU per class: [0.99, 0.633, 0.73, 0.662] mIoU: 0.754 mIoU_shapes: 0.675
+
+Training Set Eval:
+INFO: Checkpoint 44 saved!
+IoU per class: [0.99, 0.848, 0.76, 0.807] mIoU: 0.852 mIoU_shapes: 0.805
+
+Average loss this epoch =  0.0007602251349133926
+/////////////////////////
+Epoch 45/200:
+
+Test Set Eval:
+IoU per class: [0.989, 0.631, 0.675, 0.592] mIoU: 0.722 mIoU_shapes: 0.633
+
+Training Set Eval:
+INFO: Checkpoint 45 saved!
+IoU per class: [0.989, 0.825, 0.749, 0.745] mIoU: 0.827 mIoU_shapes: 0.773
+
+Average loss this epoch =  0.0011938620810728192
+/////////////////////////
+Epoch 46/200:
+
+Test Set Eval:
+IoU per class: [0.991, 0.692, 0.794, 0.721] mIoU: 0.8 mIoU_shapes: 0.736
+
+Training Set Eval:
+INFO: Checkpoint 46 saved!
+IoU per class: [0.991, 0.853, 0.81, 0.798] mIoU: 0.863 mIoU_shapes: 0.82
+
+Average loss this epoch =  0.0007466344030332366
+/////////////////////////
+Epoch 47/200:
+
+Test Set Eval:
+IoU per class: [0.987, 0.611, 0.651, 0.668] mIoU: 0.729 mIoU_shapes: 0.643
+
+Training Set Eval:
+INFO: Checkpoint 47 saved!
+IoU per class: [0.988, 0.821, 0.679, 0.79] mIoU: 0.819 mIoU_shapes: 0.763
+
+Average loss this epoch =  0.0006911492746744196
+/////////////////////////
+Epoch 48/200:
+
+Test Set Eval:
+IoU per class: [0.988, 0.633, 0.562, 0.59] mIoU: 0.693 mIoU_shapes: 0.595
+
+Training Set Eval:
+INFO: Checkpoint 48 saved!
+IoU per class: [0.989, 0.821, 0.651, 0.723] mIoU: 0.796 mIoU_shapes: 0.732
+
+Average loss this epoch =  0.0007432130590143563
+/////////////////////////
+Epoch 49/200:
+
+Test Set Eval:
+IoU per class: [0.988, 0.699, 0.709, 0.658] mIoU: 0.763 mIoU_shapes: 0.689
+
+Training Set Eval:
+INFO: Checkpoint 49 saved!
+IoU per class: [0.988, 0.856, 0.709, 0.782] mIoU: 0.834 mIoU_shapes: 0.782
+
+Average loss this epoch =  0.000687473114564329
+/////////////////////////
+Epoch 50/200:
+
+Test Set Eval:
+IoU per class: [0.987, 0.659, 0.697, 0.647] mIoU: 0.747 mIoU_shapes: 0.667
+
+Training Set Eval:
+INFO: Checkpoint 50 saved!
+IoU per class: [0.987, 0.844, 0.698, 0.795] mIoU: 0.831 mIoU_shapes: 0.779
+
+Average loss this epoch =  0.0006855935731193511
+/////////////////////////
+Epoch 51/200:
+
+Test Set Eval:
+IoU per class: [0.987, 0.672, 0.574, 0.67] mIoU: 0.726 mIoU_shapes: 0.639
+
+Training Set Eval:
+INFO: Checkpoint 51 saved!
+IoU per class: [0.987, 0.819, 0.651, 0.786] mIoU: 0.811 mIoU_shapes: 0.752
+
+Average loss this epoch =  0.0008220337798904674
+/////////////////////////
+Epoch 52/200:
+
+Test Set Eval:
+IoU per class: [0.986, 0.567, 0.671, 0.405] mIoU: 0.658 mIoU_shapes: 0.548
+
+Training Set Eval:
+INFO: Checkpoint 52 saved!
+IoU per class: [0.987, 0.815, 0.733, 0.64] mIoU: 0.794 mIoU_shapes: 0.729
+
+Average loss this epoch =  0.0007802785440468888
+/////////////////////////
+Epoch 53/200:
+
+Test Set Eval:
+IoU per class: [0.986, 0.66, 0.584, 0.612] mIoU: 0.711 mIoU_shapes: 0.619
+
+Training Set Eval:
+INFO: Checkpoint 53 saved!
+IoU per class: [0.986, 0.844, 0.667, 0.747] mIoU: 0.811 mIoU_shapes: 0.753
+
+Average loss this epoch =  0.0007670415744621883
+/////////////////////////
+Epoch 54/200:
+
+Test Set Eval:
+IoU per class: [0.984, 0.667, 0.626, 0.716] mIoU: 0.749 mIoU_shapes: 0.67
+
+Training Set Eval:
+INFO: Checkpoint 54 saved!
+IoU per class: [0.984, 0.788, 0.624, 0.784] mIoU: 0.795 mIoU_shapes: 0.732
+
+Average loss this epoch =  0.0008771112773208938
+/////////////////////////
+Epoch 55/200:
+
+Test Set Eval:
+IoU per class: [0.981, 0.525, 0.637, 0.604] mIoU: 0.687 mIoU_shapes: 0.589
+
+Training Set Eval:
+INFO: Checkpoint 55 saved!
+IoU per class: [0.984, 0.748, 0.639, 0.775] mIoU: 0.787 mIoU_shapes: 0.721
+
+Average loss this epoch =  0.0012649779040444346
+/////////////////////////
+Epoch 56/200:
+
+Test Set Eval:
+IoU per class: [0.981, 0.589, 0.626, 0.544] mIoU: 0.685 mIoU_shapes: 0.587
+
+Training Set Eval:
+INFO: Checkpoint 56 saved!
+IoU per class: [0.983, 0.773, 0.67, 0.69] mIoU: 0.779 mIoU_shapes: 0.711
+
+Average loss this epoch =  0.001169184760568531
+/////////////////////////
+Epoch 57/200:
+
+Test Set Eval:
+IoU per class: [0.985, 0.615, 0.576, 0.692] mIoU: 0.717 mIoU_shapes: 0.628
+
+Training Set Eval:
+INFO: Checkpoint 57 saved!
+IoU per class: [0.985, 0.771, 0.623, 0.796] mIoU: 0.794 mIoU_shapes: 0.73
+
+Average loss this epoch =  0.0008154118036126492
+/////////////////////////
+Epoch 58/200:
+
+Test Set Eval:
+IoU per class: [0.984, 0.651, 0.579, 0.739] mIoU: 0.738 mIoU_shapes: 0.657
+
+Training Set Eval:
+INFO: Checkpoint 58 saved!
+IoU per class: [0.983, 0.791, 0.548, 0.814] mIoU: 0.784 mIoU_shapes: 0.718
+
+Average loss this epoch =  0.0009464909591435388
+/////////////////////////
+Epoch 59/200:
+
+Test Set Eval:
+IoU per class: [0.986, 0.597, 0.576, 0.689] mIoU: 0.712 mIoU_shapes: 0.62
+
+Training Set Eval:
+INFO: Checkpoint 59 saved!
+IoU per class: [0.984, 0.787, 0.586, 0.806] mIoU: 0.791 mIoU_shapes: 0.726
+
+Average loss this epoch =  0.0007260197376107571
+/////////////////////////
+Epoch 60/200:
+
+Test Set Eval:
+IoU per class: [0.984, 0.607, 0.663, 0.623] mIoU: 0.719 mIoU_shapes: 0.631
+
+Training Set Eval:
+INFO: Checkpoint 60 saved!
+IoU per class: [0.984, 0.794, 0.658, 0.762] mIoU: 0.799 mIoU_shapes: 0.738
+
+Average loss this epoch =  0.0005613324158361267
+/////////////////////////
+Epoch 61/200:
+
+Test Set Eval:
+IoU per class: [0.982, 0.646, 0.589, 0.725] mIoU: 0.736 mIoU_shapes: 0.653
+
+Training Set Eval:
+INFO: Checkpoint 61 saved!
+IoU per class: [0.981, 0.797, 0.588, 0.821] mIoU: 0.797 mIoU_shapes: 0.735
+
+Average loss this epoch =  0.000588765827681729
+/////////////////////////
+Epoch 62/200:
+
+Test Set Eval:
+IoU per class: [0.974, 0.568, 0.56, 0.562] mIoU: 0.666 mIoU_shapes: 0.563
+
+Training Set Eval:
+INFO: Checkpoint 62 saved!
+IoU per class: [0.977, 0.738, 0.569, 0.746] mIoU: 0.757 mIoU_shapes: 0.684
+
+Average loss this epoch =  0.0005844885085915921
+/////////////////////////
+Epoch 63/200:
+
+Test Set Eval:
+IoU per class: [0.978, 0.624, 0.603, 0.645] mIoU: 0.712 mIoU_shapes: 0.624
+
+Training Set Eval:
+INFO: Checkpoint 63 saved!
+IoU per class: [0.979, 0.777, 0.591, 0.719] mIoU: 0.767 mIoU_shapes: 0.696
+
+Average loss this epoch =  0.0005796764934412106
+/////////////////////////
+Epoch 64/200:
+
+Test Set Eval:
+IoU per class: [0.979, 0.498, 0.541, 0.718] mIoU: 0.684 mIoU_shapes: 0.586
+
+Training Set Eval:
+INFO: Checkpoint 64 saved!
+IoU per class: [0.977, 0.647, 0.535, 0.763] mIoU: 0.731 mIoU_shapes: 0.648
+
+Average loss this epoch =  0.0005117798512450821
+/////////////////////////
+Epoch 65/200:
+
+Test Set Eval:
+IoU per class: [0.982, 0.596, 0.533, 0.633] mIoU: 0.686 mIoU_shapes: 0.587
+
+Training Set Eval:
+INFO: Checkpoint 65 saved!
+IoU per class: [0.982, 0.744, 0.557, 0.758] mIoU: 0.76 mIoU_shapes: 0.686
+
+Average loss this epoch =  0.000782891796223788
+/////////////////////////
+Epoch 66/200:
+
+Test Set Eval:
+IoU per class: [0.982, 0.692, 0.472, 0.595] mIoU: 0.685 mIoU_shapes: 0.586
+
+Training Set Eval:
+INFO: Checkpoint 66 saved!
+IoU per class: [0.981, 0.804, 0.532, 0.696] mIoU: 0.753 mIoU_shapes: 0.677
+
+Average loss this epoch =  0.000977614122953375
+/////////////////////////
+Epoch 67/200:
+
+Test Set Eval:
+IoU per class: [0.978, 0.601, 0.451, 0.621] mIoU: 0.663 mIoU_shapes: 0.558
+
+Training Set Eval:
+INFO: Checkpoint 67 saved!
+IoU per class: [0.978, 0.722, 0.514, 0.733] mIoU: 0.737 mIoU_shapes: 0.656
+
+Average loss this epoch =  0.000521181455217146
+/////////////////////////
+Epoch 68/200:
+
+Test Set Eval:
+IoU per class: [0.972, 0.536, 0.524, 0.521] mIoU: 0.638 mIoU_shapes: 0.527
+
+Training Set Eval:
+INFO: Checkpoint 68 saved!
+IoU per class: [0.973, 0.687, 0.546, 0.685] mIoU: 0.723 mIoU_shapes: 0.639
+
+Average loss this epoch =  0.0006108600100712796
+/////////////////////////
+Epoch 69/200:
+
+Test Set Eval:
+IoU per class: [0.972, 0.498, 0.555, 0.687] mIoU: 0.678 mIoU_shapes: 0.58
+
+Training Set Eval:
+INFO: Checkpoint 69 saved!
+IoU per class: [0.972, 0.666, 0.532, 0.743] mIoU: 0.728 mIoU_shapes: 0.647
+
+Average loss this epoch =  0.0006377445105229462
+/////////////////////////
+Epoch 70/200:
+
+Test Set Eval:
+IoU per class: [0.97, 0.528, 0.595, 0.572] mIoU: 0.666 mIoU_shapes: 0.565
+
+Training Set Eval:
+INFO: Checkpoint 70 saved!
+IoU per class: [0.974, 0.724, 0.604, 0.682] mIoU: 0.746 mIoU_shapes: 0.67
+
+Average loss this epoch =  0.0004609046371412078
+/////////////////////////
+Epoch 71/200:
+
+Test Set Eval:
+IoU per class: [0.974, 0.511, 0.565, 0.651] mIoU: 0.675 mIoU_shapes: 0.576
+
+Training Set Eval:
+INFO: Checkpoint 71 saved!
+IoU per class: [0.977, 0.705, 0.603, 0.75] mIoU: 0.759 mIoU_shapes: 0.686
+
+Average loss this epoch =  0.0004364027637816872
+/////////////////////////
+Epoch 72/200:
+
+Test Set Eval:
+IoU per class: [0.972, 0.356, 0.525, 0.648] mIoU: 0.625 mIoU_shapes: 0.51
+
+Training Set Eval:
+INFO: Checkpoint 72 saved!
+IoU per class: [0.974, 0.505, 0.556, 0.732] mIoU: 0.692 mIoU_shapes: 0.598
+
+Average loss this epoch =  0.00037853357432776413
+/////////////////////////
+Epoch 73/200:
+
+Test Set Eval:
+IoU per class: [0.976, 0.621, 0.534, 0.65] mIoU: 0.695 mIoU_shapes: 0.602
+
+Training Set Eval:
+INFO: Checkpoint 73 saved!
+IoU per class: [0.976, 0.739, 0.561, 0.714] mIoU: 0.747 mIoU_shapes: 0.671
+
+Average loss this epoch =  0.0005056550999066819
+/////////////////////////
+Epoch 74/200:
+
+Test Set Eval:
+IoU per class: [0.978, 0.582, 0.498, 0.641] mIoU: 0.675 mIoU_shapes: 0.574
+
+Training Set Eval:
+INFO: Checkpoint 74 saved!
+IoU per class: [0.977, 0.713, 0.555, 0.755] mIoU: 0.75 mIoU_shapes: 0.674
+
+Average loss this epoch =  0.0005976173044747389
+/////////////////////////
+Epoch 75/200:
+
+Test Set Eval:
+IoU per class: [0.973, 0.486, 0.58, 0.59] mIoU: 0.657 mIoU_shapes: 0.552
+
+Training Set Eval:
+INFO: Checkpoint 75 saved!
+IoU per class: [0.973, 0.64, 0.591, 0.729] mIoU: 0.733 mIoU_shapes: 0.653
+
+Average loss this epoch =  0.0006657130548644764
+/////////////////////////
+Epoch 76/200:
+
+Test Set Eval:
+IoU per class: [0.968, 0.523, 0.523, 0.427] mIoU: 0.61 mIoU_shapes: 0.491
+
+Training Set Eval:
+INFO: Checkpoint 76 saved!
+IoU per class: [0.97, 0.664, 0.548, 0.581] mIoU: 0.691 mIoU_shapes: 0.598
+
+Average loss this epoch =  0.000531270351868793
+/////////////////////////
+Epoch 77/200:
+
+Test Set Eval:
+IoU per class: [0.975, 0.523, 0.616, 0.665] mIoU: 0.695 mIoU_shapes: 0.601
+
+Training Set Eval:
+INFO: Checkpoint 77 saved!
+IoU per class: [0.975, 0.67, 0.612, 0.723] mIoU: 0.745 mIoU_shapes: 0.668
+
+Average loss this epoch =  0.001504044652483952
+/////////////////////////
+Epoch 78/200:
+
+Test Set Eval:
+IoU per class: [0.972, 0.481, 0.505, 0.509] mIoU: 0.617 mIoU_shapes: 0.498
+
+Training Set Eval:
+INFO: Checkpoint 78 saved!
+IoU per class: [0.973, 0.649, 0.544, 0.672] mIoU: 0.709 mIoU_shapes: 0.622
+
+Average loss this epoch =  0.0005598898088582889
+/////////////////////////
+Epoch 79/200:
+
+Test Set Eval:
+IoU per class: [0.976, 0.624, 0.554, 0.554] mIoU: 0.677 mIoU_shapes: 0.577
+
+Training Set Eval:
+INFO: Checkpoint 79 saved!
+IoU per class: [0.976, 0.72, 0.567, 0.653] mIoU: 0.729 mIoU_shapes: 0.647
+
+Average loss this epoch =  0.00043649594280011485
+/////////////////////////
+Epoch 80/200:
+
+Test Set Eval:
+IoU per class: [0.975, 0.522, 0.517, 0.696] mIoU: 0.678 mIoU_shapes: 0.578
+
+Training Set Eval:
+INFO: Checkpoint 80 saved!
+IoU per class: [0.974, 0.669, 0.552, 0.723] mIoU: 0.73 mIoU_shapes: 0.648
+
+Average loss this epoch =  0.0005527136216103781
+/////////////////////////
+Epoch 81/200:
+
+Test Set Eval:
+IoU per class: [0.969, 0.422, 0.492, 0.555] mIoU: 0.609 mIoU_shapes: 0.49
+
+Training Set Eval:
+INFO: Checkpoint 81 saved!
+IoU per class: [0.971, 0.608, 0.504, 0.691] mIoU: 0.694 mIoU_shapes: 0.601
+
+Average loss this epoch =  0.000307348358082472
+/////////////////////////
+Epoch 82/200:
+
+Test Set Eval:
+IoU per class: [0.969, 0.56, 0.505, 0.588] mIoU: 0.655 mIoU_shapes: 0.551
+
+Training Set Eval:
+INFO: Checkpoint 82 saved!
+IoU per class: [0.97, 0.694, 0.503, 0.673] mIoU: 0.71 mIoU_shapes: 0.624
+
+Average loss this epoch =  0.00030366730365793075
+/////////////////////////
+Epoch 83/200:
+
+Test Set Eval:
+IoU per class: [0.965, 0.515, 0.528, 0.591] mIoU: 0.65 mIoU_shapes: 0.544
+
+Training Set Eval:
+INFO: Checkpoint 83 saved!
+IoU per class: [0.969, 0.638, 0.521, 0.707] mIoU: 0.709 mIoU_shapes: 0.622
+
+Average loss this epoch =  0.00036943024297139633
+/////////////////////////
+Epoch 84/200:
+
+Test Set Eval:
+IoU per class: [0.967, 0.548, 0.506, 0.579] mIoU: 0.65 mIoU_shapes: 0.545
+
+Training Set Eval:
+INFO: Checkpoint 84 saved!
+IoU per class: [0.971, 0.656, 0.504, 0.694] mIoU: 0.706 mIoU_shapes: 0.618
+
+Average loss this epoch =  0.00040419237633629323
+/////////////////////////
+Epoch 85/200:
+
+Test Set Eval:
+IoU per class: [0.969, 0.594, 0.512, 0.586] mIoU: 0.665 mIoU_shapes: 0.564
+
+Training Set Eval:
+INFO: Checkpoint 85 saved!
+IoU per class: [0.971, 0.705, 0.51, 0.692] mIoU: 0.719 mIoU_shapes: 0.636
+
+Average loss this epoch =  0.0005532337282492027
+/////////////////////////
+Epoch 86/200:
+
+Test Set Eval:
+IoU per class: [0.967, 0.557, 0.515, 0.472] mIoU: 0.628 mIoU_shapes: 0.515
+
+Training Set Eval:
+INFO: Checkpoint 86 saved!
+IoU per class: [0.969, 0.691, 0.502, 0.569] mIoU: 0.683 mIoU_shapes: 0.587
+
+Average loss this epoch =  0.0005236236869540674
+/////////////////////////
+Epoch 87/200:
+
+Test Set Eval:
+IoU per class: [0.971, 0.458, 0.531, 0.658] mIoU: 0.655 mIoU_shapes: 0.549
+
+Training Set Eval:
+INFO: Checkpoint 87 saved!
+IoU per class: [0.971, 0.624, 0.535, 0.71] mIoU: 0.71 mIoU_shapes: 0.623
+
+Average loss this epoch =  0.0004443763813713106
+/////////////////////////
+Epoch 88/200:
+
+Test Set Eval:
+IoU per class: [0.968, 0.481, 0.383, 0.43] mIoU: 0.565 mIoU_shapes: 0.431
+
+Training Set Eval:
+INFO: Checkpoint 88 saved!
+IoU per class: [0.97, 0.637, 0.446, 0.618] mIoU: 0.668 mIoU_shapes: 0.567
+
+Average loss this epoch =  0.00038288567978966685
+/////////////////////////
+Epoch 89/200:
+
+Test Set Eval:
+IoU per class: [0.962, 0.465, 0.432, 0.403] mIoU: 0.565 mIoU_shapes: 0.433
+
+Training Set Eval:
+INFO: Checkpoint 89 saved!
+IoU per class: [0.965, 0.629, 0.466, 0.546] mIoU: 0.652 mIoU_shapes: 0.547
+
+Average loss this epoch =  0.000557721845774471
+/////////////////////////
+Epoch 90/200:
+
+Test Set Eval:
+IoU per class: [0.966, 0.408, 0.493, 0.607] mIoU: 0.619 mIoU_shapes: 0.503
+
+Training Set Eval:
+INFO: Checkpoint 90 saved!
+IoU per class: [0.971, 0.562, 0.526, 0.715] mIoU: 0.694 mIoU_shapes: 0.601
+
+Average loss this epoch =  0.0005460889020225493
+/////////////////////////
+Epoch 91/200:
+
+Test Set Eval:
+IoU per class: [0.974, 0.464, 0.511, 0.521] mIoU: 0.617 mIoU_shapes: 0.498
+
+Training Set Eval:
+INFO: Checkpoint 91 saved!
+IoU per class: [0.974, 0.648, 0.55, 0.713] mIoU: 0.721 mIoU_shapes: 0.637
+
+Average loss this epoch =  0.00047732004311294235
+/////////////////////////
+Epoch 92/200:
+
+Test Set Eval:
+IoU per class: [0.964, 0.513, 0.438, 0.56] mIoU: 0.619 mIoU_shapes: 0.504
+
+Training Set Eval:
+INFO: Checkpoint 92 saved!
+IoU per class: [0.966, 0.652, 0.454, 0.655] mIoU: 0.682 mIoU_shapes: 0.587
+
+Average loss this epoch =  0.000538354139447711
+/////////////////////////
+Epoch 93/200:
+
+Test Set Eval:
+IoU per class: [0.972, 0.598, 0.495, 0.665] mIoU: 0.682 mIoU_shapes: 0.586
+
+Training Set Eval:
+INFO: Checkpoint 93 saved!
+IoU per class: [0.973, 0.719, 0.497, 0.734] mIoU: 0.731 mIoU_shapes: 0.65
+
+Average loss this epoch =  0.000533806230233803
+/////////////////////////
+Epoch 94/200:
+
+Test Set Eval:
+IoU per class: [0.97, 0.478, 0.494, 0.59] mIoU: 0.633 mIoU_shapes: 0.521
+
+Training Set Eval:
+INFO: Checkpoint 94 saved!
+IoU per class: [0.971, 0.642, 0.501, 0.733] mIoU: 0.712 mIoU_shapes: 0.625
+
+Average loss this epoch =  0.0002844592080954229
+/////////////////////////
+Epoch 95/200:
+
+Test Set Eval:
+IoU per class: [0.968, 0.534, 0.436, 0.587] mIoU: 0.631 mIoU_shapes: 0.519
+
+Training Set Eval:
+INFO: Checkpoint 95 saved!
+IoU per class: [0.97, 0.662, 0.451, 0.701] mIoU: 0.696 mIoU_shapes: 0.605
+
+Average loss this epoch =  0.0004942984822903717
+/////////////////////////
+Epoch 96/200:
+
+Test Set Eval:
+IoU per class: [0.966, 0.542, 0.487, 0.517] mIoU: 0.628 mIoU_shapes: 0.515
+
+Training Set Eval:
+INFO: Checkpoint 96 saved!
+IoU per class: [0.968, 0.674, 0.496, 0.619] mIoU: 0.689 mIoU_shapes: 0.596
+
+Average loss this epoch =  0.00038264610777340174
+/////////////////////////
+Epoch 97/200:
+
+Test Set Eval:
+IoU per class: [0.965, 0.466, 0.443, 0.602] mIoU: 0.619 mIoU_shapes: 0.504
+
+Training Set Eval:
+INFO: Checkpoint 97 saved!
+IoU per class: [0.968, 0.616, 0.473, 0.686] mIoU: 0.686 mIoU_shapes: 0.592
+
+Average loss this epoch =  0.00037754221067268977
+/////////////////////////
+Epoch 98/200:
+
+Test Set Eval:
+IoU per class: [0.96, 0.466, 0.421, 0.45] mIoU: 0.574 mIoU_shapes: 0.446
+
+Training Set Eval:
+INFO: Checkpoint 98 saved!
+IoU per class: [0.962, 0.584, 0.463, 0.541] mIoU: 0.638 mIoU_shapes: 0.529
+
+Average loss this epoch =  0.000454061855581515
+/////////////////////////
+Epoch 99/200:
+
+Test Set Eval:
+IoU per class: [0.962, 0.422, 0.469, 0.604] mIoU: 0.614 mIoU_shapes: 0.498
+
+Training Set Eval:
+INFO: Checkpoint 99 saved!
+IoU per class: [0.964, 0.57, 0.473, 0.665] mIoU: 0.668 mIoU_shapes: 0.569
+
+Average loss this epoch =  0.00040490797498734924
+/////////////////////////
+Epoch 100/200:
+
+Test Set Eval:
+IoU per class: [0.963, 0.466, 0.419, 0.553] mIoU: 0.6 mIoU_shapes: 0.479
+
+Training Set Eval:
+INFO: Checkpoint 100 saved!
+IoU per class: [0.965, 0.607, 0.439, 0.667] mIoU: 0.67 mIoU_shapes: 0.571
+
+Average loss this epoch =  0.000379620486223548
+/////////////////////////
+Epoch 101/200:
+
+Test Set Eval:
+IoU per class: [0.966, 0.471, 0.474, 0.594] mIoU: 0.627 mIoU_shapes: 0.513
+
+Training Set Eval:
+INFO: Checkpoint 101 saved!
+IoU per class: [0.967, 0.592, 0.475, 0.652] mIoU: 0.671 mIoU_shapes: 0.573
+
+Average loss this epoch =  0.0005347424471228692
+/////////////////////////
+Epoch 102/200:
+
+Test Set Eval:
+IoU per class: [0.964, 0.487, 0.396, 0.506] mIoU: 0.588 mIoU_shapes: 0.463
+
+Training Set Eval:
+INFO: Checkpoint 102 saved!
+IoU per class: [0.965, 0.594, 0.446, 0.614] mIoU: 0.655 mIoU_shapes: 0.551
+
+Average loss this epoch =  0.00040364290381076447
+/////////////////////////
+Epoch 103/200:
+
+Test Set Eval:
+IoU per class: [0.968, 0.515, 0.476, 0.641] mIoU: 0.65 mIoU_shapes: 0.544
+
+Training Set Eval:
+INFO: Checkpoint 103 saved!
+IoU per class: [0.97, 0.671, 0.5, 0.739] mIoU: 0.72 mIoU_shapes: 0.637
+
+Average loss this epoch =  0.00032191043992421616
+/////////////////////////
+Epoch 104/200:
+
+Test Set Eval:
+IoU per class: [0.962, 0.466, 0.369, 0.489] mIoU: 0.571 mIoU_shapes: 0.441
+
+Training Set Eval:
+INFO: Checkpoint 104 saved!
+IoU per class: [0.964, 0.608, 0.402, 0.562] mIoU: 0.634 mIoU_shapes: 0.524
+
+Average loss this epoch =  0.0003069887662532439
+/////////////////////////
+Epoch 105/200:
+
+Test Set Eval:
+IoU per class: [0.962, 0.419, 0.475, 0.56] mIoU: 0.604 mIoU_shapes: 0.485
+
+Training Set Eval:
+INFO: Checkpoint 105 saved!
+IoU per class: [0.965, 0.551, 0.494, 0.689] mIoU: 0.675 mIoU_shapes: 0.578
+
+Average loss this epoch =  0.00032415945534925583
+/////////////////////////
+Epoch 106/200:
+
+Test Set Eval:
+IoU per class: [0.965, 0.424, 0.471, 0.591] mIoU: 0.612 mIoU_shapes: 0.495
+
+Training Set Eval:
+INFO: Checkpoint 106 saved!
+IoU per class: [0.967, 0.552, 0.496, 0.722] mIoU: 0.684 mIoU_shapes: 0.59
+
+Average loss this epoch =  0.0004011336791964256
+/////////////////////////
+Epoch 107/200:
+
+Test Set Eval:
+IoU per class: [0.962, 0.466, 0.487, 0.485] mIoU: 0.6 mIoU_shapes: 0.48
+
+Training Set Eval:
+INFO: Checkpoint 107 saved!
+IoU per class: [0.965, 0.585, 0.506, 0.616] mIoU: 0.668 mIoU_shapes: 0.569
+
+Average loss this epoch =  0.0004981069759344954
+/////////////////////////
+Epoch 108/200:
+
+Test Set Eval:
+IoU per class: [0.958, 0.348, 0.464, 0.525] mIoU: 0.574 mIoU_shapes: 0.446
+
+Training Set Eval:
+INFO: Checkpoint 108 saved!
+IoU per class: [0.963, 0.506, 0.451, 0.681] mIoU: 0.65 mIoU_shapes: 0.546
+
+Average loss this epoch =  0.0003754244065184972
+/////////////////////////
+Epoch 109/200:
+
+Test Set Eval:
+IoU per class: [0.962, 0.344, 0.441, 0.533] mIoU: 0.57 mIoU_shapes: 0.44
+
+Training Set Eval:
+INFO: Checkpoint 109 saved!
+IoU per class: [0.964, 0.477, 0.447, 0.684] mIoU: 0.643 mIoU_shapes: 0.536
+
+Average loss this epoch =  0.0003529472206426964
+/////////////////////////
+Epoch 110/200:
+
+Test Set Eval:
+IoU per class: [0.96, 0.47, 0.448, 0.407] mIoU: 0.571 mIoU_shapes: 0.442
+
+Training Set Eval:
+INFO: Checkpoint 110 saved!
+IoU per class: [0.962, 0.592, 0.46, 0.532] mIoU: 0.637 mIoU_shapes: 0.528
+
+Average loss this epoch =  0.0002565213389476473
+/////////////////////////
+Epoch 111/200:
+
+Test Set Eval:
+IoU per class: [0.964, 0.51, 0.47, 0.564] mIoU: 0.627 mIoU_shapes: 0.514
+
+Training Set Eval:
+INFO: Checkpoint 111 saved!
+IoU per class: [0.966, 0.631, 0.478, 0.62] mIoU: 0.674 mIoU_shapes: 0.577
+
+Average loss this epoch =  0.000321163417903948
+/////////////////////////
+Epoch 112/200:
+
+Test Set Eval:
+IoU per class: [0.96, 0.459, 0.402, 0.413] mIoU: 0.559 mIoU_shapes: 0.425
+
+Training Set Eval:
+INFO: Checkpoint 112 saved!
+IoU per class: [0.962, 0.564, 0.433, 0.496] mIoU: 0.614 mIoU_shapes: 0.498
+
+Average loss this epoch =  0.0003743756827450198
+/////////////////////////
+Epoch 113/200:
+
+Test Set Eval:
+IoU per class: [0.964, 0.459, 0.453, 0.576] mIoU: 0.613 mIoU_shapes: 0.496
+
+Training Set Eval:
+INFO: Checkpoint 113 saved!
+IoU per class: [0.966, 0.574, 0.476, 0.709] mIoU: 0.681 mIoU_shapes: 0.586
+
+Average loss this epoch =  0.000482487535127536
+/////////////////////////
+Epoch 114/200:
+
+Test Set Eval:
+IoU per class: [0.962, 0.517, 0.418, 0.497] mIoU: 0.598 mIoU_shapes: 0.477
+
+Training Set Eval:
+INFO: Checkpoint 114 saved!
+IoU per class: [0.967, 0.643, 0.459, 0.64] mIoU: 0.677 mIoU_shapes: 0.581
+
+Average loss this epoch =  0.0003301712010196063
+/////////////////////////
+Epoch 115/200:
+
+Test Set Eval:
+IoU per class: [0.96, 0.475, 0.454, 0.428] mIoU: 0.58 mIoU_shapes: 0.453
+
+Training Set Eval:
+INFO: Checkpoint 115 saved!
+IoU per class: [0.963, 0.583, 0.487, 0.567] mIoU: 0.65 mIoU_shapes: 0.546
+
+Average loss this epoch =  0.0003143716681452476
+/////////////////////////
+Epoch 116/200:
+
+Test Set Eval:
+IoU per class: [0.959, 0.437, 0.428, 0.534] mIoU: 0.589 mIoU_shapes: 0.466
+
+Training Set Eval:
+INFO: Checkpoint 116 saved!
+IoU per class: [0.961, 0.537, 0.425, 0.629] mIoU: 0.638 mIoU_shapes: 0.53
+
+Average loss this epoch =  0.0008493259112705247
+/////////////////////////
+Epoch 117/200:
+
+Test Set Eval:
+IoU per class: [0.961, 0.444, 0.443, 0.603] mIoU: 0.613 mIoU_shapes: 0.497
+
+Training Set Eval:
+INFO: Checkpoint 117 saved!
+IoU per class: [0.964, 0.552, 0.449, 0.669] mIoU: 0.659 mIoU_shapes: 0.557
+
+Average loss this epoch =  0.00040645205326160126
+/////////////////////////
+Epoch 118/200:
+
+Test Set Eval:
+IoU per class: [0.956, 0.324, 0.365, 0.502] mIoU: 0.537 mIoU_shapes: 0.397
+
+Training Set Eval:
+INFO: Checkpoint 118 saved!
+IoU per class: [0.959, 0.469, 0.382, 0.61] mIoU: 0.605 mIoU_shapes: 0.487
+
+Average loss this epoch =  0.0003909318703986611
+/////////////////////////
+Epoch 119/200:
+
+Test Set Eval:
+IoU per class: [0.963, 0.477, 0.451, 0.547] mIoU: 0.609 mIoU_shapes: 0.491
+
+Training Set Eval:
+INFO: Checkpoint 119 saved!
+IoU per class: [0.964, 0.597, 0.456, 0.695] mIoU: 0.678 mIoU_shapes: 0.582
+
+Average loss this epoch =  0.0005199812882614934
+/////////////////////////
+Epoch 120/200:
+
+Test Set Eval:
+IoU per class: [0.96, 0.436, 0.408, 0.531] mIoU: 0.584 mIoU_shapes: 0.458
+
+Training Set Eval:
+INFO: Checkpoint 120 saved!
+IoU per class: [0.963, 0.549, 0.429, 0.669] mIoU: 0.652 mIoU_shapes: 0.549
+
+Average loss this epoch =  0.0006591819819047361
+/////////////////////////
+Epoch 121/200:
+
+Test Set Eval:
+IoU per class: [0.959, 0.433, 0.456, 0.477] mIoU: 0.581 mIoU_shapes: 0.456
+
+Training Set Eval:
+INFO: Checkpoint 121 saved!
+IoU per class: [0.963, 0.552, 0.462, 0.631] mIoU: 0.652 mIoU_shapes: 0.548
+
+Average loss this epoch =  0.00038676883510964686
+/////////////////////////
+Epoch 122/200:
+
+Test Set Eval:
+IoU per class: [0.963, 0.405, 0.481, 0.531] mIoU: 0.595 mIoU_shapes: 0.472
+
+Training Set Eval:
+INFO: Checkpoint 122 saved!
+IoU per class: [0.965, 0.525, 0.492, 0.661] mIoU: 0.661 mIoU_shapes: 0.559
+
+Average loss this epoch =  0.0002500546870121896
+/////////////////////////
+Epoch 123/200:
+
+Test Set Eval:
+IoU per class: [0.964, 0.412, 0.473, 0.52] mIoU: 0.593 mIoU_shapes: 0.469
+
+Training Set Eval:
+INFO: Checkpoint 123 saved!
+IoU per class: [0.967, 0.561, 0.511, 0.699] mIoU: 0.684 mIoU_shapes: 0.59
+
+Average loss this epoch =  0.0002292769816879448
+/////////////////////////
+Epoch 124/200:
+
+Test Set Eval:
+IoU per class: [0.96, 0.374, 0.284, 0.489] mIoU: 0.527 mIoU_shapes: 0.382
+
+Training Set Eval:
+INFO: Checkpoint 124 saved!
+IoU per class: [0.962, 0.528, 0.35, 0.666] mIoU: 0.627 mIoU_shapes: 0.515
+
+Average loss this epoch =  0.00031337472434821986
+/////////////////////////
+Epoch 125/200:
+
+Test Set Eval:
+IoU per class: [0.959, 0.227, 0.343, 0.548] mIoU: 0.519 mIoU_shapes: 0.373
+
+Training Set Eval:
+INFO: Checkpoint 125 saved!
+IoU per class: [0.961, 0.355, 0.37, 0.638] mIoU: 0.581 mIoU_shapes: 0.454
+
+Average loss this epoch =  0.0003076778046755611
+/////////////////////////
+Epoch 126/200:
+
+Test Set Eval:
+IoU per class: [0.956, 0.301, 0.399, 0.542] mIoU: 0.55 mIoU_shapes: 0.414
+
+Training Set Eval:
+INFO: Checkpoint 126 saved!
+IoU per class: [0.959, 0.432, 0.414, 0.644] mIoU: 0.612 mIoU_shapes: 0.497
+
+Average loss this epoch =  0.00023274934192082873
+/////////////////////////
+Epoch 127/200:
+
+Test Set Eval:
+IoU per class: [0.962, 0.425, 0.395, 0.585] mIoU: 0.591 mIoU_shapes: 0.468
+
+Training Set Eval:
+INFO: Checkpoint 127 saved!
+IoU per class: [0.962, 0.538, 0.412, 0.664] mIoU: 0.644 mIoU_shapes: 0.538
+
+Average loss this epoch =  0.00032180020874015457
+/////////////////////////
+Epoch 128/200:
+
+Test Set Eval:
+IoU per class: [0.963, 0.447, 0.449, 0.556] mIoU: 0.604 mIoU_shapes: 0.484
+
+Training Set Eval:
+INFO: Checkpoint 128 saved!
+IoU per class: [0.963, 0.559, 0.441, 0.644] mIoU: 0.652 mIoU_shapes: 0.548
+
+Average loss this epoch =  0.00023197728719671402
+/////////////////////////
+Epoch 129/200:
+
+Test Set Eval:
+IoU per class: [0.961, 0.442, 0.46, 0.496] mIoU: 0.59 mIoU_shapes: 0.466
+
+Training Set Eval:
+INFO: Checkpoint 129 saved!
+IoU per class: [0.962, 0.525, 0.454, 0.606] mIoU: 0.637 mIoU_shapes: 0.528
+
+Average loss this epoch =  0.0003164873524689774
+/////////////////////////
+Epoch 130/200:
+
+Test Set Eval:
+IoU per class: [0.964, 0.48, 0.4, 0.566] mIoU: 0.602 mIoU_shapes: 0.482
+
+Training Set Eval:
+INFO: Checkpoint 130 saved!
+IoU per class: [0.965, 0.574, 0.441, 0.669] mIoU: 0.662 mIoU_shapes: 0.561
+
+Average loss this epoch =  0.000307327970301257
+/////////////////////////
+Epoch 131/200:
+
+Test Set Eval:
+IoU per class: [0.961, 0.475, 0.449, 0.521] mIoU: 0.602 mIoU_shapes: 0.482
+
+Training Set Eval:
+INFO: Checkpoint 131 saved!
+IoU per class: [0.964, 0.589, 0.467, 0.669] mIoU: 0.672 mIoU_shapes: 0.575
+
+Average loss this epoch =  0.0007098313405423983
+/////////////////////////
+Epoch 132/200:
+
+Test Set Eval:
+IoU per class: [0.96, 0.375, 0.379, 0.567] mIoU: 0.57 mIoU_shapes: 0.44
+
+Training Set Eval:
+INFO: Checkpoint 132 saved!
+IoU per class: [0.963, 0.486, 0.4, 0.677] mIoU: 0.631 mIoU_shapes: 0.521
+
+Average loss this epoch =  0.00041129929500643677
+/////////////////////////
+Epoch 133/200:
+
+Test Set Eval:
+IoU per class: [0.961, 0.458, 0.353, 0.488] mIoU: 0.565 mIoU_shapes: 0.433
+
+Training Set Eval:
+INFO: Checkpoint 133 saved!
+IoU per class: [0.963, 0.582, 0.423, 0.656] mIoU: 0.656 mIoU_shapes: 0.554
+
+Average loss this epoch =  0.0002773475509807156
+/////////////////////////
+Epoch 134/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.435, 0.458, 0.518] mIoU: 0.592 mIoU_shapes: 0.471
+
+Training Set Eval:
+INFO: Checkpoint 134 saved!
+IoU per class: [0.961, 0.542, 0.47, 0.638] mIoU: 0.653 mIoU_shapes: 0.55
+
+Average loss this epoch =  0.0004358581543966317
+/////////////////////////
+Epoch 135/200:
+
+Test Set Eval:
+IoU per class: [0.958, 0.296, 0.343, 0.544] mIoU: 0.535 mIoU_shapes: 0.394
+
+Training Set Eval:
+INFO: Checkpoint 135 saved!
+IoU per class: [0.961, 0.401, 0.383, 0.624] mIoU: 0.592 mIoU_shapes: 0.469
+
+Average loss this epoch =  0.0004956334455242715
+/////////////////////////
+Epoch 136/200:
+
+Test Set Eval:
+IoU per class: [0.956, 0.444, 0.467, 0.39] mIoU: 0.564 mIoU_shapes: 0.434
+
+Training Set Eval:
+INFO: Checkpoint 136 saved!
+IoU per class: [0.96, 0.555, 0.46, 0.552] mIoU: 0.632 mIoU_shapes: 0.522
+
+Average loss this epoch =  0.0005633198815908392
+/////////////////////////
+Epoch 137/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.436, 0.432, 0.465] mIoU: 0.572 mIoU_shapes: 0.444
+
+Training Set Eval:
+INFO: Checkpoint 137 saved!
+IoU per class: [0.959, 0.555, 0.425, 0.587] mIoU: 0.631 mIoU_shapes: 0.522
+
+Average loss this epoch =  0.0006015934205953048
+/////////////////////////
+Epoch 138/200:
+
+Test Set Eval:
+IoU per class: [0.956, 0.441, 0.403, 0.513] mIoU: 0.578 mIoU_shapes: 0.452
+
+Training Set Eval:
+INFO: Checkpoint 138 saved!
+IoU per class: [0.959, 0.527, 0.405, 0.612] mIoU: 0.626 mIoU_shapes: 0.515
+
+Average loss this epoch =  0.0003570266161503652
+/////////////////////////
+Epoch 139/200:
+
+Test Set Eval:
+IoU per class: [0.959, 0.471, 0.433, 0.497] mIoU: 0.59 mIoU_shapes: 0.467
+
+Training Set Eval:
+INFO: Checkpoint 139 saved!
+IoU per class: [0.961, 0.555, 0.418, 0.595] mIoU: 0.632 mIoU_shapes: 0.523
+
+Average loss this epoch =  0.0004779697399757896
+/////////////////////////
+Epoch 140/200:
+
+Test Set Eval:
+IoU per class: [0.96, 0.462, 0.426, 0.522] mIoU: 0.592 mIoU_shapes: 0.47
+
+Training Set Eval:
+INFO: Checkpoint 140 saved!
+IoU per class: [0.962, 0.542, 0.444, 0.627] mIoU: 0.644 mIoU_shapes: 0.538
+
+Average loss this epoch =  0.0003639732070547766
+/////////////////////////
+Epoch 141/200:
+
+Test Set Eval:
+IoU per class: [0.962, 0.507, 0.492, 0.511] mIoU: 0.618 mIoU_shapes: 0.503
+
+Training Set Eval:
+INFO: Checkpoint 141 saved!
+IoU per class: [0.964, 0.573, 0.505, 0.617] mIoU: 0.665 mIoU_shapes: 0.565
+
+Average loss this epoch =  0.0003438605673642338
+/////////////////////////
+Epoch 142/200:
+
+Test Set Eval:
+IoU per class: [0.958, 0.44, 0.479, 0.542] mIoU: 0.605 mIoU_shapes: 0.487
+
+Training Set Eval:
+INFO: Checkpoint 142 saved!
+IoU per class: [0.96, 0.537, 0.479, 0.619] mIoU: 0.649 mIoU_shapes: 0.545
+
+Average loss this epoch =  0.00040305795529896245
+/////////////////////////
+Epoch 143/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.42, 0.411, 0.528] mIoU: 0.579 mIoU_shapes: 0.453
+
+Training Set Eval:
+INFO: Checkpoint 143 saved!
+IoU per class: [0.96, 0.507, 0.443, 0.646] mIoU: 0.639 mIoU_shapes: 0.532
+
+Average loss this epoch =  0.0014960119913811464
+/////////////////////////
+Epoch 144/200:
+
+Test Set Eval:
+IoU per class: [0.961, 0.371, 0.433, 0.608] mIoU: 0.593 mIoU_shapes: 0.471
+
+Training Set Eval:
+INFO: Checkpoint 144 saved!
+IoU per class: [0.963, 0.485, 0.411, 0.687] mIoU: 0.637 mIoU_shapes: 0.528
+
+Average loss this epoch =  0.0002926857401636355
+/////////////////////////
+Epoch 145/200:
+
+Test Set Eval:
+IoU per class: [0.959, 0.426, 0.497, 0.538] mIoU: 0.605 mIoU_shapes: 0.487
+
+Training Set Eval:
+INFO: Checkpoint 145 saved!
+IoU per class: [0.963, 0.556, 0.486, 0.658] mIoU: 0.666 mIoU_shapes: 0.567
+
+Average loss this epoch =  0.000186539204424894
+/////////////////////////
+Epoch 146/200:
+
+Test Set Eval:
+IoU per class: [0.956, 0.422, 0.49, 0.482] mIoU: 0.588 mIoU_shapes: 0.465
+
+Training Set Eval:
+INFO: Checkpoint 146 saved!
+IoU per class: [0.959, 0.524, 0.477, 0.562] mIoU: 0.63 mIoU_shapes: 0.521
+
+Average loss this epoch =  0.00022539842452963028
+/////////////////////////
+Epoch 147/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.423, 0.402, 0.404] mIoU: 0.546 mIoU_shapes: 0.41
+
+Training Set Eval:
+INFO: Checkpoint 147 saved!
+IoU per class: [0.959, 0.53, 0.413, 0.53] mIoU: 0.608 mIoU_shapes: 0.491
+
+Average loss this epoch =  0.00019757463655212435
+/////////////////////////
+Epoch 148/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.319, 0.441, 0.51] mIoU: 0.556 mIoU_shapes: 0.423
+
+Training Set Eval:
+INFO: Checkpoint 148 saved!
+IoU per class: [0.959, 0.432, 0.442, 0.6] mIoU: 0.608 mIoU_shapes: 0.492
+
+Average loss this epoch =  0.00019388128399350154
+/////////////////////////
+Epoch 149/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.39, 0.39, 0.484] mIoU: 0.554 mIoU_shapes: 0.421
+
+Training Set Eval:
+INFO: Checkpoint 149 saved!
+IoU per class: [0.958, 0.496, 0.397, 0.568] mIoU: 0.605 mIoU_shapes: 0.487
+
+Average loss this epoch =  0.0005994455959008828
+/////////////////////////
+Epoch 150/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.323, 0.398, 0.38] mIoU: 0.513 mIoU_shapes: 0.367
+
+Training Set Eval:
+INFO: Checkpoint 150 saved!
+IoU per class: [0.953, 0.425, 0.394, 0.467] mIoU: 0.56 mIoU_shapes: 0.429
+
+Average loss this epoch =  0.00017668674680478404
+/////////////////////////
+Epoch 151/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.37, 0.45, 0.455] mIoU: 0.557 mIoU_shapes: 0.425
+
+Training Set Eval:
+INFO: Checkpoint 151 saved!
+IoU per class: [0.957, 0.454, 0.447, 0.549] mIoU: 0.602 mIoU_shapes: 0.484
+
+Average loss this epoch =  0.0005508695561516734
+/////////////////////////
+Epoch 152/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.374, 0.452, 0.472] mIoU: 0.563 mIoU_shapes: 0.433
+
+Training Set Eval:
+INFO: Checkpoint 152 saved!
+IoU per class: [0.958, 0.45, 0.463, 0.583] mIoU: 0.613 mIoU_shapes: 0.498
+
+Average loss this epoch =  0.00030131700398034134
+/////////////////////////
+Epoch 153/200:
+
+Test Set Eval:
+IoU per class: [0.961, 0.413, 0.467, 0.533] mIoU: 0.593 mIoU_shapes: 0.471
+
+Training Set Eval:
+INFO: Checkpoint 153 saved!
+IoU per class: [0.964, 0.508, 0.482, 0.681] mIoU: 0.659 mIoU_shapes: 0.557
+
+Average loss this epoch =  0.00046212491131227885
+/////////////////////////
+Epoch 154/200:
+
+Test Set Eval:
+IoU per class: [0.959, 0.318, 0.421, 0.568] mIoU: 0.566 mIoU_shapes: 0.436
+
+Training Set Eval:
+INFO: Checkpoint 154 saved!
+IoU per class: [0.962, 0.439, 0.448, 0.702] mIoU: 0.638 mIoU_shapes: 0.53
+
+Average loss this epoch =  0.00023928145920881167
+/////////////////////////
+Epoch 155/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.285, 0.424, 0.524] mIoU: 0.547 mIoU_shapes: 0.411
+
+Training Set Eval:
+INFO: Checkpoint 155 saved!
+IoU per class: [0.957, 0.385, 0.423, 0.619] mIoU: 0.596 mIoU_shapes: 0.476
+
+Average loss this epoch =  0.00045052915811538696
+/////////////////////////
+Epoch 156/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.342, 0.408, 0.512] mIoU: 0.554 mIoU_shapes: 0.421
+
+Training Set Eval:
+INFO: Checkpoint 156 saved!
+IoU per class: [0.958, 0.444, 0.416, 0.637] mIoU: 0.614 mIoU_shapes: 0.499
+
+Average loss this epoch =  0.00026639024084083206
+/////////////////////////
+Epoch 157/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.405, 0.37, 0.426] mIoU: 0.539 mIoU_shapes: 0.4
+
+Training Set Eval:
+INFO: Checkpoint 157 saved!
+IoU per class: [0.958, 0.53, 0.392, 0.583] mIoU: 0.616 mIoU_shapes: 0.502
+
+Average loss this epoch =  0.000849086058688463
+/////////////////////////
+Epoch 158/200:
+
+Test Set Eval:
+IoU per class: [0.956, 0.493, 0.457, 0.475] mIoU: 0.595 mIoU_shapes: 0.475
+
+Training Set Eval:
+INFO: Checkpoint 158 saved!
+IoU per class: [0.96, 0.588, 0.444, 0.575] mIoU: 0.642 mIoU_shapes: 0.536
+
+Average loss this epoch =  0.0010597816820423973
+/////////////////////////
+Epoch 159/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.399, 0.467, 0.417] mIoU: 0.559 mIoU_shapes: 0.428
+
+Training Set Eval:
+INFO: Checkpoint 159 saved!
+IoU per class: [0.958, 0.489, 0.467, 0.539] mIoU: 0.613 mIoU_shapes: 0.498
+
+Average loss this epoch =  0.000994918486064448
+/////////////////////////
+Epoch 160/200:
+
+Test Set Eval:
+IoU per class: [0.959, 0.305, 0.476, 0.548] mIoU: 0.572 mIoU_shapes: 0.443
+
+Training Set Eval:
+INFO: Checkpoint 160 saved!
+IoU per class: [0.96, 0.442, 0.504, 0.61] mIoU: 0.629 mIoU_shapes: 0.519
+
+Average loss this epoch =  0.00044392825544628637
+/////////////////////////
+Epoch 161/200:
+
+Test Set Eval:
+IoU per class: [0.963, 0.393, 0.558, 0.639] mIoU: 0.638 mIoU_shapes: 0.53
+
+Training Set Eval:
+INFO: Checkpoint 161 saved!
+IoU per class: [0.965, 0.511, 0.559, 0.71] mIoU: 0.686 mIoU_shapes: 0.593
+
+Average loss this epoch =  0.0004114027614374041
+/////////////////////////
+Epoch 162/200:
+
+Test Set Eval:
+IoU per class: [0.96, 0.454, 0.436, 0.544] mIoU: 0.598 mIoU_shapes: 0.478
+
+Training Set Eval:
+INFO: Checkpoint 162 saved!
+IoU per class: [0.962, 0.536, 0.454, 0.667] mIoU: 0.655 mIoU_shapes: 0.552
+
+Average loss this epoch =  0.00024651355698517675
+/////////////////////////
+Epoch 163/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.383, 0.391, 0.464] mIoU: 0.548 mIoU_shapes: 0.412
+
+Training Set Eval:
+INFO: Checkpoint 163 saved!
+IoU per class: [0.957, 0.506, 0.397, 0.567] mIoU: 0.607 mIoU_shapes: 0.49
+
+Average loss this epoch =  0.0003418613178460668
+/////////////////////////
+Epoch 164/200:
+
+Test Set Eval:
+IoU per class: [0.956, 0.459, 0.467, 0.45] mIoU: 0.583 mIoU_shapes: 0.458
+
+Training Set Eval:
+INFO: Checkpoint 164 saved!
+IoU per class: [0.96, 0.553, 0.478, 0.565] mIoU: 0.639 mIoU_shapes: 0.532
+
+Average loss this epoch =  0.0003393129387161223
+/////////////////////////
+Epoch 165/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.299, 0.449, 0.468] mIoU: 0.543 mIoU_shapes: 0.405
+
+Training Set Eval:
+INFO: Checkpoint 165 saved!
+IoU per class: [0.958, 0.447, 0.477, 0.568] mIoU: 0.613 mIoU_shapes: 0.497
+
+Average loss this epoch =  0.00014165930730528412
+/////////////////////////
+Epoch 166/200:
+
+Test Set Eval:
+IoU per class: [0.956, 0.325, 0.44, 0.501] mIoU: 0.555 mIoU_shapes: 0.422
+
+Training Set Eval:
+INFO: Checkpoint 166 saved!
+IoU per class: [0.958, 0.461, 0.463, 0.591] mIoU: 0.618 mIoU_shapes: 0.505
+
+Average loss this epoch =  0.00019136584017067276
+/////////////////////////
+Epoch 167/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.351, 0.44, 0.481] mIoU: 0.556 mIoU_shapes: 0.424
+
+Training Set Eval:
+INFO: Checkpoint 167 saved!
+IoU per class: [0.957, 0.445, 0.443, 0.584] mIoU: 0.607 mIoU_shapes: 0.491
+
+Average loss this epoch =  0.0004076624452818388
+/////////////////////////
+Epoch 168/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.375, 0.399, 0.494] mIoU: 0.556 mIoU_shapes: 0.422
+
+Training Set Eval:
+INFO: Checkpoint 168 saved!
+IoU per class: [0.96, 0.485, 0.43, 0.617] mIoU: 0.623 mIoU_shapes: 0.51
+
+Average loss this epoch =  0.00024718799039908534
+/////////////////////////
+Epoch 169/200:
+
+Test Set Eval:
+IoU per class: [0.956, 0.324, 0.497, 0.504] mIoU: 0.57 mIoU_shapes: 0.442
+
+Training Set Eval:
+INFO: Checkpoint 169 saved!
+IoU per class: [0.959, 0.447, 0.488, 0.596] mIoU: 0.623 mIoU_shapes: 0.51
+
+Average loss this epoch =  0.0002147738498374508
+/////////////////////////
+Epoch 170/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.352, 0.416, 0.384] mIoU: 0.525 mIoU_shapes: 0.384
+
+Training Set Eval:
+INFO: Checkpoint 170 saved!
+IoU per class: [0.955, 0.469, 0.423, 0.502] mIoU: 0.587 mIoU_shapes: 0.465
+
+Average loss this epoch =  0.000258182989877637
+/////////////////////////
+Epoch 171/200:
+
+Test Set Eval:
+IoU per class: [0.956, 0.384, 0.364, 0.513] mIoU: 0.554 mIoU_shapes: 0.42
+
+Training Set Eval:
+INFO: Checkpoint 171 saved!
+IoU per class: [0.958, 0.515, 0.392, 0.58] mIoU: 0.611 mIoU_shapes: 0.496
+
+Average loss this epoch =  0.0005891972131808931
+/////////////////////////
+Epoch 172/200:
+
+Test Set Eval:
+IoU per class: [0.961, 0.479, 0.49, 0.567] mIoU: 0.624 mIoU_shapes: 0.512
+
+Training Set Eval:
+INFO: Checkpoint 172 saved!
+IoU per class: [0.962, 0.565, 0.478, 0.639] mIoU: 0.661 mIoU_shapes: 0.561
+
+Average loss this epoch =  0.0011118061871708187
+/////////////////////////
+Epoch 173/200:
+
+Test Set Eval:
+IoU per class: [0.959, 0.421, 0.47, 0.485] mIoU: 0.584 mIoU_shapes: 0.459
+
+Training Set Eval:
+INFO: Checkpoint 173 saved!
+IoU per class: [0.961, 0.535, 0.484, 0.629] mIoU: 0.653 mIoU_shapes: 0.55
+
+Average loss this epoch =  0.0003206889187940494
+/////////////////////////
+Epoch 174/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.389, 0.485, 0.506] mIoU: 0.584 mIoU_shapes: 0.46
+
+Training Set Eval:
+INFO: Checkpoint 174 saved!
+IoU per class: [0.96, 0.512, 0.501, 0.628] mIoU: 0.65 mIoU_shapes: 0.547
+
+Average loss this epoch =  0.00027487483109390386
+/////////////////////////
+Epoch 175/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.349, 0.46, 0.466] mIoU: 0.557 mIoU_shapes: 0.425
+
+Training Set Eval:
+INFO: Checkpoint 175 saved!
+IoU per class: [0.957, 0.453, 0.474, 0.58] mIoU: 0.616 mIoU_shapes: 0.502
+
+Average loss this epoch =  0.0001972650010216685
+/////////////////////////
+Epoch 176/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.292, 0.423, 0.442] mIoU: 0.527 mIoU_shapes: 0.386
+
+Training Set Eval:
+INFO: Checkpoint 176 saved!
+IoU per class: [0.954, 0.391, 0.426, 0.522] mIoU: 0.573 mIoU_shapes: 0.446
+
+Average loss this epoch =  0.00020096761225157702
+/////////////////////////
+Epoch 177/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.358, 0.317, 0.416] mIoU: 0.511 mIoU_shapes: 0.364
+
+Training Set Eval:
+INFO: Checkpoint 177 saved!
+IoU per class: [0.956, 0.435, 0.366, 0.566] mIoU: 0.581 mIoU_shapes: 0.456
+
+Average loss this epoch =  0.0002515220149541001
+/////////////////////////
+Epoch 178/200:
+
+Test Set Eval:
+IoU per class: [0.956, 0.35, 0.486, 0.481] mIoU: 0.568 mIoU_shapes: 0.439
+
+Training Set Eval:
+INFO: Checkpoint 178 saved!
+IoU per class: [0.96, 0.461, 0.484, 0.589] mIoU: 0.624 mIoU_shapes: 0.512
+
+Average loss this epoch =  0.00027955582201730255
+/////////////////////////
+Epoch 179/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.436, 0.418, 0.386] mIoU: 0.549 mIoU_shapes: 0.413
+
+Training Set Eval:
+INFO: Checkpoint 179 saved!
+IoU per class: [0.958, 0.519, 0.443, 0.551] mIoU: 0.618 mIoU_shapes: 0.505
+
+Average loss this epoch =  0.0002950342005765588
+/////////////////////////
+Epoch 180/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.336, 0.407, 0.484] mIoU: 0.545 mIoU_shapes: 0.409
+
+Training Set Eval:
+INFO: Checkpoint 180 saved!
+IoU per class: [0.957, 0.446, 0.411, 0.588] mIoU: 0.6 mIoU_shapes: 0.482
+
+Average loss this epoch =  0.00080304402686562
+/////////////////////////
+Epoch 181/200:
+
+Test Set Eval:
+IoU per class: [0.959, 0.349, 0.36, 0.556] mIoU: 0.556 mIoU_shapes: 0.422
+
+Training Set Eval:
+INFO: Checkpoint 181 saved!
+IoU per class: [0.961, 0.469, 0.401, 0.679] mIoU: 0.628 mIoU_shapes: 0.516
+
+Average loss this epoch =  0.00019623002497222135
+/////////////////////////
+Epoch 182/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.332, 0.401, 0.464] mIoU: 0.538 mIoU_shapes: 0.399
+
+Training Set Eval:
+INFO: Checkpoint 182 saved!
+IoU per class: [0.957, 0.441, 0.421, 0.585] mIoU: 0.601 mIoU_shapes: 0.482
+
+Average loss this epoch =  0.0002458302078137338
+/////////////////////////
+Epoch 183/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.314, 0.424, 0.489] mIoU: 0.545 mIoU_shapes: 0.409
+
+Training Set Eval:
+INFO: Checkpoint 183 saved!
+IoU per class: [0.957, 0.412, 0.453, 0.604] mIoU: 0.607 mIoU_shapes: 0.49
+
+Average loss this epoch =  0.00020649666005597453
+/////////////////////////
+Epoch 184/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.344, 0.402, 0.422] mIoU: 0.53 mIoU_shapes: 0.389
+
+Training Set Eval:
+INFO: Checkpoint 184 saved!
+IoU per class: [0.956, 0.447, 0.438, 0.523] mIoU: 0.591 mIoU_shapes: 0.469
+
+Average loss this epoch =  0.0001933368772392991
+/////////////////////////
+Epoch 185/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.388, 0.46, 0.383] mIoU: 0.546 mIoU_shapes: 0.411
+
+Training Set Eval:
+INFO: Checkpoint 185 saved!
+IoU per class: [0.957, 0.464, 0.502, 0.508] mIoU: 0.608 mIoU_shapes: 0.491
+
+Average loss this epoch =  0.00027261546590836975
+/////////////////////////
+Epoch 186/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.292, 0.459, 0.42] mIoU: 0.531 mIoU_shapes: 0.391
+
+Training Set Eval:
+INFO: Checkpoint 186 saved!
+IoU per class: [0.955, 0.431, 0.472, 0.528] mIoU: 0.597 mIoU_shapes: 0.477
+
+Average loss this epoch =  0.00025730355638839213
+/////////////////////////
+Epoch 187/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.323, 0.484, 0.454] mIoU: 0.553 mIoU_shapes: 0.42
+
+Training Set Eval:
+INFO: Checkpoint 187 saved!
+IoU per class: [0.957, 0.427, 0.484, 0.568] mIoU: 0.609 mIoU_shapes: 0.493
+
+Average loss this epoch =  0.00022722908517805603
+/////////////////////////
+Epoch 188/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.279, 0.379, 0.419] mIoU: 0.507 mIoU_shapes: 0.359
+
+Training Set Eval:
+INFO: Checkpoint 188 saved!
+IoU per class: [0.953, 0.365, 0.401, 0.503] mIoU: 0.556 mIoU_shapes: 0.423
+
+Average loss this epoch =  0.0003978876888003808
+/////////////////////////
+Epoch 189/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.355, 0.421, 0.384] mIoU: 0.528 mIoU_shapes: 0.387
+
+Training Set Eval:
+INFO: Checkpoint 189 saved!
+IoU per class: [0.955, 0.438, 0.431, 0.498] mIoU: 0.58 mIoU_shapes: 0.456
+
+Average loss this epoch =  0.0003619333378440665
+/////////////////////////
+Epoch 190/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.352, 0.423, 0.446] mIoU: 0.543 mIoU_shapes: 0.407
+
+Training Set Eval:
+INFO: Checkpoint 190 saved!
+IoU per class: [0.955, 0.46, 0.416, 0.523] mIoU: 0.589 mIoU_shapes: 0.466
+
+Average loss this epoch =  0.0002821681701488575
+/////////////////////////
+Epoch 191/200:
+
+Test Set Eval:
+IoU per class: [0.956, 0.413, 0.504, 0.433] mIoU: 0.577 mIoU_shapes: 0.45
+
+Training Set Eval:
+INFO: Checkpoint 191 saved!
+IoU per class: [0.959, 0.487, 0.516, 0.532] mIoU: 0.623 mIoU_shapes: 0.512
+
+Average loss this epoch =  0.0002165714037218852
+/////////////////////////
+Epoch 192/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.318, 0.503, 0.418] mIoU: 0.548 mIoU_shapes: 0.413
+
+Training Set Eval:
+INFO: Checkpoint 192 saved!
+IoU per class: [0.955, 0.404, 0.495, 0.483] mIoU: 0.584 mIoU_shapes: 0.461
+
+Average loss this epoch =  0.0003204120315268449
+/////////////////////////
+Epoch 193/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.373, 0.4, 0.37] mIoU: 0.523 mIoU_shapes: 0.381
+
+Training Set Eval:
+INFO: Checkpoint 193 saved!
+IoU per class: [0.954, 0.448, 0.434, 0.469] mIoU: 0.576 mIoU_shapes: 0.451
+
+Average loss this epoch =  0.00032241545835798253
+/////////////////////////
+Epoch 194/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.316, 0.484, 0.399] mIoU: 0.537 mIoU_shapes: 0.4
+
+Training Set Eval:
+INFO: Checkpoint 194 saved!
+IoU per class: [0.954, 0.425, 0.478, 0.468] mIoU: 0.581 mIoU_shapes: 0.457
+
+Average loss this epoch =  0.0002073555654811061
+/////////////////////////
+Epoch 195/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.338, 0.411, 0.431] mIoU: 0.533 mIoU_shapes: 0.393
+
+Training Set Eval:
+INFO: Checkpoint 195 saved!
+IoU per class: [0.956, 0.456, 0.424, 0.516] mIoU: 0.588 mIoU_shapes: 0.465
+
+Average loss this epoch =  0.00018361983937698428
+/////////////////////////
+Epoch 196/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.314, 0.419, 0.424] mIoU: 0.527 mIoU_shapes: 0.386
+
+Training Set Eval:
+INFO: Checkpoint 196 saved!
+IoU per class: [0.954, 0.429, 0.424, 0.513] mIoU: 0.58 mIoU_shapes: 0.456
+
+Average loss this epoch =  0.00021558443559762324
+/////////////////////////
+Epoch 197/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.29, 0.429, 0.451] mIoU: 0.531 mIoU_shapes: 0.39
+
+Training Set Eval:
+INFO: Checkpoint 197 saved!
+IoU per class: [0.956, 0.422, 0.458, 0.528] mIoU: 0.591 mIoU_shapes: 0.469
+
+Average loss this epoch =  0.00024236012328119957
+/////////////////////////
+Epoch 198/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.351, 0.501, 0.366] mIoU: 0.542 mIoU_shapes: 0.406
+
+Training Set Eval:
+INFO: Checkpoint 198 saved!
+IoU per class: [0.955, 0.449, 0.519, 0.478] mIoU: 0.6 mIoU_shapes: 0.482
+
+Average loss this epoch =  0.00038745332213126465
+/////////////////////////
+Epoch 199/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.338, 0.51, 0.348] mIoU: 0.536 mIoU_shapes: 0.398
+
+Training Set Eval:
+INFO: Checkpoint 199 saved!
+IoU per class: [0.954, 0.415, 0.524, 0.45] mIoU: 0.586 mIoU_shapes: 0.463
+
+Average loss this epoch =  0.00018790939425324796
+/////////////////////////
+Epoch 200/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.368, 0.396, 0.384] mIoU: 0.525 mIoU_shapes: 0.383
+
+Training Set Eval:
+INFO: Checkpoint 200 saved!
+IoU per class: [0.956, 0.457, 0.444, 0.488] mIoU: 0.586 mIoU_shapes: 0.463
+
+Average loss this epoch =  0.00017973403426892588
+/////////////////////////
+Max test score: 0.8 found at epoch: 46
+Max test score only shapes: 0.736 found at epoch: 46
+INFO: Using device cuda
+INFO: Network:
+	3 input channels
+	4 output channels (classes)
+	Bilinear upscaling
+INFO: Creating dataset with 478 examples
+INFO: Scanning mask files to determine unique values
+Active:  BBox loss [True, False, 1]  [True, 0.2]  [False, 1]  linear  True  True  
+  0%|          | 0/478 [00:00<?, ?it/s]  0%|          | 1/478 [00:00<01:15,  6.34it/s]  2%|▏         | 8/478 [00:00<00:22, 20.81it/s]  4%|▍         | 19/478 [00:00<00:10, 45.04it/s]  6%|▌         | 29/478 [00:00<00:07, 56.50it/s] 18%|█▊        | 87/478 [00:00<00:02, 175.65it/s] 24%|██▍       | 114/478 [00:00<00:02, 179.53it/s] 29%|██▉       | 140/478 [00:01<00:01, 187.24it/s] 33%|███▎      | 160/478 [00:01<00:01, 159.73it/s] 40%|████      | 192/478 [00:01<00:01, 162.35it/s] 49%|████▉     | 234/478 [00:01<00:01, 212.83it/s] 55%|█████▌    | 265/478 [00:01<00:01, 212.24it/s] 63%|██████▎   | 299/478 [00:01<00:00, 209.47it/s] 68%|██████▊   | 327/478 [00:01<00:00, 217.86it/s] 79%|███████▉  | 378/478 [00:02<00:00, 239.74it/s] 84%|████████▍ | 403/478 [00:02<00:00, 200.54it/s] 98%|█████████▊| 467/478 [00:02<00:00, 290.12it/s]100%|██████████| 478/478 [00:02<00:00, 194.06it/s]
+INFO: Unique mask values: [[0, 0, 0], [0, 0, 255], [0, 255, 0], [255, 0, 0]]
+INFO: Creating dataset with 90 examples
+INFO: Scanning mask files to determine unique values
+../../datasetCLEVRaug/ImagesValidation ../../datasetCLEVRaug/MasksValidation
+  0%|          | 0/90 [00:00<?, ?it/s]  1%|          | 1/90 [00:00<00:34,  2.55it/s]  4%|▍         | 4/90 [00:00<00:09,  9.54it/s] 80%|████████  | 72/90 [00:00<00:00, 179.05it/s]100%|██████████| 90/90 [00:00<00:00, 141.65it/s]
+INFO: Creating dataset with 478 examples
+INFO: Scanning mask files to determine unique values
+unique mask values: [[0, 0, 0], [0, 0, 255], [0, 255, 0], [255, 0, 0]]
+../../datasetCLEVRaug/ImagesTraining ../../datasetCLEVRaug/MasksTraining
+  0%|          | 0/478 [00:00<?, ?it/s]  0%|          | 1/478 [00:00<06:21,  1.25it/s]  1%|▏         | 6/478 [00:00<01:02,  7.51it/s] 28%|██▊       | 136/478 [00:01<00:01, 175.52it/s] 34%|███▍      | 163/478 [00:01<00:01, 187.16it/s] 41%|████▏     | 198/478 [00:01<00:01, 211.52it/s] 49%|████▉     | 234/478 [00:01<00:01, 240.47it/s] 55%|█████▌    | 265/478 [00:01<00:00, 253.82it/s] 62%|██████▏   | 296/478 [00:01<00:00, 220.30it/s] 68%|██████▊   | 325/478 [00:01<00:00, 228.16it/s] 73%|███████▎  | 351/478 [00:02<00:00, 165.92it/s] 86%|████████▌ | 409/478 [00:02<00:00, 238.72it/s] 92%|█████████▏| 439/478 [00:02<00:00, 232.57it/s]100%|██████████| 478/478 [00:02<00:00, 190.57it/s]
+/apps/leuven/rocky8/icelake/2023a/software/PyTorch/2.1.2-foss-2023a-CUDA-12.1.1/lib/python3.11/site-packages/torch/utils/data/dataloader.py:557: UserWarning: This DataLoader will create 64 worker processes in total. Our suggested max number of worker in current system is 8, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(_create_warning_msg(
+INFO: Starting training:
+        Epochs:          200
+        Batch size:      1
+        Learning rate:   1e-08
+        Training size:   478
+        Validation size: 0
+        Checkpoints:     True
+        Device:          cuda
+        Images scaling:  1
+        Mixed Precision: True
+    
+unique mask values: [[0, 0, 0], [0, 0, 255], [0, 255, 0], [255, 0, 0]]
+range(0, 478) range(478, 478)
+0
+Epoch 1/200:
+
+Test Set Eval:
+IoU per class: [0.506, 0.129, 0.017, 0.022] mIoU: 0.169 mIoU_shapes: 0.056
+
+Training Set Eval:
+INFO: Checkpoint 1 saved!
+IoU per class: [0.512, 0.148, 0.017, 0.023] mIoU: 0.175 mIoU_shapes: 0.063
+
+Average loss this epoch =  0.5128832382138304
+/////////////////////////
+Epoch 2/200:
+
+Test Set Eval:
+IoU per class: [0.501, 0.056, 0.022, 0.004] mIoU: 0.146 mIoU_shapes: 0.028
+
+Training Set Eval:
+INFO: Checkpoint 2 saved!
+IoU per class: [0.507, 0.068, 0.031, 0.005] mIoU: 0.153 mIoU_shapes: 0.035
+
+Average loss this epoch =  0.3559409424849634
+/////////////////////////
+Epoch 3/200:
+
+Test Set Eval:
+IoU per class: [0.501, 0.069, 0.028, 0.01] mIoU: 0.152 mIoU_shapes: 0.035
+
+Training Set Eval:
+INFO: Checkpoint 3 saved!
+IoU per class: [0.515, 0.071, 0.032, 0.009] mIoU: 0.157 mIoU_shapes: 0.038
+
+Average loss this epoch =  0.2811102448148209
+/////////////////////////
+Epoch 4/200:
+
+Test Set Eval:
+IoU per class: [0.602, 0.167, 0.025, 0.13] mIoU: 0.231 mIoU_shapes: 0.107
+
+Training Set Eval:
+INFO: Checkpoint 4 saved!
+IoU per class: [0.616, 0.2, 0.031, 0.148] mIoU: 0.249 mIoU_shapes: 0.127
+
+Average loss this epoch =  0.23787352430271802
+/////////////////////////
+Epoch 5/200:
+
+Test Set Eval:
+IoU per class: [0.962, 0.265, 0.111, 0.062] mIoU: 0.35 mIoU_shapes: 0.146
+
+Training Set Eval:
+INFO: Checkpoint 5 saved!
+IoU per class: [0.962, 0.329, 0.12, 0.084] mIoU: 0.374 mIoU_shapes: 0.177
+
+Average loss this epoch =  0.20873693043217997
+/////////////////////////
+Epoch 6/200:
+
+Test Set Eval:
+IoU per class: [0.97, 0.271, 0.157, 0.052] mIoU: 0.362 mIoU_shapes: 0.16
+
+Training Set Eval:
+INFO: Checkpoint 6 saved!
+IoU per class: [0.968, 0.343, 0.181, 0.054] mIoU: 0.387 mIoU_shapes: 0.193
+
+Average loss this epoch =  0.18616099337653635
+/////////////////////////
+Epoch 7/200:
+
+Test Set Eval:
+IoU per class: [0.972, 0.31, 0.225, 0.048] mIoU: 0.389 mIoU_shapes: 0.194
+
+Training Set Eval:
+INFO: Checkpoint 7 saved!
+IoU per class: [0.972, 0.385, 0.265, 0.058] mIoU: 0.42 mIoU_shapes: 0.236
+
+Average loss this epoch =  0.16604757907500328
+/////////////////////////
+Epoch 8/200:
+
+Test Set Eval:
+IoU per class: [0.975, 0.341, 0.257, 0.04] mIoU: 0.403 mIoU_shapes: 0.213
+
+Training Set Eval:
+INFO: Checkpoint 8 saved!
+IoU per class: [0.976, 0.405, 0.304, 0.055] mIoU: 0.435 mIoU_shapes: 0.255
+
+Average loss this epoch =  0.1463127455451997
+/////////////////////////
+Epoch 9/200:
+
+Test Set Eval:
+IoU per class: [0.972, 0.327, 0.3, 0.112] mIoU: 0.428 mIoU_shapes: 0.246
+
+Training Set Eval:
+INFO: Checkpoint 9 saved!
+IoU per class: [0.972, 0.404, 0.366, 0.169] mIoU: 0.478 mIoU_shapes: 0.313
+
+Average loss this epoch =  0.1280030765294031
+/////////////////////////
+Epoch 10/200:
+
+Test Set Eval:
+IoU per class: [0.974, 0.274, 0.309, 0.268] mIoU: 0.456 mIoU_shapes: 0.284
+
+Training Set Eval:
+INFO: Checkpoint 10 saved!
+IoU per class: [0.974, 0.362, 0.35, 0.344] mIoU: 0.507 mIoU_shapes: 0.352
+
+Average loss this epoch =  0.11193821320473898
+/////////////////////////
+Epoch 11/200:
+
+Test Set Eval:
+IoU per class: [0.975, 0.34, 0.315, 0.212] mIoU: 0.46 mIoU_shapes: 0.289
+
+Training Set Eval:
+INFO: Checkpoint 11 saved!
+IoU per class: [0.974, 0.445, 0.37, 0.296] mIoU: 0.521 mIoU_shapes: 0.37
+
+Average loss this epoch =  0.09690398850700346
+/////////////////////////
+Epoch 12/200:
+
+Test Set Eval:
+IoU per class: [0.972, 0.26, 0.334, 0.388] mIoU: 0.488 mIoU_shapes: 0.327
+
+Training Set Eval:
+INFO: Checkpoint 12 saved!
+IoU per class: [0.972, 0.355, 0.393, 0.458] mIoU: 0.544 mIoU_shapes: 0.402
+
+Average loss this epoch =  0.08321811564297855
+/////////////////////////
+Epoch 13/200:
+
+Test Set Eval:
+IoU per class: [0.98, 0.383, 0.408, 0.376] mIoU: 0.537 mIoU_shapes: 0.389
+
+Training Set Eval:
+INFO: Checkpoint 13 saved!
+IoU per class: [0.98, 0.556, 0.46, 0.491] mIoU: 0.622 mIoU_shapes: 0.502
+
+Average loss this epoch =  0.07042092359215645
+/////////////////////////
+Epoch 14/200:
+
+Test Set Eval:
+IoU per class: [0.985, 0.353, 0.613, 0.477] mIoU: 0.607 mIoU_shapes: 0.481
+
+Training Set Eval:
+INFO: Checkpoint 14 saved!
+IoU per class: [0.985, 0.536, 0.673, 0.608] mIoU: 0.701 mIoU_shapes: 0.606
+
+Average loss this epoch =  0.057775381718719356
+/////////////////////////
+Epoch 15/200:
+
+Test Set Eval:
+IoU per class: [0.991, 0.499, 0.596, 0.515] mIoU: 0.65 mIoU_shapes: 0.537
+
+Training Set Eval:
+INFO: Checkpoint 15 saved!
+IoU per class: [0.99, 0.71, 0.659, 0.663] mIoU: 0.755 mIoU_shapes: 0.677
+
+Average loss this epoch =  0.0456142784661329
+/////////////////////////
+Epoch 16/200:
+
+Test Set Eval:
+IoU per class: [0.99, 0.512, 0.619, 0.545] mIoU: 0.667 mIoU_shapes: 0.559
+
+Training Set Eval:
+INFO: Checkpoint 16 saved!
+IoU per class: [0.991, 0.704, 0.695, 0.679] mIoU: 0.767 mIoU_shapes: 0.693
+
+Average loss this epoch =  0.03624191443790452
+/////////////////////////
+Epoch 17/200:
+
+Test Set Eval:
+IoU per class: [0.991, 0.546, 0.604, 0.574] mIoU: 0.678 mIoU_shapes: 0.574
+
+Training Set Eval:
+INFO: Checkpoint 17 saved!
+IoU per class: [0.99, 0.677, 0.684, 0.627] mIoU: 0.745 mIoU_shapes: 0.663
+
+Average loss this epoch =  0.029156694851161048
+/////////////////////////
+Epoch 18/200:
+
+Test Set Eval:
+IoU per class: [0.991, 0.476, 0.604, 0.437] mIoU: 0.627 mIoU_shapes: 0.506
+
+Training Set Eval:
+INFO: Checkpoint 18 saved!
+IoU per class: [0.991, 0.761, 0.668, 0.708] mIoU: 0.782 mIoU_shapes: 0.712
+
+Average loss this epoch =  0.022992726649200566
+/////////////////////////
+Epoch 19/200:
+
+Test Set Eval:
+IoU per class: [0.992, 0.547, 0.72, 0.649] mIoU: 0.727 mIoU_shapes: 0.639
+
+Training Set Eval:
+INFO: Checkpoint 19 saved!
+IoU per class: [0.991, 0.713, 0.757, 0.746] mIoU: 0.802 mIoU_shapes: 0.739
+
+Average loss this epoch =  0.01820633102161615
+/////////////////////////
+Epoch 20/200:
+
+Test Set Eval:
+IoU per class: [0.992, 0.615, 0.761, 0.621] mIoU: 0.747 mIoU_shapes: 0.666
+
+Training Set Eval:
+INFO: Checkpoint 20 saved!
+IoU per class: [0.992, 0.799, 0.794, 0.752] mIoU: 0.834 mIoU_shapes: 0.782
+
+Average loss this epoch =  0.014220514058069206
+/////////////////////////
+Epoch 21/200:
+
+Test Set Eval:
+IoU per class: [0.991, 0.581, 0.708, 0.577] mIoU: 0.714 mIoU_shapes: 0.622
+
+Training Set Eval:
+INFO: Checkpoint 21 saved!
+IoU per class: [0.99, 0.797, 0.776, 0.768] mIoU: 0.833 mIoU_shapes: 0.78
+
+Average loss this epoch =  0.011510535762898592
+/////////////////////////
+Epoch 22/200:
+
+Test Set Eval:
+IoU per class: [0.992, 0.614, 0.727, 0.628] mIoU: 0.74 mIoU_shapes: 0.657
+
+Training Set Eval:
+INFO: Checkpoint 22 saved!
+IoU per class: [0.992, 0.825, 0.798, 0.786] mIoU: 0.85 mIoU_shapes: 0.803
+
+Average loss this epoch =  0.009221378230649557
+/////////////////////////
+Epoch 23/200:
+
+Test Set Eval:
+IoU per class: [0.991, 0.528, 0.729, 0.603] mIoU: 0.713 mIoU_shapes: 0.62
+
+Training Set Eval:
+INFO: Checkpoint 23 saved!
+IoU per class: [0.991, 0.788, 0.782, 0.769] mIoU: 0.833 mIoU_shapes: 0.78
+
+Average loss this epoch =  0.0076661179754025765
+/////////////////////////
+Epoch 24/200:
+
+Test Set Eval:
+IoU per class: [0.991, 0.588, 0.766, 0.545] mIoU: 0.723 mIoU_shapes: 0.633
+
+Training Set Eval:
+INFO: Checkpoint 24 saved!
+IoU per class: [0.991, 0.808, 0.807, 0.751] mIoU: 0.839 mIoU_shapes: 0.789
+
+Average loss this epoch =  0.0061447301170317195
+/////////////////////////
+Epoch 25/200:
+
+Test Set Eval:
+IoU per class: [0.991, 0.526, 0.559, 0.532] mIoU: 0.652 mIoU_shapes: 0.539
+
+Training Set Eval:
+INFO: Checkpoint 25 saved!
+IoU per class: [0.989, 0.769, 0.666, 0.72] mIoU: 0.786 mIoU_shapes: 0.719
+
+Average loss this epoch =  0.005437711791513355
+/////////////////////////
+Epoch 26/200:
+
+Test Set Eval:
+IoU per class: [0.986, 0.612, 0.711, 0.493] mIoU: 0.701 mIoU_shapes: 0.605
+
+Training Set Eval:
+INFO: Checkpoint 26 saved!
+IoU per class: [0.987, 0.812, 0.783, 0.706] mIoU: 0.822 mIoU_shapes: 0.767
+
+Average loss this epoch =  0.004355937367203844
+/////////////////////////
+Epoch 27/200:
+
+Test Set Eval:
+IoU per class: [0.986, 0.587, 0.718, 0.621] mIoU: 0.728 mIoU_shapes: 0.642
+
+Training Set Eval:
+INFO: Checkpoint 27 saved!
+IoU per class: [0.984, 0.743, 0.788, 0.676] mIoU: 0.798 mIoU_shapes: 0.736
+
+Average loss this epoch =  0.004372439623876596
+/////////////////////////
+Epoch 28/200:
+
+Test Set Eval:
+IoU per class: [0.984, 0.62, 0.758, 0.501] mIoU: 0.716 mIoU_shapes: 0.626
+
+Training Set Eval:
+INFO: Checkpoint 28 saved!
+IoU per class: [0.984, 0.804, 0.79, 0.658] mIoU: 0.809 mIoU_shapes: 0.751
+
+Average loss this epoch =  0.0036151035061441207
+/////////////////////////
+Epoch 29/200:
+
+Test Set Eval:
+IoU per class: [0.979, 0.634, 0.763, 0.525] mIoU: 0.725 mIoU_shapes: 0.641
+
+Training Set Eval:
+INFO: Checkpoint 29 saved!
+IoU per class: [0.981, 0.749, 0.789, 0.625] mIoU: 0.786 mIoU_shapes: 0.721
+
+Average loss this epoch =  0.0026560271135433948
+/////////////////////////
+Epoch 30/200:
+
+Test Set Eval:
+IoU per class: [0.976, 0.618, 0.705, 0.392] mIoU: 0.673 mIoU_shapes: 0.572
+
+Training Set Eval:
+INFO: Checkpoint 30 saved!
+IoU per class: [0.979, 0.799, 0.775, 0.528] mIoU: 0.77 mIoU_shapes: 0.701
+
+Average loss this epoch =  0.00239675439052502
+/////////////////////////
+Epoch 31/200:
+
+Test Set Eval:
+IoU per class: [0.983, 0.528, 0.709, 0.474] mIoU: 0.674 mIoU_shapes: 0.571
+
+Training Set Eval:
+INFO: Checkpoint 31 saved!
+IoU per class: [0.985, 0.778, 0.771, 0.68] mIoU: 0.804 mIoU_shapes: 0.743
+
+Average loss this epoch =  0.0025210931710119527
+/////////////////////////
+Epoch 32/200:
+
+Test Set Eval:
+IoU per class: [0.974, 0.617, 0.71, 0.435] mIoU: 0.684 mIoU_shapes: 0.587
+
+Training Set Eval:
+INFO: Checkpoint 32 saved!
+IoU per class: [0.977, 0.793, 0.739, 0.586] mIoU: 0.774 mIoU_shapes: 0.706
+
+Average loss this epoch =  0.0021962214214532446
+/////////////////////////
+Epoch 33/200:
+
+Test Set Eval:
+IoU per class: [0.972, 0.581, 0.704, 0.422] mIoU: 0.67 mIoU_shapes: 0.569
+
+Training Set Eval:
+INFO: Checkpoint 33 saved!
+IoU per class: [0.977, 0.756, 0.757, 0.598] mIoU: 0.772 mIoU_shapes: 0.703
+
+Average loss this epoch =  0.002567287768280157
+/////////////////////////
+Epoch 34/200:
+
+Test Set Eval:
+IoU per class: [0.97, 0.551, 0.7, 0.492] mIoU: 0.678 mIoU_shapes: 0.581
+
+Training Set Eval:
+INFO: Checkpoint 34 saved!
+IoU per class: [0.976, 0.744, 0.765, 0.619] mIoU: 0.776 mIoU_shapes: 0.709
+
+Average loss this epoch =  0.0023101326311981327
+/////////////////////////
+Epoch 35/200:
+
+Test Set Eval:
+IoU per class: [0.963, 0.51, 0.573, 0.28] mIoU: 0.581 mIoU_shapes: 0.454
+
+Training Set Eval:
+INFO: Checkpoint 35 saved!
+IoU per class: [0.971, 0.734, 0.668, 0.536] mIoU: 0.727 mIoU_shapes: 0.646
+
+Average loss this epoch =  0.001585473824744444
+/////////////////////////
+Epoch 36/200:
+
+Test Set Eval:
+IoU per class: [0.96, 0.504, 0.577, 0.272] mIoU: 0.579 mIoU_shapes: 0.451
+
+Training Set Eval:
+INFO: Checkpoint 36 saved!
+IoU per class: [0.968, 0.713, 0.65, 0.491] mIoU: 0.706 mIoU_shapes: 0.618
+
+Average loss this epoch =  0.001680786514880767
+/////////////////////////
+Epoch 37/200:
+
+Test Set Eval:
+IoU per class: [0.967, 0.529, 0.68, 0.385] mIoU: 0.641 mIoU_shapes: 0.532
+
+Training Set Eval:
+INFO: Checkpoint 37 saved!
+IoU per class: [0.972, 0.754, 0.681, 0.559] mIoU: 0.741 mIoU_shapes: 0.664
+
+Average loss this epoch =  0.0013251374456174205
+/////////////////////////
+Epoch 38/200:
+
+Test Set Eval:
+IoU per class: [0.967, 0.551, 0.653, 0.316] mIoU: 0.622 mIoU_shapes: 0.507
+
+Training Set Eval:
+INFO: Checkpoint 38 saved!
+IoU per class: [0.973, 0.776, 0.659, 0.514] mIoU: 0.73 mIoU_shapes: 0.65
+
+Average loss this epoch =  0.0013088034037266815
+/////////////////////////
+Epoch 39/200:
+
+Test Set Eval:
+IoU per class: [0.973, 0.607, 0.664, 0.468] mIoU: 0.678 mIoU_shapes: 0.58
+
+Training Set Eval:
+INFO: Checkpoint 39 saved!
+IoU per class: [0.976, 0.772, 0.69, 0.643] mIoU: 0.77 mIoU_shapes: 0.702
+
+Average loss this epoch =  0.0012397322195843174
+/////////////////////////
+Epoch 40/200:
+
+Test Set Eval:
+IoU per class: [0.958, 0.439, 0.622, 0.314] mIoU: 0.583 mIoU_shapes: 0.458
+
+Training Set Eval:
+INFO: Checkpoint 40 saved!
+IoU per class: [0.962, 0.615, 0.615, 0.51] mIoU: 0.675 mIoU_shapes: 0.58
+
+Average loss this epoch =  0.0010874061903694185
+/////////////////////////
+Epoch 41/200:
+
+Test Set Eval:
+IoU per class: [0.961, 0.402, 0.58, 0.445] mIoU: 0.597 mIoU_shapes: 0.476
+
+Training Set Eval:
+INFO: Checkpoint 41 saved!
+IoU per class: [0.965, 0.6, 0.606, 0.575] mIoU: 0.686 mIoU_shapes: 0.594
+
+Average loss this epoch =  0.0011413975240795184
+/////////////////////////
+Epoch 42/200:
+
+Test Set Eval:
+IoU per class: [0.958, 0.417, 0.493, 0.357] mIoU: 0.556 mIoU_shapes: 0.422
+
+Training Set Eval:
+INFO: Checkpoint 42 saved!
+IoU per class: [0.963, 0.611, 0.538, 0.547] mIoU: 0.665 mIoU_shapes: 0.565
+
+Average loss this epoch =  0.0013177363692965967
+/////////////////////////
+Epoch 43/200:
+
+Test Set Eval:
+IoU per class: [0.956, 0.438, 0.453, 0.378] mIoU: 0.556 mIoU_shapes: 0.423
+
+Training Set Eval:
+INFO: Checkpoint 43 saved!
+IoU per class: [0.96, 0.554, 0.512, 0.517] mIoU: 0.636 mIoU_shapes: 0.528
+
+Average loss this epoch =  0.0012131688734477533
+/////////////////////////
+Epoch 44/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.429, 0.498, 0.364] mIoU: 0.562 mIoU_shapes: 0.43
+
+Training Set Eval:
+INFO: Checkpoint 44 saved!
+IoU per class: [0.963, 0.595, 0.531, 0.556] mIoU: 0.661 mIoU_shapes: 0.561
+
+Average loss this epoch =  0.0013957382744825037
+/////////////////////////
+Epoch 45/200:
+
+Test Set Eval:
+IoU per class: [0.959, 0.454, 0.542, 0.349] mIoU: 0.576 mIoU_shapes: 0.448
+
+Training Set Eval:
+INFO: Checkpoint 45 saved!
+IoU per class: [0.965, 0.647, 0.544, 0.578] mIoU: 0.683 mIoU_shapes: 0.59
+
+Average loss this epoch =  0.001013039981470946
+/////////////////////////
+Epoch 46/200:
+
+Test Set Eval:
+IoU per class: [0.958, 0.45, 0.552, 0.303] mIoU: 0.566 mIoU_shapes: 0.435
+
+Training Set Eval:
+INFO: Checkpoint 46 saved!
+IoU per class: [0.962, 0.618, 0.568, 0.519] mIoU: 0.667 mIoU_shapes: 0.568
+
+Average loss this epoch =  0.0008991564542179826
+/////////////////////////
+Epoch 47/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.403, 0.553, 0.404] mIoU: 0.579 mIoU_shapes: 0.453
+
+Training Set Eval:
+INFO: Checkpoint 47 saved!
+IoU per class: [0.962, 0.57, 0.573, 0.572] mIoU: 0.669 mIoU_shapes: 0.572
+
+Average loss this epoch =  0.0007700000472647375
+/////////////////////////
+Epoch 48/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.333, 0.541, 0.366] mIoU: 0.549 mIoU_shapes: 0.413
+
+Training Set Eval:
+INFO: Checkpoint 48 saved!
+IoU per class: [0.959, 0.491, 0.542, 0.527] mIoU: 0.63 mIoU_shapes: 0.52
+
+Average loss this epoch =  0.000836268753187427
+/////////////////////////
+Epoch 49/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.424, 0.522, 0.339] mIoU: 0.56 mIoU_shapes: 0.428
+
+Training Set Eval:
+INFO: Checkpoint 49 saved!
+IoU per class: [0.961, 0.582, 0.548, 0.54] mIoU: 0.658 mIoU_shapes: 0.557
+
+Average loss this epoch =  0.0014076090756819338
+/////////////////////////
+Epoch 50/200:
+
+Test Set Eval:
+IoU per class: [0.956, 0.433, 0.533, 0.338] mIoU: 0.565 mIoU_shapes: 0.435
+
+Training Set Eval:
+INFO: Checkpoint 50 saved!
+IoU per class: [0.96, 0.582, 0.539, 0.525] mIoU: 0.652 mIoU_shapes: 0.549
+
+Average loss this epoch =  0.0007103700268717491
+/////////////////////////
+Epoch 51/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.498, 0.499, 0.258] mIoU: 0.552 mIoU_shapes: 0.418
+
+Training Set Eval:
+INFO: Checkpoint 51 saved!
+IoU per class: [0.958, 0.595, 0.503, 0.417] mIoU: 0.618 mIoU_shapes: 0.505
+
+Average loss this epoch =  0.001019749369581374
+/////////////////////////
+Epoch 52/200:
+
+Test Set Eval:
+IoU per class: [0.961, 0.432, 0.516, 0.462] mIoU: 0.593 mIoU_shapes: 0.47
+
+Training Set Eval:
+INFO: Checkpoint 52 saved!
+IoU per class: [0.964, 0.593, 0.521, 0.574] mIoU: 0.663 mIoU_shapes: 0.563
+
+Average loss this epoch =  0.0008931152491389957
+/////////////////////////
+Epoch 53/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.465, 0.46, 0.316] mIoU: 0.549 mIoU_shapes: 0.414
+
+Training Set Eval:
+INFO: Checkpoint 53 saved!
+IoU per class: [0.959, 0.601, 0.467, 0.47] mIoU: 0.624 mIoU_shapes: 0.513
+
+Average loss this epoch =  0.001073302334821374
+/////////////////////////
+Epoch 54/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.408, 0.506, 0.21] mIoU: 0.52 mIoU_shapes: 0.375
+
+Training Set Eval:
+INFO: Checkpoint 54 saved!
+IoU per class: [0.958, 0.566, 0.512, 0.417] mIoU: 0.613 mIoU_shapes: 0.498
+
+Average loss this epoch =  0.0012502763810018117
+/////////////////////////
+Epoch 55/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.458, 0.517, 0.345] mIoU: 0.569 mIoU_shapes: 0.44
+
+Training Set Eval:
+INFO: Checkpoint 55 saved!
+IoU per class: [0.959, 0.577, 0.515, 0.495] mIoU: 0.637 mIoU_shapes: 0.529
+
+Average loss this epoch =  0.0007230415005065407
+/////////////////////////
+Epoch 56/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.46, 0.525, 0.415] mIoU: 0.589 mIoU_shapes: 0.467
+
+Training Set Eval:
+INFO: Checkpoint 56 saved!
+IoU per class: [0.961, 0.55, 0.547, 0.579] mIoU: 0.659 mIoU_shapes: 0.558
+
+Average loss this epoch =  0.0006083586101252663
+/////////////////////////
+Epoch 57/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.479, 0.53, 0.328] mIoU: 0.573 mIoU_shapes: 0.446
+
+Training Set Eval:
+INFO: Checkpoint 57 saved!
+IoU per class: [0.96, 0.603, 0.547, 0.509] mIoU: 0.655 mIoU_shapes: 0.553
+
+Average loss this epoch =  0.0007811618898702964
+/////////////////////////
+Epoch 58/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.466, 0.558, 0.324] mIoU: 0.576 mIoU_shapes: 0.45
+
+Training Set Eval:
+INFO: Checkpoint 58 saved!
+IoU per class: [0.961, 0.604, 0.552, 0.513] mIoU: 0.658 mIoU_shapes: 0.556
+
+Average loss this epoch =  0.0006057376268019736
+/////////////////////////
+Epoch 59/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.463, 0.562, 0.314] mIoU: 0.573 mIoU_shapes: 0.446
+
+Training Set Eval:
+INFO: Checkpoint 59 saved!
+IoU per class: [0.96, 0.614, 0.554, 0.493] mIoU: 0.655 mIoU_shapes: 0.554
+
+Average loss this epoch =  0.000658524834461292
+/////////////////////////
+Epoch 60/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.378, 0.423, 0.303] mIoU: 0.514 mIoU_shapes: 0.368
+
+Training Set Eval:
+INFO: Checkpoint 60 saved!
+IoU per class: [0.955, 0.494, 0.468, 0.459] mIoU: 0.594 mIoU_shapes: 0.474
+
+Average loss this epoch =  0.000670205474398625
+/////////////////////////
+Epoch 61/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.291, 0.564, 0.395] mIoU: 0.551 mIoU_shapes: 0.417
+
+Training Set Eval:
+INFO: Checkpoint 61 saved!
+IoU per class: [0.96, 0.441, 0.562, 0.536] mIoU: 0.625 mIoU_shapes: 0.513
+
+Average loss this epoch =  0.0006081915176064399
+/////////////////////////
+Epoch 62/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.435, 0.567, 0.34] mIoU: 0.574 mIoU_shapes: 0.447
+
+Training Set Eval:
+INFO: Checkpoint 62 saved!
+IoU per class: [0.958, 0.512, 0.554, 0.466] mIoU: 0.622 mIoU_shapes: 0.511
+
+Average loss this epoch =  0.0006053838645065179
+/////////////////////////
+Epoch 63/200:
+
+Test Set Eval:
+IoU per class: [0.957, 0.432, 0.603, 0.426] mIoU: 0.605 mIoU_shapes: 0.487
+
+Training Set Eval:
+INFO: Checkpoint 63 saved!
+IoU per class: [0.961, 0.541, 0.576, 0.583] mIoU: 0.665 mIoU_shapes: 0.567
+
+Average loss this epoch =  0.000573728997338267
+/////////////////////////
+Epoch 64/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.268, 0.515, 0.359] mIoU: 0.523 mIoU_shapes: 0.381
+
+Training Set Eval:
+INFO: Checkpoint 64 saved!
+IoU per class: [0.957, 0.4, 0.506, 0.512] mIoU: 0.594 mIoU_shapes: 0.473
+
+Average loss this epoch =  0.0008387044383890958
+/////////////////////////
+Epoch 65/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.381, 0.522, 0.326] mIoU: 0.545 mIoU_shapes: 0.409
+
+Training Set Eval:
+INFO: Checkpoint 65 saved!
+IoU per class: [0.957, 0.523, 0.511, 0.488] mIoU: 0.62 mIoU_shapes: 0.507
+
+Average loss this epoch =  0.0005710358774312869
+/////////////////////////
+Epoch 66/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.374, 0.412, 0.267] mIoU: 0.501 mIoU_shapes: 0.351
+
+Training Set Eval:
+INFO: Checkpoint 66 saved!
+IoU per class: [0.958, 0.524, 0.471, 0.467] mIoU: 0.605 mIoU_shapes: 0.487
+
+Average loss this epoch =  0.0008756162980610357
+/////////////////////////
+Epoch 67/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.324, 0.496, 0.354] mIoU: 0.531 mIoU_shapes: 0.391
+
+Training Set Eval:
+INFO: Checkpoint 67 saved!
+IoU per class: [0.956, 0.427, 0.491, 0.489] mIoU: 0.591 mIoU_shapes: 0.469
+
+Average loss this epoch =  0.0007828007682098005
+/////////////////////////
+Epoch 68/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.444, 0.531, 0.27] mIoU: 0.55 mIoU_shapes: 0.415
+
+Training Set Eval:
+INFO: Checkpoint 68 saved!
+IoU per class: [0.96, 0.591, 0.515, 0.483] mIoU: 0.637 mIoU_shapes: 0.53
+
+Average loss this epoch =  0.0008318826369161886
+/////////////////////////
+Epoch 69/200:
+
+Test Set Eval:
+IoU per class: [0.958, 0.475, 0.461, 0.312] mIoU: 0.552 mIoU_shapes: 0.416
+
+Training Set Eval:
+INFO: Checkpoint 69 saved!
+IoU per class: [0.961, 0.604, 0.51, 0.501] mIoU: 0.644 mIoU_shapes: 0.538
+
+Average loss this epoch =  0.0007936293609970284
+/////////////////////////
+Epoch 70/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.398, 0.455, 0.35] mIoU: 0.539 mIoU_shapes: 0.401
+
+Training Set Eval:
+INFO: Checkpoint 70 saved!
+IoU per class: [0.956, 0.497, 0.491, 0.512] mIoU: 0.614 mIoU_shapes: 0.5
+
+Average loss this epoch =  0.0005522955162255834
+/////////////////////////
+Epoch 71/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.432, 0.485, 0.335] mIoU: 0.551 mIoU_shapes: 0.417
+
+Training Set Eval:
+INFO: Checkpoint 71 saved!
+IoU per class: [0.957, 0.515, 0.508, 0.519] mIoU: 0.625 mIoU_shapes: 0.514
+
+Average loss this epoch =  0.0004418866404928423
+/////////////////////////
+Epoch 72/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.439, 0.514, 0.376] mIoU: 0.571 mIoU_shapes: 0.443
+
+Training Set Eval:
+INFO: Checkpoint 72 saved!
+IoU per class: [0.957, 0.522, 0.501, 0.549] mIoU: 0.632 mIoU_shapes: 0.524
+
+Average loss this epoch =  0.0005036778903905318
+/////////////////////////
+Epoch 73/200:
+
+Test Set Eval:
+IoU per class: [0.955, 0.343, 0.514, 0.433] mIoU: 0.561 mIoU_shapes: 0.43
+
+Training Set Eval:
+INFO: Checkpoint 73 saved!
+IoU per class: [0.958, 0.442, 0.503, 0.565] mIoU: 0.617 mIoU_shapes: 0.503
+
+Average loss this epoch =  0.00042797721704179774
+/////////////////////////
+Epoch 74/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.425, 0.536, 0.353] mIoU: 0.567 mIoU_shapes: 0.438
+
+Training Set Eval:
+INFO: Checkpoint 74 saved!
+IoU per class: [0.957, 0.531, 0.508, 0.511] mIoU: 0.627 mIoU_shapes: 0.517
+
+Average loss this epoch =  0.0011940581030426664
+/////////////////////////
+Epoch 75/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.342, 0.476, 0.381] mIoU: 0.537 mIoU_shapes: 0.4
+
+Training Set Eval:
+INFO: Checkpoint 75 saved!
+IoU per class: [0.954, 0.436, 0.456, 0.499] mIoU: 0.586 mIoU_shapes: 0.464
+
+Average loss this epoch =  0.0007986721882760275
+/////////////////////////
+Epoch 76/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.391, 0.371, 0.295] mIoU: 0.502 mIoU_shapes: 0.352
+
+Training Set Eval:
+INFO: Checkpoint 76 saved!
+IoU per class: [0.955, 0.495, 0.437, 0.466] mIoU: 0.588 mIoU_shapes: 0.466
+
+Average loss this epoch =  0.000539595986011138
+/////////////////////////
+Epoch 77/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.355, 0.404, 0.305] mIoU: 0.504 mIoU_shapes: 0.355
+
+Training Set Eval:
+INFO: Checkpoint 77 saved!
+IoU per class: [0.957, 0.471, 0.48, 0.499] mIoU: 0.602 mIoU_shapes: 0.483
+
+Average loss this epoch =  0.00046847554929086853
+/////////////////////////
+Epoch 78/200:
+
+Test Set Eval:
+IoU per class: [0.956, 0.401, 0.452, 0.412] mIoU: 0.555 mIoU_shapes: 0.422
+
+Training Set Eval:
+INFO: Checkpoint 78 saved!
+IoU per class: [0.959, 0.502, 0.526, 0.547] mIoU: 0.633 mIoU_shapes: 0.525
+
+Average loss this epoch =  0.0006783521699107342
+/////////////////////////
+Epoch 79/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.353, 0.423, 0.252] mIoU: 0.494 mIoU_shapes: 0.343
+
+Training Set Eval:
+INFO: Checkpoint 79 saved!
+IoU per class: [0.953, 0.452, 0.45, 0.4] mIoU: 0.564 mIoU_shapes: 0.434
+
+Average loss this epoch =  0.000454089226333666
+/////////////////////////
+Epoch 80/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.347, 0.337, 0.25] mIoU: 0.47 mIoU_shapes: 0.311
+
+Training Set Eval:
+INFO: Checkpoint 80 saved!
+IoU per class: [0.952, 0.428, 0.388, 0.378] mIoU: 0.536 mIoU_shapes: 0.398
+
+Average loss this epoch =  0.0005342393614757011
+/////////////////////////
+Epoch 81/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.366, 0.458, 0.269] mIoU: 0.51 mIoU_shapes: 0.364
+
+Training Set Eval:
+INFO: Checkpoint 81 saved!
+IoU per class: [0.954, 0.476, 0.443, 0.435] mIoU: 0.577 mIoU_shapes: 0.451
+
+Average loss this epoch =  0.0007249308305804201
+/////////////////////////
+Epoch 82/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.347, 0.46, 0.331] mIoU: 0.522 mIoU_shapes: 0.379
+
+Training Set Eval:
+INFO: Checkpoint 82 saved!
+IoU per class: [0.954, 0.453, 0.435, 0.494] mIoU: 0.584 mIoU_shapes: 0.461
+
+Average loss this epoch =  0.0006540720682263873
+/////////////////////////
+Epoch 83/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.372, 0.412, 0.371] mIoU: 0.526 mIoU_shapes: 0.385
+
+Training Set Eval:
+INFO: Checkpoint 83 saved!
+IoU per class: [0.953, 0.448, 0.43, 0.48] mIoU: 0.578 mIoU_shapes: 0.453
+
+Average loss this epoch =  0.0009635486737454785
+/////////////////////////
+Epoch 84/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.291, 0.454, 0.425] mIoU: 0.531 mIoU_shapes: 0.39
+
+Training Set Eval:
+INFO: Checkpoint 84 saved!
+IoU per class: [0.956, 0.434, 0.438, 0.561] mIoU: 0.597 mIoU_shapes: 0.478
+
+Average loss this epoch =  0.0008918060667843998
+/////////////////////////
+Epoch 85/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.362, 0.384, 0.284] mIoU: 0.496 mIoU_shapes: 0.343
+
+Training Set Eval:
+INFO: Checkpoint 85 saved!
+IoU per class: [0.956, 0.46, 0.386, 0.456] mIoU: 0.564 mIoU_shapes: 0.434
+
+Average loss this epoch =  0.0011131346973913983
+/////////////////////////
+Epoch 86/200:
+
+Test Set Eval:
+IoU per class: [0.953, 0.434, 0.478, 0.378] mIoU: 0.561 mIoU_shapes: 0.43
+
+Training Set Eval:
+INFO: Checkpoint 86 saved!
+IoU per class: [0.956, 0.525, 0.456, 0.529] mIoU: 0.617 mIoU_shapes: 0.503
+
+Average loss this epoch =  0.0009874922211698907
+/////////////////////////
+Epoch 87/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.286, 0.458, 0.391] mIoU: 0.522 mIoU_shapes: 0.378
+
+Training Set Eval:
+INFO: Checkpoint 87 saved!
+IoU per class: [0.958, 0.463, 0.474, 0.543] mIoU: 0.61 mIoU_shapes: 0.493
+
+Average loss this epoch =  0.0005936555907317285
+/////////////////////////
+Epoch 88/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.343, 0.425, 0.369] mIoU: 0.522 mIoU_shapes: 0.379
+
+Training Set Eval:
+INFO: Checkpoint 88 saved!
+IoU per class: [0.954, 0.451, 0.437, 0.514] mIoU: 0.589 mIoU_shapes: 0.467
+
+Average loss this epoch =  0.0005490028583853814
+/////////////////////////
+Epoch 89/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.281, 0.421, 0.304] mIoU: 0.488 mIoU_shapes: 0.335
+
+Training Set Eval:
+INFO: Checkpoint 89 saved!
+IoU per class: [0.952, 0.403, 0.418, 0.474] mIoU: 0.562 mIoU_shapes: 0.432
+
+Average loss this epoch =  0.0006567785305956916
+/////////////////////////
+Epoch 90/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.296, 0.381, 0.297] mIoU: 0.48 mIoU_shapes: 0.325
+
+Training Set Eval:
+INFO: Checkpoint 90 saved!
+IoU per class: [0.952, 0.444, 0.41, 0.444] mIoU: 0.562 mIoU_shapes: 0.432
+
+Average loss this epoch =  0.00047375480001441605
+/////////////////////////
+Epoch 91/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.375, 0.488, 0.349] mIoU: 0.541 mIoU_shapes: 0.404
+
+Training Set Eval:
+INFO: Checkpoint 91 saved!
+IoU per class: [0.956, 0.496, 0.498, 0.495] mIoU: 0.611 mIoU_shapes: 0.496
+
+Average loss this epoch =  0.0005456176138323221
+/////////////////////////
+Epoch 92/200:
+
+Test Set Eval:
+IoU per class: [0.954, 0.331, 0.467, 0.462] mIoU: 0.554 mIoU_shapes: 0.42
+
+Training Set Eval:
+INFO: Checkpoint 92 saved!
+IoU per class: [0.956, 0.432, 0.462, 0.579] mIoU: 0.607 mIoU_shapes: 0.491
+
+Average loss this epoch =  0.0006098949260791475
+/////////////////////////
+Epoch 93/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.373, 0.442, 0.335] mIoU: 0.525 mIoU_shapes: 0.383
+
+Training Set Eval:
+INFO: Checkpoint 93 saved!
+IoU per class: [0.956, 0.461, 0.447, 0.529] mIoU: 0.598 mIoU_shapes: 0.479
+
+Average loss this epoch =  0.0005694483114585717
+/////////////////////////
+Epoch 94/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.296, 0.453, 0.342] mIoU: 0.51 mIoU_shapes: 0.364
+
+Training Set Eval:
+INFO: Checkpoint 94 saved!
+IoU per class: [0.953, 0.421, 0.441, 0.496] mIoU: 0.578 mIoU_shapes: 0.453
+
+Average loss this epoch =  0.0005056331534265973
+/////////////////////////
+Epoch 95/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.35, 0.47, 0.406] mIoU: 0.544 mIoU_shapes: 0.408
+
+Training Set Eval:
+INFO: Checkpoint 95 saved!
+IoU per class: [0.955, 0.457, 0.457, 0.505] mIoU: 0.593 mIoU_shapes: 0.473
+
+Average loss this epoch =  0.0005205779893627725
+/////////////////////////
+Epoch 96/200:
+
+Test Set Eval:
+IoU per class: [0.952, 0.4, 0.311, 0.362] mIoU: 0.506 mIoU_shapes: 0.357
+
+Training Set Eval:
+INFO: Checkpoint 96 saved!
+IoU per class: [0.954, 0.468, 0.357, 0.442] mIoU: 0.555 mIoU_shapes: 0.423
+
+Average loss this epoch =  0.00037584104672635447
+/////////////////////////
+Epoch 97/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.361, 0.378, 0.35] mIoU: 0.51 mIoU_shapes: 0.363
+
+Training Set Eval:
+INFO: Checkpoint 97 saved!
+IoU per class: [0.953, 0.441, 0.4, 0.483] mIoU: 0.569 mIoU_shapes: 0.441
+
+Average loss this epoch =  0.00037584388355829727
+/////////////////////////
+Epoch 98/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.305, 0.358, 0.33] mIoU: 0.485 mIoU_shapes: 0.331
+
+Training Set Eval:
+INFO: Checkpoint 98 saved!
+IoU per class: [0.954, 0.436, 0.404, 0.484] mIoU: 0.57 mIoU_shapes: 0.441
+
+Average loss this epoch =  0.0003912491591405669
+/////////////////////////
+Epoch 99/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.309, 0.436, 0.361] mIoU: 0.514 mIoU_shapes: 0.369
+
+Training Set Eval:
+INFO: Checkpoint 99 saved!
+IoU per class: [0.954, 0.452, 0.423, 0.48] mIoU: 0.577 mIoU_shapes: 0.451
+
+Average loss this epoch =  0.00042830385797692144
+/////////////////////////
+Epoch 100/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.393, 0.44, 0.288] mIoU: 0.517 mIoU_shapes: 0.374
+
+Training Set Eval:
+INFO: Checkpoint 100 saved!
+IoU per class: [0.954, 0.508, 0.438, 0.422] mIoU: 0.581 mIoU_shapes: 0.456
+
+Average loss this epoch =  0.00034520634796828903
+/////////////////////////
+Epoch 101/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.365, 0.43, 0.361] mIoU: 0.527 mIoU_shapes: 0.386
+
+Training Set Eval:
+INFO: Checkpoint 101 saved!
+IoU per class: [0.956, 0.475, 0.43, 0.534] mIoU: 0.599 mIoU_shapes: 0.48
+
+Average loss this epoch =  0.000951306278735524
+/////////////////////////
+Epoch 102/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.368, 0.502, 0.361] mIoU: 0.545 mIoU_shapes: 0.41
+
+Training Set Eval:
+INFO: Checkpoint 102 saved!
+IoU per class: [0.954, 0.444, 0.479, 0.502] mIoU: 0.595 mIoU_shapes: 0.475
+
+Average loss this epoch =  0.00033561835478539245
+/////////////////////////
+Epoch 103/200:
+
+Test Set Eval:
+IoU per class: [0.946, 0.306, 0.416, 0.327] mIoU: 0.499 mIoU_shapes: 0.349
+
+Training Set Eval:
+INFO: Checkpoint 103 saved!
+IoU per class: [0.952, 0.391, 0.411, 0.45] mIoU: 0.551 mIoU_shapes: 0.418
+
+Average loss this epoch =  0.00037418424334984945
+/////////////////////////
+Epoch 104/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.287, 0.415, 0.404] mIoU: 0.514 mIoU_shapes: 0.368
+
+Training Set Eval:
+INFO: Checkpoint 104 saved!
+IoU per class: [0.954, 0.408, 0.418, 0.515] mIoU: 0.574 mIoU_shapes: 0.447
+
+Average loss this epoch =  0.00048642911048115046
+/////////////////////////
+Epoch 105/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.328, 0.314, 0.348] mIoU: 0.485 mIoU_shapes: 0.33
+
+Training Set Eval:
+INFO: Checkpoint 105 saved!
+IoU per class: [0.954, 0.438, 0.349, 0.486] mIoU: 0.557 mIoU_shapes: 0.424
+
+Average loss this epoch =  0.0005627422901377019
+/////////////////////////
+Epoch 106/200:
+
+Test Set Eval:
+IoU per class: [0.945, 0.329, 0.424, 0.21] mIoU: 0.477 mIoU_shapes: 0.321
+
+Training Set Eval:
+INFO: Checkpoint 106 saved!
+IoU per class: [0.951, 0.42, 0.427, 0.373] mIoU: 0.543 mIoU_shapes: 0.407
+
+Average loss this epoch =  0.0006268754539130622
+/////////////////////////
+Epoch 107/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.278, 0.447, 0.385] mIoU: 0.514 mIoU_shapes: 0.37
+
+Training Set Eval:
+INFO: Checkpoint 107 saved!
+IoU per class: [0.953, 0.392, 0.432, 0.471] mIoU: 0.562 mIoU_shapes: 0.432
+
+Average loss this epoch =  0.0005889649047013606
+/////////////////////////
+Epoch 108/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.385, 0.423, 0.336] mIoU: 0.523 mIoU_shapes: 0.381
+
+Training Set Eval:
+INFO: Checkpoint 108 saved!
+IoU per class: [0.955, 0.501, 0.435, 0.472] mIoU: 0.591 mIoU_shapes: 0.469
+
+Average loss this epoch =  0.0004646960474457202
+/////////////////////////
+Epoch 109/200:
+
+Test Set Eval:
+IoU per class: [0.946, 0.331, 0.358, 0.248] mIoU: 0.471 mIoU_shapes: 0.312
+
+Training Set Eval:
+INFO: Checkpoint 109 saved!
+IoU per class: [0.951, 0.436, 0.389, 0.385] mIoU: 0.54 mIoU_shapes: 0.403
+
+Average loss this epoch =  0.0003110136696484298
+/////////////////////////
+Epoch 110/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.204, 0.385, 0.349] mIoU: 0.471 mIoU_shapes: 0.313
+
+Training Set Eval:
+INFO: Checkpoint 110 saved!
+IoU per class: [0.951, 0.337, 0.4, 0.448] mIoU: 0.534 mIoU_shapes: 0.395
+
+Average loss this epoch =  0.0005528562113829736
+/////////////////////////
+Epoch 111/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.267, 0.382, 0.335] mIoU: 0.483 mIoU_shapes: 0.328
+
+Training Set Eval:
+INFO: Checkpoint 111 saved!
+IoU per class: [0.951, 0.393, 0.398, 0.46] mIoU: 0.551 mIoU_shapes: 0.417
+
+Average loss this epoch =  0.0004755584016504647
+/////////////////////////
+Epoch 112/200:
+
+Test Set Eval:
+IoU per class: [0.95, 0.323, 0.444, 0.381] mIoU: 0.525 mIoU_shapes: 0.383
+
+Training Set Eval:
+INFO: Checkpoint 112 saved!
+IoU per class: [0.954, 0.467, 0.452, 0.505] mIoU: 0.595 mIoU_shapes: 0.475
+
+Average loss this epoch =  0.00042734793913414286
+/////////////////////////
+Epoch 113/200:
+
+Test Set Eval:
+IoU per class: [0.945, 0.266, 0.45, 0.285] mIoU: 0.487 mIoU_shapes: 0.334
+
+Training Set Eval:
+INFO: Checkpoint 113 saved!
+IoU per class: [0.95, 0.368, 0.44, 0.431] mIoU: 0.548 mIoU_shapes: 0.413
+
+Average loss this epoch =  0.00036951338396910344
+/////////////////////////
+Epoch 114/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.329, 0.379, 0.366] mIoU: 0.506 mIoU_shapes: 0.358
+
+Training Set Eval:
+INFO: Checkpoint 114 saved!
+IoU per class: [0.952, 0.439, 0.403, 0.47] mIoU: 0.566 mIoU_shapes: 0.437
+
+Average loss this epoch =  0.0013592288085107524
+/////////////////////////
+Epoch 115/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.341, 0.409, 0.342] mIoU: 0.51 mIoU_shapes: 0.364
+
+Training Set Eval:
+INFO: Checkpoint 115 saved!
+IoU per class: [0.951, 0.442, 0.396, 0.443] mIoU: 0.558 mIoU_shapes: 0.427
+
+Average loss this epoch =  0.0003049462784284328
+/////////////////////////
+Epoch 116/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.36, 0.408, 0.295] mIoU: 0.503 mIoU_shapes: 0.355
+
+Training Set Eval:
+INFO: Checkpoint 116 saved!
+IoU per class: [0.952, 0.45, 0.407, 0.456] mIoU: 0.566 mIoU_shapes: 0.437
+
+Average loss this epoch =  0.0003263872101217134
+/////////////////////////
+Epoch 117/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.409, 0.431, 0.39] mIoU: 0.545 mIoU_shapes: 0.41
+
+Training Set Eval:
+INFO: Checkpoint 117 saved!
+IoU per class: [0.955, 0.484, 0.423, 0.515] mIoU: 0.594 mIoU_shapes: 0.474
+
+Average loss this epoch =  0.00026312613836392196
+/////////////////////////
+Epoch 118/200:
+
+Test Set Eval:
+IoU per class: [0.946, 0.358, 0.299, 0.281] mIoU: 0.471 mIoU_shapes: 0.313
+
+Training Set Eval:
+INFO: Checkpoint 118 saved!
+IoU per class: [0.951, 0.436, 0.33, 0.434] mIoU: 0.538 mIoU_shapes: 0.4
+
+Average loss this epoch =  0.0005002909000947386
+/////////////////////////
+Epoch 119/200:
+
+Test Set Eval:
+IoU per class: [0.945, 0.377, 0.411, 0.207] mIoU: 0.485 mIoU_shapes: 0.332
+
+Training Set Eval:
+INFO: Checkpoint 119 saved!
+IoU per class: [0.951, 0.449, 0.403, 0.342] mIoU: 0.536 mIoU_shapes: 0.398
+
+Average loss this epoch =  0.0003658569258127252
+/////////////////////////
+Epoch 120/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.321, 0.421, 0.323] mIoU: 0.503 mIoU_shapes: 0.355
+
+Training Set Eval:
+INFO: Checkpoint 120 saved!
+IoU per class: [0.952, 0.409, 0.448, 0.432] mIoU: 0.56 mIoU_shapes: 0.429
+
+Average loss this epoch =  0.0004000711765249404
+/////////////////////////
+Epoch 121/200:
+
+Test Set Eval:
+IoU per class: [0.946, 0.372, 0.392, 0.256] mIoU: 0.491 mIoU_shapes: 0.34
+
+Training Set Eval:
+INFO: Checkpoint 121 saved!
+IoU per class: [0.951, 0.442, 0.414, 0.376] mIoU: 0.546 mIoU_shapes: 0.41
+
+Average loss this epoch =  0.00025803728270730214
+/////////////////////////
+Epoch 122/200:
+
+Test Set Eval:
+IoU per class: [0.946, 0.332, 0.399, 0.304] mIoU: 0.495 mIoU_shapes: 0.345
+
+Training Set Eval:
+INFO: Checkpoint 122 saved!
+IoU per class: [0.951, 0.417, 0.409, 0.427] mIoU: 0.551 mIoU_shapes: 0.417
+
+Average loss this epoch =  0.0008357727752071046
+/////////////////////////
+Epoch 123/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.273, 0.321, 0.367] mIoU: 0.477 mIoU_shapes: 0.32
+
+Training Set Eval:
+INFO: Checkpoint 123 saved!
+IoU per class: [0.951, 0.348, 0.352, 0.477] mIoU: 0.532 mIoU_shapes: 0.393
+
+Average loss this epoch =  0.00035891342113207576
+/////////////////////////
+Epoch 124/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.3, 0.424, 0.321] mIoU: 0.498 mIoU_shapes: 0.348
+
+Training Set Eval:
+INFO: Checkpoint 124 saved!
+IoU per class: [0.951, 0.377, 0.424, 0.426] mIoU: 0.544 mIoU_shapes: 0.409
+
+Average loss this epoch =  0.00022117556637799889
+/////////////////////////
+Epoch 125/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.334, 0.398, 0.309] mIoU: 0.497 mIoU_shapes: 0.347
+
+Training Set Eval:
+INFO: Checkpoint 125 saved!
+IoU per class: [0.952, 0.413, 0.41, 0.436] mIoU: 0.553 mIoU_shapes: 0.42
+
+Average loss this epoch =  0.00025350068964718775
+/////////////////////////
+Epoch 126/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.365, 0.422, 0.332] mIoU: 0.517 mIoU_shapes: 0.373
+
+Training Set Eval:
+INFO: Checkpoint 126 saved!
+IoU per class: [0.954, 0.462, 0.434, 0.447] mIoU: 0.574 mIoU_shapes: 0.447
+
+Average loss this epoch =  0.000643588509020945
+/////////////////////////
+Epoch 127/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.336, 0.368, 0.323] mIoU: 0.493 mIoU_shapes: 0.342
+
+Training Set Eval:
+INFO: Checkpoint 127 saved!
+IoU per class: [0.951, 0.426, 0.372, 0.441] mIoU: 0.548 mIoU_shapes: 0.413
+
+Average loss this epoch =  0.00022785516775302808
+/////////////////////////
+Epoch 128/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.319, 0.404, 0.348] mIoU: 0.505 mIoU_shapes: 0.357
+
+Training Set Eval:
+INFO: Checkpoint 128 saved!
+IoU per class: [0.952, 0.415, 0.405, 0.449] mIoU: 0.555 mIoU_shapes: 0.423
+
+Average loss this epoch =  0.0002077916270768792
+/////////////////////////
+Epoch 129/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.311, 0.442, 0.348] mIoU: 0.512 mIoU_shapes: 0.367
+
+Training Set Eval:
+INFO: Checkpoint 129 saved!
+IoU per class: [0.952, 0.413, 0.43, 0.467] mIoU: 0.565 mIoU_shapes: 0.437
+
+Average loss this epoch =  0.0002435214474610205
+/////////////////////////
+Epoch 130/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.319, 0.374, 0.338] mIoU: 0.495 mIoU_shapes: 0.344
+
+Training Set Eval:
+INFO: Checkpoint 130 saved!
+IoU per class: [0.952, 0.428, 0.397, 0.454] mIoU: 0.558 mIoU_shapes: 0.426
+
+Average loss this epoch =  0.00027349613076972163
+/////////////////////////
+Epoch 131/200:
+
+Test Set Eval:
+IoU per class: [0.945, 0.324, 0.378, 0.29] mIoU: 0.484 mIoU_shapes: 0.331
+
+Training Set Eval:
+INFO: Checkpoint 131 saved!
+IoU per class: [0.95, 0.413, 0.382, 0.413] mIoU: 0.539 mIoU_shapes: 0.403
+
+Average loss this epoch =  0.00044188623523113617
+/////////////////////////
+Epoch 132/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.312, 0.414, 0.344] mIoU: 0.505 mIoU_shapes: 0.357
+
+Training Set Eval:
+INFO: Checkpoint 132 saved!
+IoU per class: [0.953, 0.418, 0.406, 0.481] mIoU: 0.564 mIoU_shapes: 0.435
+
+Average loss this epoch =  0.0003318763864090253
+/////////////////////////
+Epoch 133/200:
+
+Test Set Eval:
+IoU per class: [0.944, 0.241, 0.34, 0.307] mIoU: 0.458 mIoU_shapes: 0.296
+
+Training Set Eval:
+INFO: Checkpoint 133 saved!
+IoU per class: [0.949, 0.338, 0.339, 0.433] mIoU: 0.515 mIoU_shapes: 0.37
+
+Average loss this epoch =  0.0002476139516261831
+/////////////////////////
+Epoch 134/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.35, 0.383, 0.292] mIoU: 0.493 mIoU_shapes: 0.341
+
+Training Set Eval:
+INFO: Checkpoint 134 saved!
+IoU per class: [0.951, 0.44, 0.389, 0.399] mIoU: 0.545 mIoU_shapes: 0.409
+
+Average loss this epoch =  0.0005134081304322725
+/////////////////////////
+Epoch 135/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.317, 0.395, 0.336] mIoU: 0.499 mIoU_shapes: 0.349
+
+Training Set Eval:
+INFO: Checkpoint 135 saved!
+IoU per class: [0.951, 0.402, 0.382, 0.429] mIoU: 0.541 mIoU_shapes: 0.405
+
+Average loss this epoch =  0.0005790994007717116
+/////////////////////////
+Epoch 136/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.281, 0.405, 0.354] mIoU: 0.497 mIoU_shapes: 0.347
+
+Training Set Eval:
+INFO: Checkpoint 136 saved!
+IoU per class: [0.952, 0.352, 0.414, 0.436] mIoU: 0.538 mIoU_shapes: 0.4
+
+Average loss this epoch =  0.00032277551779687154
+/////////////////////////
+Epoch 137/200:
+
+Test Set Eval:
+IoU per class: [0.946, 0.29, 0.412, 0.343] mIoU: 0.498 mIoU_shapes: 0.348
+
+Training Set Eval:
+INFO: Checkpoint 137 saved!
+IoU per class: [0.951, 0.378, 0.398, 0.434] mIoU: 0.54 mIoU_shapes: 0.403
+
+Average loss this epoch =  0.00029158673276462316
+/////////////////////////
+Epoch 138/200:
+
+Test Set Eval:
+IoU per class: [0.944, 0.306, 0.394, 0.245] mIoU: 0.472 mIoU_shapes: 0.315
+
+Training Set Eval:
+INFO: Checkpoint 138 saved!
+IoU per class: [0.95, 0.404, 0.395, 0.38] mIoU: 0.532 mIoU_shapes: 0.393
+
+Average loss this epoch =  0.0004871073627072897
+/////////////////////////
+Epoch 139/200:
+
+Test Set Eval:
+IoU per class: [0.942, 0.281, 0.377, 0.228] mIoU: 0.457 mIoU_shapes: 0.296
+
+Training Set Eval:
+INFO: Checkpoint 139 saved!
+IoU per class: [0.947, 0.356, 0.375, 0.352] mIoU: 0.508 mIoU_shapes: 0.361
+
+Average loss this epoch =  0.00028718602707196477
+/////////////////////////
+Epoch 140/200:
+
+Test Set Eval:
+IoU per class: [0.946, 0.342, 0.42, 0.3] mIoU: 0.502 mIoU_shapes: 0.354
+
+Training Set Eval:
+INFO: Checkpoint 140 saved!
+IoU per class: [0.951, 0.41, 0.422, 0.436] mIoU: 0.555 mIoU_shapes: 0.423
+
+Average loss this epoch =  0.000427454086527166
+/////////////////////////
+Epoch 141/200:
+
+Test Set Eval:
+IoU per class: [0.945, 0.296, 0.384, 0.291] mIoU: 0.479 mIoU_shapes: 0.324
+
+Training Set Eval:
+INFO: Checkpoint 141 saved!
+IoU per class: [0.949, 0.372, 0.376, 0.417] mIoU: 0.529 mIoU_shapes: 0.388
+
+Average loss this epoch =  0.00023073304023702774
+/////////////////////////
+Epoch 142/200:
+
+Test Set Eval:
+IoU per class: [0.944, 0.288, 0.366, 0.268] mIoU: 0.466 mIoU_shapes: 0.307
+
+Training Set Eval:
+INFO: Checkpoint 142 saved!
+IoU per class: [0.949, 0.373, 0.39, 0.384] mIoU: 0.524 mIoU_shapes: 0.382
+
+Average loss this epoch =  0.0007385416385020172
+/////////////////////////
+Epoch 143/200:
+
+Test Set Eval:
+IoU per class: [0.946, 0.325, 0.446, 0.273] mIoU: 0.498 mIoU_shapes: 0.348
+
+Training Set Eval:
+INFO: Checkpoint 143 saved!
+IoU per class: [0.951, 0.396, 0.464, 0.377] mIoU: 0.547 mIoU_shapes: 0.412
+
+Average loss this epoch =  0.00027203644045227244
+/////////////////////////
+Epoch 144/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.28, 0.421, 0.311] mIoU: 0.49 mIoU_shapes: 0.337
+
+Training Set Eval:
+INFO: Checkpoint 144 saved!
+IoU per class: [0.951, 0.368, 0.45, 0.41] mIoU: 0.545 mIoU_shapes: 0.409
+
+Average loss this epoch =  0.00035518267538757004
+/////////////////////////
+Epoch 145/200:
+
+Test Set Eval:
+IoU per class: [0.943, 0.238, 0.271, 0.249] mIoU: 0.425 mIoU_shapes: 0.253
+
+Training Set Eval:
+INFO: Checkpoint 145 saved!
+IoU per class: [0.948, 0.328, 0.324, 0.369] mIoU: 0.492 mIoU_shapes: 0.34
+
+Average loss this epoch =  0.00025940106628330185
+/////////////////////////
+Epoch 146/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.276, 0.365, 0.357] mIoU: 0.486 mIoU_shapes: 0.333
+
+Training Set Eval:
+INFO: Checkpoint 146 saved!
+IoU per class: [0.951, 0.359, 0.386, 0.46] mIoU: 0.539 mIoU_shapes: 0.402
+
+Average loss this epoch =  0.0003083899118411491
+/////////////////////////
+Epoch 147/200:
+
+Test Set Eval:
+IoU per class: [0.951, 0.354, 0.407, 0.384] mIoU: 0.524 mIoU_shapes: 0.382
+
+Training Set Eval:
+INFO: Checkpoint 147 saved!
+IoU per class: [0.955, 0.444, 0.409, 0.511] mIoU: 0.58 mIoU_shapes: 0.455
+
+Average loss this epoch =  0.0006745004379599663
+/////////////////////////
+Epoch 148/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.305, 0.389, 0.338] mIoU: 0.495 mIoU_shapes: 0.344
+
+Training Set Eval:
+INFO: Checkpoint 148 saved!
+IoU per class: [0.951, 0.399, 0.389, 0.462] mIoU: 0.55 mIoU_shapes: 0.417
+
+Average loss this epoch =  0.0001931382210683623
+/////////////////////////
+Epoch 149/200:
+
+Test Set Eval:
+IoU per class: [0.944, 0.329, 0.38, 0.23] mIoU: 0.471 mIoU_shapes: 0.313
+
+Training Set Eval:
+INFO: Checkpoint 149 saved!
+IoU per class: [0.95, 0.41, 0.381, 0.372] mIoU: 0.528 mIoU_shapes: 0.388
+
+Average loss this epoch =  0.0003554673561491228
+/////////////////////////
+Epoch 150/200:
+
+Test Set Eval:
+IoU per class: [0.946, 0.305, 0.354, 0.309] mIoU: 0.479 mIoU_shapes: 0.323
+
+Training Set Eval:
+INFO: Checkpoint 150 saved!
+IoU per class: [0.951, 0.386, 0.384, 0.458] mIoU: 0.545 mIoU_shapes: 0.409
+
+Average loss this epoch =  0.0006590414496146485
+/////////////////////////
+Epoch 151/200:
+
+Test Set Eval:
+IoU per class: [0.944, 0.279, 0.329, 0.263] mIoU: 0.453 mIoU_shapes: 0.29
+
+Training Set Eval:
+INFO: Checkpoint 151 saved!
+IoU per class: [0.949, 0.361, 0.357, 0.409] mIoU: 0.519 mIoU_shapes: 0.376
+
+Average loss this epoch =  0.0004292666350947264
+/////////////////////////
+Epoch 152/200:
+
+Test Set Eval:
+IoU per class: [0.944, 0.248, 0.383, 0.303] mIoU: 0.47 mIoU_shapes: 0.311
+
+Training Set Eval:
+INFO: Checkpoint 152 saved!
+IoU per class: [0.949, 0.346, 0.372, 0.384] mIoU: 0.513 mIoU_shapes: 0.367
+
+Average loss this epoch =  0.00030502605263658147
+/////////////////////////
+Epoch 153/200:
+
+Test Set Eval:
+IoU per class: [0.943, 0.274, 0.374, 0.282] mIoU: 0.468 mIoU_shapes: 0.31
+
+Training Set Eval:
+INFO: Checkpoint 153 saved!
+IoU per class: [0.947, 0.365, 0.356, 0.361] mIoU: 0.507 mIoU_shapes: 0.361
+
+Average loss this epoch =  0.0003173289875106333
+/////////////////////////
+Epoch 154/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.323, 0.407, 0.303] mIoU: 0.495 mIoU_shapes: 0.344
+
+Training Set Eval:
+INFO: Checkpoint 154 saved!
+IoU per class: [0.951, 0.419, 0.403, 0.425] mIoU: 0.55 mIoU_shapes: 0.416
+
+Average loss this epoch =  0.0002157019926663722
+/////////////////////////
+Epoch 155/200:
+
+Test Set Eval:
+IoU per class: [0.946, 0.274, 0.392, 0.287] mIoU: 0.475 mIoU_shapes: 0.318
+
+Training Set Eval:
+INFO: Checkpoint 155 saved!
+IoU per class: [0.951, 0.383, 0.384, 0.401] mIoU: 0.53 mIoU_shapes: 0.389
+
+Average loss this epoch =  0.00018252281152553637
+/////////////////////////
+Epoch 156/200:
+
+Test Set Eval:
+IoU per class: [0.943, 0.238, 0.331, 0.276] mIoU: 0.447 mIoU_shapes: 0.282
+
+Training Set Eval:
+INFO: Checkpoint 156 saved!
+IoU per class: [0.948, 0.336, 0.357, 0.375] mIoU: 0.504 mIoU_shapes: 0.356
+
+Average loss this epoch =  0.00030003350898311727
+/////////////////////////
+Epoch 157/200:
+
+Test Set Eval:
+IoU per class: [0.942, 0.262, 0.429, 0.243] mIoU: 0.469 mIoU_shapes: 0.312
+
+Training Set Eval:
+INFO: Checkpoint 157 saved!
+IoU per class: [0.947, 0.348, 0.416, 0.328] mIoU: 0.51 mIoU_shapes: 0.364
+
+Average loss this epoch =  0.00042859486705588496
+/////////////////////////
+Epoch 158/200:
+
+Test Set Eval:
+IoU per class: [0.945, 0.306, 0.326, 0.305] mIoU: 0.471 mIoU_shapes: 0.312
+
+Training Set Eval:
+INFO: Checkpoint 158 saved!
+IoU per class: [0.95, 0.396, 0.36, 0.418] mIoU: 0.531 mIoU_shapes: 0.391
+
+Average loss this epoch =  0.0004017314090389587
+/////////////////////////
+Epoch 159/200:
+
+Test Set Eval:
+IoU per class: [0.945, 0.259, 0.378, 0.308] mIoU: 0.473 mIoU_shapes: 0.315
+
+Training Set Eval:
+INFO: Checkpoint 159 saved!
+IoU per class: [0.95, 0.351, 0.386, 0.418] mIoU: 0.526 mIoU_shapes: 0.385
+
+Average loss this epoch =  0.00024633115804345037
+/////////////////////////
+Epoch 160/200:
+
+Test Set Eval:
+IoU per class: [0.945, 0.308, 0.392, 0.247] mIoU: 0.473 mIoU_shapes: 0.316
+
+Training Set Eval:
+INFO: Checkpoint 160 saved!
+IoU per class: [0.949, 0.373, 0.386, 0.364] mIoU: 0.518 mIoU_shapes: 0.374
+
+Average loss this epoch =  0.0002180182347736598
+/////////////////////////
+Epoch 161/200:
+
+Test Set Eval:
+IoU per class: [0.946, 0.325, 0.405, 0.286] mIoU: 0.49 mIoU_shapes: 0.338
+
+Training Set Eval:
+INFO: Checkpoint 161 saved!
+IoU per class: [0.951, 0.401, 0.417, 0.402] mIoU: 0.543 mIoU_shapes: 0.407
+
+Average loss this epoch =  0.0009066585342255596
+/////////////////////////
+Epoch 162/200:
+
+Test Set Eval:
+IoU per class: [0.943, 0.295, 0.374, 0.247] mIoU: 0.465 mIoU_shapes: 0.305
+
+Training Set Eval:
+INFO: Checkpoint 162 saved!
+IoU per class: [0.947, 0.384, 0.358, 0.338] mIoU: 0.507 mIoU_shapes: 0.36
+
+Average loss this epoch =  0.0005124527415471097
+/////////////////////////
+Epoch 163/200:
+
+Test Set Eval:
+IoU per class: [0.945, 0.29, 0.352, 0.275] mIoU: 0.466 mIoU_shapes: 0.306
+
+Training Set Eval:
+INFO: Checkpoint 163 saved!
+IoU per class: [0.95, 0.395, 0.379, 0.393] mIoU: 0.529 mIoU_shapes: 0.389
+
+Average loss this epoch =  0.0008772327934847716
+/////////////////////////
+Epoch 164/200:
+
+Test Set Eval:
+IoU per class: [0.942, 0.287, 0.332, 0.227] mIoU: 0.447 mIoU_shapes: 0.282
+
+Training Set Eval:
+INFO: Checkpoint 164 saved!
+IoU per class: [0.947, 0.37, 0.348, 0.336] mIoU: 0.5 mIoU_shapes: 0.351
+
+Average loss this epoch =  0.00044793869411596197
+/////////////////////////
+Epoch 165/200:
+
+Test Set Eval:
+IoU per class: [0.944, 0.306, 0.367, 0.259] mIoU: 0.469 mIoU_shapes: 0.311
+
+Training Set Eval:
+INFO: Checkpoint 165 saved!
+IoU per class: [0.949, 0.38, 0.375, 0.352] mIoU: 0.514 mIoU_shapes: 0.369
+
+Average loss this epoch =  0.0011546106767454905
+/////////////////////////
+Epoch 166/200:
+
+Test Set Eval:
+IoU per class: [0.943, 0.281, 0.285, 0.203] mIoU: 0.428 mIoU_shapes: 0.256
+
+Training Set Eval:
+INFO: Checkpoint 166 saved!
+IoU per class: [0.948, 0.351, 0.327, 0.361] mIoU: 0.497 mIoU_shapes: 0.347
+
+Average loss this epoch =  0.0005567772119115087
+/////////////////////////
+Epoch 167/200:
+
+Test Set Eval:
+IoU per class: [0.942, 0.247, 0.309, 0.268] mIoU: 0.441 mIoU_shapes: 0.274
+
+Training Set Eval:
+INFO: Checkpoint 167 saved!
+IoU per class: [0.947, 0.315, 0.346, 0.371] mIoU: 0.495 mIoU_shapes: 0.344
+
+Average loss this epoch =  0.00046715342973565455
+/////////////////////////
+Epoch 168/200:
+
+Test Set Eval:
+IoU per class: [0.947, 0.302, 0.378, 0.33] mIoU: 0.489 mIoU_shapes: 0.337
+
+Training Set Eval:
+INFO: Checkpoint 168 saved!
+IoU per class: [0.951, 0.391, 0.398, 0.409] mIoU: 0.537 mIoU_shapes: 0.399
+
+Average loss this epoch =  0.00032328801798521225
+/////////////////////////
+Epoch 169/200:
+
+Test Set Eval:
+IoU per class: [0.949, 0.374, 0.384, 0.256] mIoU: 0.491 mIoU_shapes: 0.338
+
+Training Set Eval:
+INFO: Checkpoint 169 saved!
+IoU per class: [0.953, 0.474, 0.424, 0.345] mIoU: 0.549 mIoU_shapes: 0.415
+
+Average loss this epoch =  0.0006400591159964206
+/////////////////////////
+Epoch 170/200:
+
+Test Set Eval:
+IoU per class: [0.943, 0.215, 0.315, 0.288] mIoU: 0.44 mIoU_shapes: 0.273
+
+Training Set Eval:
+INFO: Checkpoint 170 saved!
+IoU per class: [0.948, 0.306, 0.357, 0.366] mIoU: 0.494 mIoU_shapes: 0.343
+
+Average loss this epoch =  0.000367301746142958
+/////////////////////////
+Epoch 171/200:
+
+Test Set Eval:
+IoU per class: [0.943, 0.28, 0.275, 0.221] mIoU: 0.43 mIoU_shapes: 0.259
+
+Training Set Eval:
+INFO: Checkpoint 171 saved!
+IoU per class: [0.948, 0.35, 0.33, 0.393] mIoU: 0.505 mIoU_shapes: 0.357
+
+Average loss this epoch =  0.0004062767308127431
+/////////////////////////
+Epoch 172/200:
+
+Test Set Eval:
+IoU per class: [0.948, 0.245, 0.434, 0.375] mIoU: 0.5 mIoU_shapes: 0.351
+
+Training Set Eval:
+INFO: Checkpoint 172 saved!
+IoU per class: [0.952, 0.327, 0.427, 0.454] mIoU: 0.54 mIoU_shapes: 0.403
+
+Average loss this epoch =  0.00033015561403090983
+/////////////////////////
+Epoch 173/200:
+
+Test Set Eval:
+IoU per class: [0.943, 0.298, 0.383, 0.202] mIoU: 0.456 mIoU_shapes: 0.294
+
+Training Set Eval:
+INFO: Checkpoint 173 saved!
+IoU per class: [0.948, 0.361, 0.392, 0.346] mIoU: 0.512 mIoU_shapes: 0.367
+
+Average loss this epoch =  0.00029662566329644816
+/////////////////////////
+Epoch 174/200:
+
+Test Set Eval:
+IoU per class: [0.944, 0.313, 0.362, 0.283] mIoU: 0.476 mIoU_shapes: 0.319
+
+Training Set Eval:
+INFO: Checkpoint 174 saved!
+IoU per class: [0.949, 0.384, 0.385, 0.382] mIoU: 0.525 mIoU_shapes: 0.384
+
+Average loss this epoch =  0.000591278076171875
+/////////////////////////
+Epoch 175/200:
+
+Test Set Eval:
+IoU per class: [0.944, 0.291, 0.337, 0.246] mIoU: 0.454 mIoU_shapes: 0.291
+
+Training Set Eval:
+INFO: Checkpoint 175 saved!
+IoU per class: [0.948, 0.378, 0.359, 0.362] mIoU: 0.512 mIoU_shapes: 0.366
+
+Average loss this epoch =  0.00040075578824246775
+/////////////////////////
+Epoch 176/200:
+
+Test Set Eval:
+IoU per class: [0.943, 0.231, 0.343, 0.284] mIoU: 0.45 mIoU_shapes: 0.286
+
+Training Set Eval:
+INFO: Checkpoint 176 saved!
+IoU per class: [0.947, 0.318, 0.357, 0.369] mIoU: 0.498 mIoU_shapes: 0.348
+
+Average loss this epoch =  0.0004849144604415574
+/////////////////////////
+Epoch 177/200:
+
+Test Set Eval:
+IoU per class: [0.944, 0.272, 0.342, 0.249] mIoU: 0.451 mIoU_shapes: 0.287
+
+Training Set Eval:
+INFO: Checkpoint 177 saved!
+IoU per class: [0.95, 0.345, 0.383, 0.42] mIoU: 0.524 mIoU_shapes: 0.383
+
+Average loss this epoch =  0.0003911865306199844
+/////////////////////////
+Epoch 178/200:
+
+Test Set Eval:
+IoU per class: [0.943, 0.296, 0.297, 0.257] mIoU: 0.448 mIoU_shapes: 0.283
+
+Training Set Eval:
+INFO: Checkpoint 178 saved!
+IoU per class: [0.947, 0.343, 0.345, 0.344] mIoU: 0.495 mIoU_shapes: 0.344
+
+Average loss this epoch =  0.00030197461903344635
+/////////////////////////
+Epoch 179/200:
+
+Test Set Eval:
+IoU per class: [0.945, 0.33, 0.364, 0.249] mIoU: 0.472 mIoU_shapes: 0.314
+
+Training Set Eval:
+INFO: Checkpoint 179 saved!
+IoU per class: [0.949, 0.408, 0.373, 0.362] mIoU: 0.523 mIoU_shapes: 0.381
+
+Average loss this epoch =  0.0002572288947125359
+/////////////////////////
+Epoch 180/200:
+
+Test Set Eval:
+IoU per class: [0.942, 0.249, 0.348, 0.24] mIoU: 0.445 mIoU_shapes: 0.279
+
+Training Set Eval:
+INFO: Checkpoint 180 saved!
+IoU per class: [0.948, 0.359, 0.354, 0.346] mIoU: 0.502 mIoU_shapes: 0.353
+
+Average loss this epoch =  0.0003173013361926857
+/////////////////////////
+Epoch 181/200:
+
+Test Set Eval:
+IoU per class: [0.944, 0.188, 0.337, 0.292] mIoU: 0.44 mIoU_shapes: 0.272
+
+Training Set Eval:
+INFO: Checkpoint 181 saved!
+IoU per class: [0.948, 0.285, 0.359, 0.366] mIoU: 0.489 mIoU_shapes: 0.337
+
+Average loss this epoch =  0.0002743442188246978
+/////////////////////////
+Epoch 182/200:
+
+Test Set Eval:
+IoU per class: [0.943, 0.313, 0.305, 0.22] mIoU: 0.445 mIoU_shapes: 0.279
+
+Training Set Eval:
+INFO: Checkpoint 182 saved!
+IoU per class: [0.948, 0.392, 0.344, 0.35] mIoU: 0.508 mIoU_shapes: 0.362
+
+Average loss this epoch =  0.0004369051012533978
+/////////////////////////
+Epoch 183/200:
+
+Test Set Eval:
+IoU per class: [0.946, 0.293, 0.41, 0.321] mIoU: 0.492 mIoU_shapes: 0.341
+
+Training Set Eval:
+INFO: Checkpoint 183 saved!
+IoU per class: [0.95, 0.394, 0.399, 0.411] mIoU: 0.538 mIoU_shapes: 0.401
+
+Average loss this epoch =  0.00026744360953694107
+/////////////////////////
+Epoch 184/200:
+
+Test Set Eval:
+IoU per class: [0.942, 0.196, 0.341, 0.275] mIoU: 0.438 mIoU_shapes: 0.27
+
+Training Set Eval:
+INFO: Checkpoint 184 saved!
+IoU per class: [0.947, 0.286, 0.353, 0.373] mIoU: 0.49 mIoU_shapes: 0.337
+
+Average loss this epoch =  0.0002557081345733738
+/////////////////////////
+Epoch 185/200:
+
+Test Set Eval:
+IoU per class: [0.942, 0.262, 0.389, 0.22] mIoU: 0.453 mIoU_shapes: 0.29
+
+Training Set Eval:
+INFO: Checkpoint 185 saved!
+IoU per class: [0.948, 0.338, 0.387, 0.358] mIoU: 0.508 mIoU_shapes: 0.361
+
+Average loss this epoch =  0.00034241886443174037
+/////////////////////////
+Epoch 186/200:
+
+Test Set Eval:
+IoU per class: [0.946, 0.263, 0.423, 0.335] mIoU: 0.492 mIoU_shapes: 0.34
+
+Training Set Eval:
+INFO: Checkpoint 186 saved!
+IoU per class: [0.95, 0.356, 0.424, 0.417] mIoU: 0.537 mIoU_shapes: 0.399
+
+Average loss this epoch =  0.0002781357226511425
+/////////////////////////
+Epoch 187/200:
+
+Test Set Eval:
+IoU per class: [0.944, 0.322, 0.385, 0.273] mIoU: 0.481 mIoU_shapes: 0.327
+
+Training Set Eval:
+INFO: Checkpoint 187 saved!
+IoU per class: [0.948, 0.393, 0.368, 0.357] mIoU: 0.517 mIoU_shapes: 0.373
+
+Average loss this epoch =  0.00031571009169063807
+/////////////////////////
+Epoch 188/200:
+
+Test Set Eval:
+IoU per class: [0.943, 0.292, 0.381, 0.25] mIoU: 0.467 mIoU_shapes: 0.308
+
+Training Set Eval:
+INFO: Checkpoint 188 saved!
+IoU per class: [0.948, 0.367, 0.381, 0.355] mIoU: 0.513 mIoU_shapes: 0.368
+
+Average loss this epoch =  0.0005558529034818066
+/////////////////////////
+Epoch 189/200:
+
+Test Set Eval:
+IoU per class: [0.944, 0.269, 0.339, 0.282] mIoU: 0.459 mIoU_shapes: 0.297
+
+Training Set Eval:
+INFO: Checkpoint 189 saved!
+IoU per class: [0.949, 0.369, 0.37, 0.377] mIoU: 0.516 mIoU_shapes: 0.372
+
+Average loss this epoch =  0.00022048261562151889
+/////////////////////////
+Epoch 190/200:
+
+Test Set Eval:
+IoU per class: [0.941, 0.261, 0.36, 0.214] mIoU: 0.444 mIoU_shapes: 0.278
+
+Training Set Eval:
+INFO: Checkpoint 190 saved!
+IoU per class: [0.947, 0.347, 0.357, 0.313] mIoU: 0.491 mIoU_shapes: 0.339
+
+Average loss this epoch =  0.00026587823943612966
+/////////////////////////
+Epoch 191/200:
+
+Test Set Eval:
+IoU per class: [0.943, 0.251, 0.37, 0.257] mIoU: 0.455 mIoU_shapes: 0.293
+
+Training Set Eval:
+INFO: Checkpoint 191 saved!
+IoU per class: [0.948, 0.352, 0.364, 0.343] mIoU: 0.502 mIoU_shapes: 0.353
+
+Average loss this epoch =  0.00015691837693358065
+/////////////////////////
+Epoch 192/200:
+
+Test Set Eval:
+IoU per class: [0.942, 0.281, 0.375, 0.232] mIoU: 0.458 mIoU_shapes: 0.296
+
+Training Set Eval:
+INFO: Checkpoint 192 saved!
+IoU per class: [0.948, 0.393, 0.373, 0.337] mIoU: 0.513 mIoU_shapes: 0.368
+
+Average loss this epoch =  0.00025313383428122706
+/////////////////////////
+Epoch 193/200:
+
+Test Set Eval:
+IoU per class: [0.945, 0.244, 0.365, 0.293] mIoU: 0.462 mIoU_shapes: 0.301
+
+Training Set Eval:
+INFO: Checkpoint 193 saved!
+IoU per class: [0.949, 0.358, 0.373, 0.371] mIoU: 0.513 mIoU_shapes: 0.367
+
+Average loss this epoch =  0.00037190427216525853
+/////////////////////////
+Epoch 194/200:
+
+Test Set Eval:
+IoU per class: [0.941, 0.227, 0.343, 0.235] mIoU: 0.437 mIoU_shapes: 0.269
+
+Training Set Eval:
+INFO: Checkpoint 194 saved!
+IoU per class: [0.946, 0.328, 0.34, 0.316] mIoU: 0.483 mIoU_shapes: 0.328
+
+Average loss this epoch =  0.00020569427305185646
+/////////////////////////
+Epoch 195/200:
+
+Test Set Eval:
+IoU per class: [0.944, 0.227, 0.328, 0.298] mIoU: 0.449 mIoU_shapes: 0.284
+
+Training Set Eval:
+INFO: Checkpoint 195 saved!
+IoU per class: [0.948, 0.323, 0.345, 0.383] mIoU: 0.5 mIoU_shapes: 0.35
+
+Average loss this epoch =  0.0001660108285718383
+/////////////////////////
+Epoch 196/200:
+
+Test Set Eval:
+IoU per class: [0.944, 0.24, 0.372, 0.291] mIoU: 0.461 mIoU_shapes: 0.301
+
+Training Set Eval:
+INFO: Checkpoint 196 saved!
+IoU per class: [0.948, 0.333, 0.366, 0.373] mIoU: 0.505 mIoU_shapes: 0.357
+
+Average loss this epoch =  0.00018805845262615252
+/////////////////////////
+Epoch 197/200:
+
+Test Set Eval:
+IoU per class: [0.944, 0.266, 0.321, 0.277] mIoU: 0.452 mIoU_shapes: 0.288
+
+Training Set Eval:
+INFO: Checkpoint 197 saved!
+IoU per class: [0.949, 0.389, 0.352, 0.356] mIoU: 0.511 mIoU_shapes: 0.366
+
+Average loss this epoch =  0.00031927009756096237
+/////////////////////////
+Epoch 198/200:
+
+Test Set Eval:
+IoU per class: [0.941, 0.278, 0.329, 0.213] mIoU: 0.44 mIoU_shapes: 0.273
+
+Training Set Eval:
+INFO: Checkpoint 198 saved!
+IoU per class: [0.947, 0.38, 0.345, 0.306] mIoU: 0.494 mIoU_shapes: 0.343
+
+Average loss this epoch =  0.0002543614810979516
+/////////////////////////
+Epoch 199/200:
+
+Test Set Eval:
+IoU per class: [0.942, 0.267, 0.299, 0.24] mIoU: 0.437 mIoU_shapes: 0.269
+
+Training Set Eval:
+INFO: Checkpoint 199 saved!
+IoU per class: [0.946, 0.358, 0.308, 0.336] mIoU: 0.487 mIoU_shapes: 0.334
+
+Average loss this epoch =  0.00058164594063699
+/////////////////////////
+Epoch 200/200:
+
+Test Set Eval:
+IoU per class: [0.943, 0.262, 0.354, 0.271] mIoU: 0.457 mIoU_shapes: 0.295
+
+Training Set Eval:
+INFO: Checkpoint 200 saved!
+IoU per class: [0.948, 0.352, 0.364, 0.375] mIoU: 0.51 mIoU_shapes: 0.364
+
+Average loss this epoch =  0.00035446879130527064
+/////////////////////////
+Max test score: 0.747 found at epoch: 20
+Max test score only shapes: 0.666 found at epoch: 20
